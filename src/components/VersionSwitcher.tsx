@@ -7,17 +7,17 @@ export default function VersionSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isV3 = pathname.startsWith("/v3");
+  const isV1 = pathname.startsWith("/v1");
   const isV2 = pathname.startsWith("/v2");
-  const isV1 = !isV2 && !isV3;
+  const isV3 = !isV1 && !isV2;
 
   const switchVersion = (target: "v1" | "v2" | "v3") => {
     if (target === "v1" && !isV1) {
-      router.push("/");
+      router.push("/v1");
     } else if (target === "v2" && !isV2) {
       router.push("/v2");
     } else if (target === "v3" && !isV3) {
-      router.push("/v3");
+      router.push("/");
     }
   };
 

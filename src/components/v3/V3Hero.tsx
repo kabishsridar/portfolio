@@ -11,6 +11,8 @@ interface V3HeroProps {
   onOpenTerminal: () => void;
 }
 
+const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
+
 export default function V3Hero({ onOpenTerminal }: V3HeroProps) {
   const lettersRef = useRef<HTMLSpanElement[]>([]);
 
@@ -131,7 +133,7 @@ export default function V3Hero({ onOpenTerminal }: V3HeroProps) {
               </button>
 
               <a
-                href="/Kabish_Sridar_Resume.pdf"
+                href={`${basePath}/Kabish_Sridar_Resume.pdf`}
                 download="Kabish_Sridar_Resume.pdf"
                 className="flex items-center space-x-2 px-4 py-3.5 border border-tactical-border/70 text-tactical-muted hover:text-tactical-ivory transition-colors tracking-wider uppercase"
               >

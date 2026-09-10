@@ -140,7 +140,7 @@ export default function Hero({ onOpenTerminal }: HeroProps) {
               </button>
 
               <a
-                href="/Kabish_Sridar_Resume.pdf"
+                href={`${process.env.NODE_ENV === "production" ? "/portfolio" : ""}/Kabish_Sridar_Resume.pdf`}
                 download="Kabish_Sridar_Resume.pdf"
                 className="flex items-center space-x-2 px-4 py-3.5 border border-tactical-border/80 text-tactical-muted hover:text-tactical-ivory hover:border-tactical-border transition-colors tracking-wider uppercase"
                 title="Download verified resume PDF"
