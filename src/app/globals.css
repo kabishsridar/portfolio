@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #08090a;
+  --bg-surface: #0f1216;
+  --bg-surface-elevated: #161a20;
+  --border-tactical: #22262c;
+  --border-bright: #333a42;
+  --accent-amber: #ff5500;
+  --accent-green: #00ff66;
+  --text-ivory: #ededed;
+  --text-muted: #838d99;
+  --text-dim: #49515a;
+}
+
+@theme {
+  --color-tactical-base: #08090a;
+  --color-tactical-surface: #0f1216;
+  --color-tactical-elevated: #161a20;
+  --color-tactical-border: #22262c;
+  --color-tactical-border-bright: #333a42;
+  --color-tactical-amber: #ff5500;
+  --color-tactical-green: #00ff66;
+  --color-tactical-ivory: #ededed;
+  --color-tactical-muted: #838d99;
+  --color-tactical-dim: #49515a;
+  --font-display: var(--font-display), "Space Grotesk", sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+}
+
+html, body {
+  background-color: var(--bg-base);
+  color: var(--text-ivory);
+  font-family: var(--font-display), -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: auto; /* Managed by Lenis */
+}
+
+/* Tactical Background Grid Pattern */
+.bg-tactical-grid {
+  background-color: #08090a;
+  background-image: 
+    linear-gradient(to right, rgba(34, 38, 44, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 38, 44, 0.35) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-dot-matrix {
+  background-image: radial-gradient(rgba(255, 85, 0, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* CRT / Terminal Scanlines */
+.scanlines {
+  position: relative;
+}
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Monospace telemetry styles */
+.font-mono-tech {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  letter-spacing: -0.02em;
+}
+
+/* Tactical Crosshairs */
+.tactical-crosshair {
+  position: relative;
+}
+.tactical-crosshair::before,
+.tactical-crosshair::after {
+  content: "+";
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--accent-amber);
+  opacity: 0.75;
+  pointer-events: none;
+}
+.tactical-crosshair::before {
+  top: -6px;
+  left: -6px;
+}
+.tactical-crosshair::after {
+  bottom: -6px;
+  right: -6px;
+}
+
+/* Custom Scrollbar for Tactical Theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08090a;
+}
+::-webkit-scrollbar-thumb {
+  background: #22262c;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff5500;
+}
+
+/* Pulse beacon animation */
+@keyframes beaconPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+.animate-beacon {
+  animation: beaconPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Radar Sweep Keyframe */
+@keyframes radarSweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-radar {
+  animation: radarSweep 6s linear infinite;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: #ff5500;
+  color: #08090a;
+}
