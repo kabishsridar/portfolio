@@ -21,9 +21,11 @@ import {
   Laptop
 } from "lucide-react";
 
+const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
+
 const USER_PHOTOS = [
   {
-    src: "/kabish.jpg",
+    src: `${basePath}/kabish.jpg`,
     title: "Official Passport Identity",
     desc: "Primary frontal passport photo & identity record.",
   },
@@ -134,7 +136,7 @@ export default function V3HologramAvatar() {
     loader.setMeshoptDecoder(MeshoptDecoder);
 
     loader.load(
-      "/kabish_avatar.glb",
+      `${basePath}/kabish_avatar.glb`,
       (gltf) => {
         const model = gltf.scene;
 
@@ -372,7 +374,7 @@ export default function V3HologramAvatar() {
           <div className="relative w-full h-full flex flex-col justify-between overflow-hidden bg-tactical-surface">
             <div className="relative w-full h-full">
               <Image
-                src="/kabish_cartoon.jpg"
+                src={`${basePath}/kabish_cartoon.jpg`}
                 alt="Kabish Sridar — Stylized Cartoon Character"
                 fill
                 className="object-cover"

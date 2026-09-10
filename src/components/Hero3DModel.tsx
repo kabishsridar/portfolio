@@ -26,9 +26,11 @@ interface Hero3DModelProps {
   initialMode?: "3d" | "cyber" | "photo";
 }
 
+const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
+
 const REFERENCE_PHOTOS = [
   {
-    src: "/kabish.jpg",
+    src: `${basePath}/kabish.jpg`,
     title: "OFFICIAL PASSPORT // IDENTITY VERIFICATION",
     desc: "Primary frontal facial landmark & identity biometric record.",
   },
@@ -164,7 +166,7 @@ export default function Hero3DModel({ initialMode = "3d" }: Hero3DModelProps) {
     loader.setMeshoptDecoder(MeshoptDecoder);
 
     loader.load(
-      "/kabish_avatar.glb",
+      `${basePath}/kabish_avatar.glb`,
       (gltf) => {
         const model = gltf.scene;
 
@@ -460,7 +462,7 @@ export default function Hero3DModel({ initialMode = "3d" }: Hero3DModelProps) {
           <div className="relative w-full h-full flex flex-col justify-between overflow-hidden bg-tactical-surface">
             <div className="relative w-full h-full">
               <Image
-                src="/kabish_cartoon.jpg"
+                src={`${basePath}/kabish_cartoon.jpg`}
                 alt="Kabish Sridar — Stylized Cartoon Character"
                 fill
                 className="object-cover"
