@@ -251,7 +251,12 @@ export default function Terminal({ isOpen, onClose }: TerminalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-tactical-base/80 backdrop-blur-md">
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className="relative w-full max-w-3xl h-[520px] max-h-[85vh] bg-tactical-surface border border-tactical-amber shadow-[0_0_35px_rgba(255,85,0,0.25)] flex flex-col font-mono-tech scanlines overflow-hidden">
         
         {/* Terminal Header Bar */}

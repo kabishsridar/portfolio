@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Mail, Phone, Copy, Check, Send, MapPin, ShieldCheck, Zap } from "lucide-react";
 import { profileData } from "@/data/profile";
+import V3TiltCard from "./V3TiltCard";
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -61,9 +62,9 @@ export default function V3TransmissionPortal() {
   };
 
   return (
-    <section id="v3-contact" className="relative w-full bg-tactical-base/95 py-24 overflow-hidden font-mono-tech">
+    <section id="v3-contact" className="relative w-full bg-transparent py-24 overflow-hidden font-mono-tech">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pl-10 md:pl-24 space-y-12">
-        
+
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-tactical-border pb-6">
           <div>
@@ -82,170 +83,174 @@ export default function V3TransmissionPortal() {
 
         {/* Dual Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           {/* Left 5 Cols: Station Ident */}
-          <div className="lg:col-span-5 border border-tactical-border bg-tactical-surface/90 backdrop-blur-xl p-6 sm:p-7 space-y-5 shadow-[0_15px_35px_rgba(0,0,0,0.8)]">
-            <div className="flex items-center justify-between text-xs text-tactical-muted border-b border-tactical-border pb-3">
-              <span className="text-blue-400 font-bold">STATION IDENT: KABISH // 0x4B</span>
-              <span className="text-tactical-green flex items-center gap-1 text-[10px]">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                AUTHENTICATED
-              </span>
-            </div>
-
-            {/* Email */}
-            <div className="space-y-1">
-              <span className="text-[10px] text-tactical-dim block">OFFICIAL EMAIL</span>
-              <div className="flex items-center justify-between p-3 border border-tactical-border bg-tactical-base">
-                <a
-                  href={`mailto:${profileData.contact.email}`}
-                  className="text-xs text-tactical-ivory hover:text-blue-400 transition-colors flex items-center gap-2 truncate"
-                >
-                  <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                  <span className="truncate">{profileData.contact.email}</span>
-                </a>
-                <button
-                  onClick={() => copyText(profileData.contact.email, "email")}
-                  className="p-1 text-tactical-muted hover:text-blue-400 transition-colors ml-2"
-                >
-                  {copiedEmail ? <Check className="w-4 h-4 text-tactical-green" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div className="space-y-1">
-              <span className="text-[10px] text-tactical-dim block">VOICE FREQUENCY</span>
-              <div className="flex items-center justify-between p-3 border border-tactical-border bg-tactical-base">
-                <a
-                  href={`tel:${profileData.contact.phone.replace(/\s+/g, "")}`}
-                  className="text-xs text-tactical-ivory hover:text-blue-400 transition-colors flex items-center gap-2"
-                >
-                  <Phone className="w-4 h-4 text-tactical-green shrink-0" />
-                  <span>{profileData.contact.phone}</span>
-                </a>
-                <button
-                  onClick={() => copyText(profileData.contact.phone, "phone")}
-                  className="p-1 text-tactical-muted hover:text-blue-400 transition-colors"
-                >
-                  {copiedPhone ? <Check className="w-4 h-4 text-tactical-green" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-
-            {/* External Links */}
-            <div className="pt-2 border-t border-tactical-border space-y-2">
-              <span className="text-[10px] text-tactical-dim block">EXTERNAL NODES</span>
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <a
-                  href={profileData.contact.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 p-2.5 border border-tactical-border bg-tactical-base hover:border-blue-500 text-tactical-muted hover:text-tactical-ivory transition-colors"
-                >
-                  <GithubIcon className="w-4 h-4 text-tactical-ivory" />
-                  <span>GitHub</span>
-                </a>
-                <a
-                  href={profileData.contact.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-2 p-2.5 border border-tactical-border bg-tactical-base hover:border-blue-500 text-tactical-muted hover:text-tactical-ivory transition-colors"
-                >
-                  <LinkedinIcon className="w-4 h-4 text-blue-400" />
-                  <span>LinkedIn</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Coordinates */}
-            <div className="p-3 border border-tactical-border/60 bg-tactical-base text-[11px] text-tactical-muted flex items-start space-x-2">
-              <MapPin className="w-4 h-4 text-tactical-amber shrink-0 mt-0.5" />
-              <div>
-                <span className="text-tactical-ivory block font-semibold">
-                  {profileData.location.base}
-                </span>
-                <span>{profileData.location.region}</span>
-                <span className="block text-[10px] text-blue-400">
-                  [{profileData.location.coordinates}]
+          <div className="lg:col-span-5">
+            <V3TiltCard className="h-full border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 sm:p-7 space-y-5 shadow-[0_15px_35px_rgba(0,0,0,0.8)] group hover:border-tactical-amber/50 transition-colors">
+              <div className="flex items-center justify-between text-xs text-tactical-muted border-b border-tactical-border pb-3">
+                <span className="text-blue-400 font-bold">STATION IDENT: KABISH // 0x4B</span>
+                <span className="text-tactical-green flex items-center gap-1 text-[10px]">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  AUTHENTICATED
                 </span>
               </div>
-            </div>
+
+              {/* Email */}
+              <div className="space-y-1">
+                <span className="text-[10px] text-tactical-dim block">OFFICIAL EMAIL</span>
+                <div className="flex items-center justify-between p-3 border border-tactical-border bg-transparent">
+                  <a
+                    href={`mailto:${profileData.contact.email}`}
+                    className="text-xs text-tactical-ivory hover:text-blue-400 transition-colors flex items-center gap-2 truncate"
+                  >
+                    <Mail className="w-4 h-4 text-blue-400 shrink-0" />
+                    <span className="truncate">{profileData.contact.email}</span>
+                  </a>
+                  <button
+                    onClick={() => copyText(profileData.contact.email, "email")}
+                    className="p-1 text-tactical-muted hover:text-blue-400 transition-colors ml-2"
+                  >
+                    {copiedEmail ? <Check className="w-4 h-4 text-tactical-green" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="space-y-1">
+                <span className="text-[10px] text-tactical-dim block">VOICE FREQUENCY</span>
+                <div className="flex items-center justify-between p-3 border border-tactical-border bg-transparent">
+                  <a
+                    href={`tel:${profileData.contact.phone.replace(/\s+/g, "")}`}
+                    className="text-xs text-tactical-ivory hover:text-blue-400 transition-colors flex items-center gap-2"
+                  >
+                    <Phone className="w-4 h-4 text-tactical-green shrink-0" />
+                    <span>{profileData.contact.phone}</span>
+                  </a>
+                  <button
+                    onClick={() => copyText(profileData.contact.phone, "phone")}
+                    className="p-1 text-tactical-muted hover:text-blue-400 transition-colors"
+                  >
+                    {copiedPhone ? <Check className="w-4 h-4 text-tactical-green" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* External Links */}
+              <div className="pt-2 border-t border-tactical-border space-y-2">
+                <span className="text-[10px] text-tactical-dim block">EXTERNAL NODES</span>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <a
+                    href={profileData.contact.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-2 p-2.5 border border-tactical-border bg-transparent hover:border-blue-500 text-tactical-muted hover:text-tactical-ivory transition-colors"
+                  >
+                    <GithubIcon className="w-4 h-4 text-tactical-ivory" />
+                    <span>GitHub</span>
+                  </a>
+                  <a
+                    href={profileData.contact.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-2 p-2.5 border border-tactical-border bg-transparent hover:border-blue-500 text-tactical-muted hover:text-tactical-ivory transition-colors"
+                  >
+                    <LinkedinIcon className="w-4 h-4 text-blue-400" />
+                    <span>LinkedIn</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Coordinates */}
+              <div className="p-3 border border-tactical-border/60 bg-transparent text-[11px] text-tactical-muted flex items-start space-x-2">
+                <MapPin className="w-4 h-4 text-tactical-amber shrink-0 mt-0.5" />
+                <div>
+                  <span className="text-tactical-ivory block font-semibold">
+                    {profileData.location.base}
+                  </span>
+                  <span>{profileData.location.region}</span>
+                  <span className="block text-[10px] text-blue-400">
+                    [{profileData.location.coordinates}]
+                  </span>
+                </div>
+              </div>
+            </V3TiltCard>
           </div>
 
           {/* Right 7 Cols: Form */}
-          <div className="lg:col-span-7 border border-tactical-border bg-tactical-surface/90 backdrop-blur-xl p-6 sm:p-8 space-y-6 shadow-[0_15px_35px_rgba(0,0,0,0.8)]">
-            <div className="flex items-center justify-between border-b border-tactical-border pb-3 text-xs">
-              <span className="text-blue-400 font-bold">
-                DIRECT PACKET DISPATCH CONSOLE
-              </span>
-              <span className="text-tactical-dim text-[10px]">
-                PORT 443 // SSL ENCRYPTED
-              </span>
-            </div>
+          <div className="lg:col-span-7">
+            <V3TiltCard className="h-full border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 sm:p-8 space-y-6 shadow-[0_15px_35px_rgba(0,0,0,0.8)] group hover:border-tactical-amber/50 transition-colors">
+              <div className="flex items-center justify-between border-b border-tactical-border pb-3 text-xs">
+                <span className="text-blue-400 font-bold">
+                  DIRECT PACKET DISPATCH CONSOLE
+                </span>
+                <span className="text-tactical-dim text-[10px]">
+                  PORT 443 // SSL ENCRYPTED
+                </span>
+              </div>
 
-            <form onSubmit={handleTransmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={handleTransmit} className="space-y-4 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-tactical-dim uppercase block">
+                      Sender Name / Organization *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="e.g. AI Lab / Engineering Lead"
+                      className="w-full p-3 bg-transparent border border-tactical-border text-tactical-ivory focus:border-blue-500 outline-none font-mono"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] text-tactical-dim uppercase block">
+                      Callsign / Email
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="e.g. team@deeptech.ai"
+                      className="w-full p-3 bg-transparent border border-tactical-border text-tactical-ivory focus:border-blue-500 outline-none font-mono"
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-1">
                   <label className="text-[10px] text-tactical-dim uppercase block">
-                    Sender Name / Organization *
+                    Message Payload *
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="e.g. AI Lab / Engineering Lead"
-                    className="w-full p-3 bg-tactical-base border border-tactical-border text-tactical-ivory focus:border-blue-500 outline-none font-mono"
+                    rows={4}
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    placeholder="Inquire regarding computer vision pipelines, edge machine learning roles, or industrial PLC automation..."
+                    className="w-full p-3 bg-transparent border border-tactical-border text-tactical-ivory focus:border-blue-500 outline-none font-mono resize-none"
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[10px] text-tactical-dim uppercase block">
-                    Callsign / Email
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="e.g. team@deeptech.ai"
-                    className="w-full p-3 bg-tactical-base border border-tactical-border text-tactical-ivory focus:border-blue-500 outline-none font-mono"
-                  />
-                </div>
+                {msgStatus && (
+                  <div className="p-2.5 border border-blue-500/50 bg-blue-500/10 text-blue-400 text-xs font-semibold">
+                    {msgStatus}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-blue-500 text-tactical-base hover:bg-tactical-ivory font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>DISPATCH TRANSMISSION</span>
+                </button>
+              </form>
+
+              <div className="text-[10px] text-tactical-dim text-center">
+                TRANSMITS DIRECTLY TO KABISH SRIDAR // FAST ROUTING
               </div>
-
-              <div className="space-y-1">
-                <label className="text-[10px] text-tactical-dim uppercase block">
-                  Message Payload *
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Inquire regarding computer vision pipelines, edge machine learning roles, or industrial PLC automation..."
-                  className="w-full p-3 bg-tactical-base border border-tactical-border text-tactical-ivory focus:border-blue-500 outline-none font-mono resize-none"
-                />
-              </div>
-
-              {msgStatus && (
-                <div className="p-2.5 border border-blue-500/50 bg-blue-500/10 text-blue-400 text-xs font-semibold">
-                  {msgStatus}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                className="w-full py-4 bg-blue-500 text-tactical-base hover:bg-tactical-ivory font-black text-xs uppercase tracking-widest flex items-center justify-center space-x-2 transition-all shadow-[0_0_20px_rgba(59,130,246,0.4)]"
-              >
-                <Send className="w-4 h-4" />
-                <span>DISPATCH TRANSMISSION</span>
-              </button>
-            </form>
-
-            <div className="text-[10px] text-tactical-dim text-center">
-              TRANSMITS DIRECTLY TO KABISH SRIDAR // FAST ROUTING
-            </div>
+            </V3TiltCard>
           </div>
 
         </div>

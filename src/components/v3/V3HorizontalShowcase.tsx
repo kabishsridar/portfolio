@@ -58,10 +58,10 @@ export default function V3HorizontalShowcase() {
     <section
       id="v3-projects"
       ref={containerRef}
-      className="relative w-full min-h-screen bg-tactical-base/95 border-b border-tactical-border overflow-hidden flex flex-col justify-between py-12 md:py-0"
+      className="relative w-full min-h-screen bg-transparent border-b border-tactical-border overflow-hidden flex flex-col justify-between py-12 md:py-0"
     >
       {/* Top Header Strip with Decrypt Effect */}
-      <div className="relative z-20 px-4 sm:px-8 md:pl-24 py-4 border-b border-tactical-border bg-tactical-surface/80 backdrop-blur-md flex items-center justify-between font-mono-tech text-xs">
+      <div className="relative z-20 px-4 sm:px-8 md:pl-24 py-4 border-b border-tactical-border bg-transparent backdrop-blur-md flex items-center justify-between font-mono-tech text-xs">
         <div className="flex items-center space-x-3">
           <span className="w-2.5 h-2.5 bg-blue-500 inline-block animate-ping" />
           <span className="font-black tracking-widest text-tactical-ivory uppercase">
@@ -82,17 +82,17 @@ export default function V3HorizontalShowcase() {
           {projects.map((p, idx) => (
             <V3TiltCard
               key={p.id}
-              maxTilt={6}
-              className="relative w-[340px] sm:w-[480px] md:w-[560px] border border-tactical-border bg-tactical-surface/90 backdrop-blur-2xl p-6 sm:p-8 flex flex-col justify-between shrink-0 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group hover:border-blue-500 transition-colors duration-300"
+              maxTilt={8}
+              className="relative w-[340px] sm:w-[480px] md:w-[560px] border border-tactical-border/50 bg-transparent backdrop-blur-2xl p-6 sm:p-8 flex flex-col justify-between shrink-0 shadow-[0_20px_50px_rgba(0,0,0,0.6)] group hover:border-tactical-amber/50 transition-colors duration-300"
             >
               {/* Giant Background Parallax Index Number */}
-              <span className="absolute -top-6 -right-2 text-7xl sm:text-9xl font-black text-tactical-border/30 select-none pointer-events-none group-hover:text-blue-500/20 transition-colors">
+              <span className="absolute -top-6 -right-2 text-7xl sm:text-9xl font-black text-tactical-border/20 select-none pointer-events-none group-hover:text-tactical-amber/15 transition-colors">
                 0{idx + 1}
               </span>
 
               {/* Project Category & Status */}
               <div className="relative z-10 space-y-3">
-                <div className="flex items-center justify-between text-xs border-b border-tactical-border pb-3">
+                <div className="flex items-center justify-between text-xs border-b border-tactical-border/30 pb-3">
                   <span className="text-blue-400 font-bold tracking-wider">
                     {p.code}
                   </span>
@@ -103,7 +103,7 @@ export default function V3HorizontalShowcase() {
                         className={`px-2 py-0.5 border text-[9px] font-bold uppercase transition-all flex items-center gap-1 ${
                           activeSim === p.id
                             ? "border-tactical-green bg-tactical-green/20 text-tactical-green shadow-[0_0_8px_#00ff66]"
-                            : "border-tactical-border bg-tactical-base text-tactical-muted hover:text-tactical-ivory"
+                            : "border-tactical-border bg-transparent text-tactical-muted hover:text-tactical-ivory"
                         }`}
                       >
                         <Eye className="w-2.5 h-2.5" />
@@ -152,8 +152,8 @@ export default function V3HorizontalShowcase() {
               </div>
 
               {/* 3-Step Pipeline Flow */}
-              <div className="relative z-10 space-y-1.5 text-[10px] border border-tactical-border/60 bg-tactical-base/80 p-3">
-                <div className="flex items-center justify-between text-tactical-dim pb-1 border-b border-tactical-border/40">
+              <div className="relative z-10 space-y-1.5 text-[10px] border border-tactical-border/30 bg-transparent p-3">
+                <div className="flex items-center justify-between text-tactical-dim pb-1 border-b border-tactical-border/30">
                   <span className="flex items-center gap-1 text-tactical-green font-bold">
                     <GitBranch className="w-3 h-3" /> PIPELINE
                   </span>
@@ -171,12 +171,12 @@ export default function V3HorizontalShowcase() {
               </div>
 
               {/* Action Button & Stack Tags */}
-              <div className="relative z-10 pt-4 flex items-center justify-between border-t border-tactical-border">
+              <div className="relative z-10 pt-4 flex items-center justify-between border-t border-tactical-border/30">
                 <div className="flex flex-wrap gap-1 max-w-[240px]">
                   {p.stack.slice(0, 3).map((s) => (
                     <span
                       key={s}
-                      className="px-1.5 py-0.5 border border-tactical-border bg-tactical-base text-[9px] text-tactical-muted"
+                      className="px-1.5 py-0.5 border border-tactical-border/30 bg-transparent text-[9px] text-tactical-muted"
                     >
                       {s}
                     </span>
@@ -198,7 +198,7 @@ export default function V3HorizontalShowcase() {
       </div>
 
       {/* Bottom Progress Bar */}
-      <div className="relative z-20 px-4 sm:px-8 md:pl-24 py-3 border-t border-tactical-border bg-tactical-base flex items-center justify-between font-mono-tech text-[10px] text-tactical-muted">
+      <div className="relative z-20 px-4 sm:px-8 md:pl-24 py-3 border-t border-tactical-border bg-transparent flex items-center justify-between font-mono-tech text-[10px] text-tactical-muted">
         <div className="flex items-center space-x-3">
           <span className="text-blue-400 font-bold">[RAIL: 06 SCHEMATICS]</span>
           <span className="hidden sm:inline">SCROLL VERTICALLY TO SCRUB HORIZONTAL RAIL // HOVER FOR 3D PERSPECTIVE</span>

@@ -8,9 +8,9 @@ export default function V3Footer({ onOpenTerminal }: { onOpenTerminal: () => voi
   };
 
   return (
-    <footer className="w-full bg-tactical-base/95 border-t border-tactical-border py-12 font-mono-tech text-xs text-tactical-muted">
+    <footer className="w-full bg-transparent border-t border-tactical-border py-12 font-mono-tech text-xs text-tactical-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pl-10 md:pl-24 space-y-6">
-        
+
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-tactical-border/60 pb-6">
           <div className="flex items-center space-x-3">
             <span className="w-2.5 h-2.5 bg-blue-500 inline-block" />
@@ -18,7 +18,7 @@ export default function V3Footer({ onOpenTerminal }: { onOpenTerminal: () => voi
               KABISH SRIDAR // V3 HYPER-SCROLL
             </span>
             <span className="text-tactical-dim hidden md:inline">
-              SRMIST B.TECH (AI &amp; ML)
+              SRMIST B.TECH (AI & ML)
             </span>
           </div>
 

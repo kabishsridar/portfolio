@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  GraduationCap, 
-  BookOpen, 
-  Award, 
-  FileText, 
-  ExternalLink, 
-  ChevronRight, 
-  CheckCircle2, 
-  Cpu, 
-  Layers, 
-  Sparkles, 
-  Download, 
+import {
+  GraduationCap,
+  BookOpen,
+  Award,
+  FileText,
+  ExternalLink,
+  ChevronRight,
+  CheckCircle2,
+  Cpu,
+  Layers,
+  Sparkles,
+  Download,
   ShieldCheck,
   Code2,
   Atom,
@@ -27,23 +27,23 @@ export default function V3AcademicDossier() {
   const [expandedPaper, setExpandedPaper] = useState(false);
   const [showSpecSheet, setShowSpecSheet] = useState(false);
 
-  const filteredCourses = courseFilter === "ALL" 
-    ? profileData.education.coursework 
+  const filteredCourses = courseFilter === "ALL"
+    ? profileData.education.coursework
     : profileData.education.coursework.filter((c) => c.category === courseFilter);
 
   return (
-    <section id="v3-academic" className="relative w-full bg-tactical-base/95 py-24 border-b border-tactical-border overflow-hidden font-mono-tech">
+    <section id="v3-academic" className="relative w-full bg-transparent py-24 border-b border-tactical-border overflow-hidden font-mono-tech">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pl-10 md:pl-24 space-y-16">
-        
+
         {/* Section Header with Decrypt Effect */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-tactical-border pb-6">
           <div>
             <div className="flex items-center space-x-2 text-xs text-blue-400 tracking-widest uppercase mb-2">
               <GraduationCap className="w-4 h-4 text-blue-400" />
-              <span>ACADEMIC STACK 05 // CURRICULUM &amp; ENGINEERING</span>
+              <span>ACADEMIC STACK 05 // CURRICULUM & ENGINEERING</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-black text-tactical-ivory tracking-tight uppercase">
-              ACADEMIC <span className="text-blue-400"><V3TextDecrypt text="DOSSIER" /></span> &amp; CURRICULUM
+              ACADEMIC <span className="text-blue-400"><V3TextDecrypt text="DOSSIER" /></span> & CURRICULUM
             </h2>
           </div>
           <div className="flex items-center space-x-3">
@@ -57,7 +57,7 @@ export default function V3AcademicDossier() {
             <a
               href="/Kabish_Sridar_Resume.pdf"
               download="Kabish_Sridar_Resume.pdf"
-              className="px-4 py-2.5 border border-tactical-border bg-tactical-surface text-tactical-ivory hover:border-tactical-green hover:text-tactical-green transition-all text-xs font-bold uppercase flex items-center gap-2"
+              className="px-4 py-2.5 border border-tactical-border bg-transparent text-tactical-ivory hover:border-tactical-green hover:text-tactical-green transition-all text-xs font-bold uppercase flex items-center gap-2"
             >
               <Download className="w-3.5 h-3.5" />
               <span>RESUME PDF</span>
@@ -67,10 +67,10 @@ export default function V3AcademicDossier() {
 
         {/* Top Split: SRMIST Degree Details & Engineering Architecture Showcase */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          
+
           {/* Left 5 Cols: SRMIST Degree Credentials */}
           <div className="lg:col-span-5">
-            <V3TiltCard className="h-full border border-tactical-border bg-tactical-surface/90 backdrop-blur-xl p-6 sm:p-8 space-y-6 flex flex-col justify-between">
+            <V3TiltCard className="h-full border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 sm:p-8 space-y-6 flex flex-col justify-between shadow-[0_15px_40px_rgba(0,0,0,0.8)] group hover:border-tactical-amber/50 transition-colors">
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b border-tactical-border pb-3">
                   <span className="px-2 py-0.5 border border-blue-400/50 bg-blue-500/10 text-blue-400 text-[10px] font-bold">
@@ -95,13 +95,13 @@ export default function V3AcademicDossier() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                  <div className="p-3 border border-tactical-border/70 bg-tactical-base/80">
+                  <div className="p-3 border border-tactical-border/70 bg-transparent">
                     <span className="text-[9px] text-tactical-dim block uppercase">CGPA INDEX</span>
                     <span className="text-lg font-black text-tactical-green">
                       {profileData.education.cgpaEstimate}
                     </span>
                   </div>
-                  <div className="p-3 border border-tactical-border/70 bg-tactical-base/80">
+                  <div className="p-3 border border-tactical-border/70 bg-transparent">
                     <span className="text-[9px] text-tactical-dim block uppercase">GRADUATION</span>
                     <span className="text-lg font-black text-tactical-amber">
                       MAY 2029
@@ -123,21 +123,21 @@ export default function V3AcademicDossier() {
 
           {/* Right 7 Cols: Applied Systems Engineering & Research Showcase */}
           <div className="lg:col-span-7">
-            <V3TiltCard className="h-full border border-tactical-amber/40 bg-tactical-surface/90 backdrop-blur-xl p-6 sm:p-8 space-y-6 flex flex-col justify-between shadow-[0_10px_30px_rgba(255,170,0,0.08)]">
+            <V3TiltCard className="h-full border border-tactical-amber/40 bg-transparent backdrop-blur-xl p-6 sm:p-8 space-y-6 flex flex-col justify-between shadow-[0_10px_30px_rgba(255,170,0,0.08)] group hover:border-tactical-amber/50 transition-colors">
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b border-tactical-border pb-3">
                   <span className="px-2 py-0.5 border border-tactical-amber bg-tactical-amber/10 text-tactical-amber text-[10px] font-bold">
-                    APPLIED RESEARCH &amp; SYSTEMS ARCHITECTURE
+                    APPLIED RESEARCH & SYSTEMS ARCHITECTURE
                   </span>
                   <span className="text-xs text-tactical-dim">2024 — PRESENT</span>
                 </div>
 
                 <h3 className="text-xl sm:text-2xl font-black text-tactical-ivory leading-snug">
-                  Edge AI Silicon &amp; Deterministic Industrial Systems
+                  Edge AI Silicon & Deterministic Industrial Systems
                 </h3>
 
                 <p className="text-xs text-blue-400 font-bold">
-                  SRMIST Department of Computer Science &amp; Engineering (AI &amp; ML)
+                  SRMIST Department of Computer Science & Engineering (AI & ML)
                 </p>
 
                 <p className="text-xs text-tactical-muted leading-relaxed">
@@ -150,29 +150,29 @@ export default function V3AcademicDossier() {
                     ENGINEERING DOMAINS:
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px]">
-                    <div className="p-2 border border-tactical-border bg-tactical-base/80 text-tactical-ivory">
+                    <div className="p-2 border border-tactical-border bg-transparent text-tactical-ivory">
                       High-concurrency Redis state caching for real-time edge vision
                     </div>
-                    <div className="p-2 border border-tactical-border bg-tactical-base/80 text-tactical-ivory">
+                    <div className="p-2 border border-tactical-border bg-transparent text-tactical-ivory">
                       ABB AC500 PLC batching logic with IEC 61131-3 Structured Text
                     </div>
-                    <div className="p-2 border border-tactical-border bg-tactical-base/80 text-tactical-ivory">
-                      Sub-millisecond dual-core FreeRTOS task partition &amp; telemetry
+                    <div className="p-2 border border-tactical-border bg-transparent text-tactical-ivory">
+                      Sub-millisecond dual-core FreeRTOS task partition & telemetry
                     </div>
                   </div>
                 </div>
 
                 {/* Expandable Architecture Drawer */}
                 {expandedPaper && (
-                  <div className="p-3.5 border border-tactical-border bg-tactical-base/95 space-y-2 text-xs">
+                  <div className="p-3.5 border border-tactical-border bg-transparent space-y-2 text-xs">
                     <span className="text-[10px] text-blue-400 font-bold uppercase block">
                       LAB ARCHITECTURE PIPELINE:
                     </span>
                     <ol className="list-decimal list-inside space-y-1 text-tactical-muted text-[11px]">
                       <li><span className="text-tactical-ivory">Edge Hardware Sensor / Video Frame Capture (USB / RTSP)</span></li>
-                      <li><span className="text-tactical-ivory">OpenCV &amp; DeepFace / YOLOv8 Real-time Inference Engine</span></li>
+                      <li><span className="text-tactical-ivory">OpenCV & DeepFace / YOLOv8 Real-time Inference Engine</span></li>
                       <li><span className="text-tactical-ivory">Redis In-Memory Key-Value Caching Layer (Sub-1.5ms Lookup)</span></li>
-                      <li><span className="text-tactical-ivory">Deterministic PLC Modbus TCP/IP Actuation &amp; PostgreSQL Logging</span></li>
+                      <li><span className="text-tactical-ivory">Deterministic PLC Modbus TCP/IP Actuation & PostgreSQL Logging</span></li>
                     </ol>
                   </div>
                 )}
@@ -188,7 +188,7 @@ export default function V3AcademicDossier() {
                 </button>
 
                 <span className="text-[10px] text-tactical-dim font-mono-tech">
-                  FOCUS: AI/ML &amp; EMBEDDED HARDWARE
+                  FOCUS: AI/ML & EMBEDDED HARDWARE
                 </span>
               </div>
             </V3TiltCard>
@@ -197,12 +197,12 @@ export default function V3AcademicDossier() {
         </div>
 
         {/* Academic Coursework Filterable Matrix */}
-        <div className="border border-tactical-border bg-tactical-surface/80 p-6 sm:p-8 space-y-6">
+        <div className="border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 sm:p-8 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-tactical-border pb-4">
             <div className="flex items-center space-x-2">
               <Code2 className="w-4 h-4 text-tactical-green" />
               <span className="font-bold text-tactical-ivory uppercase text-sm">
-                CORE CURRICULUM &amp; ENGINEERING COURSEWORK
+                CORE CURRICULUM & ENGINEERING COURSEWORK
               </span>
             </div>
 
@@ -215,7 +215,7 @@ export default function V3AcademicDossier() {
                   className={`px-3 py-1 border text-[10px] font-bold uppercase transition-all ${
                     courseFilter === tab
                       ? "border-blue-500 bg-blue-500/20 text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
-                      : "border-tactical-border bg-tactical-base text-tactical-muted hover:text-tactical-ivory"
+                      : "border-tactical-border bg-transparent text-tactical-muted hover:text-tactical-ivory"
                   }`}
                 >
                   {tab}
@@ -228,14 +228,14 @@ export default function V3AcademicDossier() {
             {filteredCourses.map((course) => (
               <div
                 key={course.code}
-                className="p-4 border border-tactical-border/70 bg-tactical-base/90 space-y-3 hover:border-blue-500 transition-colors group flex flex-col justify-between"
+                className="p-4 border border-tactical-border/70 bg-transparent space-y-3 hover:border-blue-500 transition-colors group flex flex-col justify-between"
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between text-[10px]">
                     <span className="text-blue-400 font-bold">{course.code}</span>
                     <span className={`px-1.5 py-0.5 border text-[9px] font-bold ${
-                      course.gradeOrStatus === "ACTIVE" 
-                        ? "border-tactical-amber/50 text-tactical-amber bg-tactical-amber/10" 
+                      course.gradeOrStatus === "ACTIVE"
+                        ? "border-tactical-amber/50 text-tactical-amber bg-tactical-amber/10"
                         : "border-tactical-green/50 text-tactical-green bg-tactical-green/10"
                     }`}>
                       {course.gradeOrStatus}
@@ -250,7 +250,7 @@ export default function V3AcademicDossier() {
                   {course.skills.map((s, idx) => (
                     <span
                       key={idx}
-                      className="px-1.5 py-0.5 bg-tactical-surface text-[9px] text-tactical-dim border border-tactical-border/50"
+                      className="px-1.5 py-0.5 bg-transparent text-[9px] text-tactical-dim border border-tactical-border/50"
                     >
                       {s}
                     </span>
@@ -266,7 +266,7 @@ export default function V3AcademicDossier() {
           <div className="flex items-center justify-between border-b border-tactical-border pb-3 text-xs">
             <span className="font-bold text-tactical-ivory uppercase flex items-center gap-2">
               <Award className="w-4 h-4 text-tactical-amber" />
-              COMPETITIVE HONOURS &amp; HACKATHON OUTCOMES
+              COMPETITIVE HONOURS & HACKATHON OUTCOMES
             </span>
             <span className="text-tactical-dim text-[10px]">VERIFIED COMMENDATIONS</span>
           </div>
@@ -275,7 +275,7 @@ export default function V3AcademicDossier() {
             {profileData.achievements.map((item, idx) => (
               <V3TiltCard
                 key={idx}
-                className="border border-tactical-border bg-tactical-surface/80 p-6 space-y-3 flex flex-col justify-between"
+                className="border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 space-y-3 flex flex-col justify-between group hover:border-tactical-amber/50 transition-colors"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -311,7 +311,7 @@ export default function V3AcademicDossier() {
       {showSpecSheet && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md font-mono-tech">
           <div className="relative w-full max-w-4xl max-h-[90vh] bg-tactical-base border border-blue-500 shadow-[0_0_50px_rgba(59,130,246,0.3)] flex flex-col overflow-hidden">
-            
+
             {/* Modal Header */}
             <div className="p-4 border-b border-tactical-border bg-tactical-surface flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -338,7 +338,7 @@ export default function V3AcademicDossier() {
                 </div>
                 <div>
                   <span className="text-[10px] text-tactical-dim uppercase block">INSTITUTION</span>
-                  <span className="font-bold text-tactical-ivory block">SRMIST (AI &amp; ML)</span>
+                  <span className="font-bold text-tactical-ivory block">SRMIST (AI & ML)</span>
                   <span className="text-[10px] text-tactical-dim">2025 — 2029 (Year 2)</span>
                 </div>
                 <div>
@@ -354,20 +354,20 @@ export default function V3AcademicDossier() {
                   TECHNICAL ARSENAL ACCORDING TO DOMAIN:
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-3 border border-tactical-border bg-tactical-surface/60 space-y-2">
-                    <span className="text-blue-400 font-bold text-[10px] uppercase block">AI &amp; COMPUTER VISION</span>
+                  <div className="p-3 border border-tactical-border bg-transparent space-y-2">
+                    <span className="text-blue-400 font-bold text-[10px] uppercase block">AI & COMPUTER VISION</span>
                     <p className="text-[11px] text-tactical-ivory">PyTorch, OpenCV, DeepFace, YOLOv8, ONNX Runtime, NumPy, Real-time Sub-millimeter Metrology</p>
                   </div>
-                  <div className="p-3 border border-tactical-border bg-tactical-surface/60 space-y-2">
-                    <span className="text-tactical-green font-bold text-[10px] uppercase block">EMBEDDED SILICON &amp; INDUSTRIAL</span>
+                  <div className="p-3 border border-tactical-border bg-transparent space-y-2">
+                    <span className="text-tactical-green font-bold text-[10px] uppercase block">EMBEDDED SILICON & INDUSTRIAL</span>
                     <p className="text-[11px] text-tactical-ivory">ABB AC500 PLC, Structured Text (IEC 61131-3), ESP32 FreeRTOS, Raspberry Pi 4, Modbus TCP/IP, I2C/SPI</p>
                   </div>
-                  <div className="p-3 border border-tactical-border bg-tactical-surface/60 space-y-2">
-                    <span className="text-tactical-amber font-bold text-[10px] uppercase block">LANGUAGES &amp; RUNTIMES</span>
+                  <div className="p-3 border border-tactical-border bg-transparent space-y-2">
+                    <span className="text-tactical-amber font-bold text-[10px] uppercase block">LANGUAGES & RUNTIMES</span>
                     <p className="text-[11px] text-tactical-ivory">Python, C++17/20, C, TypeScript, SQL (PostgreSQL), Bash, Structured Text</p>
                   </div>
-                  <div className="p-3 border border-tactical-border bg-tactical-surface/60 space-y-2">
-                    <span className="text-purple-400 font-bold text-[10px] uppercase block">INFRASTRUCTURE &amp; PROTOCOLS</span>
+                  <div className="p-3 border border-tactical-border bg-transparent space-y-2">
+                    <span className="text-purple-400 font-bold text-[10px] uppercase block">INFRASTRUCTURE & PROTOCOLS</span>
                     <p className="text-[11px] text-tactical-ivory">Docker Containers, Redis State Caching, Linux IPC, Next.js, Three.js, Git CI/CD</p>
                   </div>
                 </div>

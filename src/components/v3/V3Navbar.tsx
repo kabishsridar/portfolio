@@ -30,9 +30,9 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 h-16 border-b border-tactical-border/70 bg-tactical-base/80 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 right-0 z-40 h-16 border-b border-tactical-border/70 bg-transparent backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between font-mono-tech text-xs">
-        
+
         {/* Left: Identity */}
         <div className="flex items-center space-x-3">
           <a
@@ -55,7 +55,7 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
           <span className="text-tactical-dim">|</span>
           <span className="text-tactical-green">10.7905° N, 78.7047° E</span>
           <span className="text-tactical-dim">|</span>
-          <span className="text-tactical-amber">SRMIST AI &amp; ML</span>
+          <span className="text-tactical-amber">SRMIST AI & ML</span>
         </div>
 
         {/* Right: Anchors & Terminal Trigger */}
@@ -67,7 +67,7 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
             <a href="#v3-radar" className="hover:text-blue-400 transition-colors">
               // RADAR
             </a>
-            <a href="#v3-timeline" className="hover:text-blue-400 transition-colors">
+            <a href="#v3-academic" className="hover:text-blue-400 transition-colors">
               // DOSSIER
             </a>
             <a href="#v3-contact" className="hover:text-blue-400 transition-colors">
@@ -80,7 +80,7 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
             className={`flex items-center space-x-1.5 px-3 py-1.5 border transition-all text-[11px] uppercase tracking-wider font-semibold ${
               terminalOpen
                 ? "border-blue-500 bg-blue-500/20 text-blue-400"
-                : "border-tactical-border hover:border-blue-500 text-tactical-ivory bg-tactical-surface"
+                : "border-tactical-border hover:border-blue-500 text-tactical-ivory bg-transparent"
             }`}
             title="Toggle Terminal Emulator (Ctrl + ~)"
           >

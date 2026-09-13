@@ -21,7 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && (e.key === "~" || e.key === "`")) {
+      if ((e.ctrlKey && (e.key === "~" || e.key === "`")) || (e.key === "`" && !["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName))) {
         e.preventDefault();
         setTerminalOpen((prev) => !prev);
       }
@@ -32,8 +32,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative min-h-screen bg-tactical-base text-tactical-ivory">
-      {/* Persistent Full-Page Three.js 3D Camera Flight Canvas */}
+    <main className="relative min-h-screen bg-transparent text-tactical-ivory">
+      {/* Persistent Full-Page Three.js 3D Camera Flight Canvas - Orange Torus Knot Centerpiece */}
       <V3FullPageCanvas />
 
       {/* Scroll-Drawn Glowing PCB Laser Trace Line */}
@@ -51,48 +51,43 @@ export default function Home() {
         terminalOpen={terminalOpen}
       />
 
-      {/* V3 Cinematic Hero with Counting Metrics, Photo Capsule & 3D Holographic Avatar */}
+      {/* V3 Hero Section - No background, transparent */}
       <V3Hero onOpenTerminal={() => setTerminalOpen(true)} />
 
-      {/* V3 Pinned Horizontal Super-Scroll Schematics Gallery */}
+      {/* V3 Horizontal Project Showcase - Sleek sliding */}
       <V3HorizontalShowcase />
 
-      {/* V3 Interactive Hardware Telemetry Cockpit & Digital Storage Oscilloscope */}
+      {/* V3 Hardware Lab Benchmarks */}
       <V3HardwareLab />
 
-      {/* V3 Hardware & AI Skill Radar */}
+      {/* V3 Radar Skills Matrix */}
       <V3RadarMatrix />
 
-      {/* V3 Academic Curriculum, IEEE Publication & Credentials Dossier */}
+      {/* V3 Academic Dossier */}
       <V3AcademicDossier />
 
-      {/* V3 Direct Packet Transmission Portal */}
+      {/* V3 Transmission Portal Contact */}
       <V3TransmissionPortal />
 
-      {/* V3 Cybernetic Footer */}
+      {/* V3 Footer */}
       <V3Footer onOpenTerminal={() => setTerminalOpen(true)} />
 
-      {/* Interactive Slide-Out Terminal Emulator */}
+      {/* Global Terminal Overlay */}
       <Terminal
         isOpen={terminalOpen}
         onClose={() => setTerminalOpen(false)}
       />
 
-      {/* Floating HUD Terminal Pill Trigger */}
-      <div className="fixed bottom-5 right-5 z-40">
+      {/* Floating Terminal Toggle Hint */}
+      <div className="fixed bottom-6 right-6 z-30 hidden md:block">
         <button
-          onClick={() => setTerminalOpen((prev) => !prev)}
-          className={`flex items-center space-x-2 px-3.5 py-2 border font-mono-tech text-xs tracking-wider transition-all duration-200 shadow-xl ${
-            terminalOpen
-              ? "bg-blue-500/20 text-blue-400 border-blue-500 font-bold"
-              : "bg-tactical-surface/90 text-tactical-ivory border-tactical-border hover:border-blue-500 hover:text-blue-400 backdrop-blur-md"
-          }`}
-          title="Toggle Hardware Terminal (Ctrl + ~)"
+          onClick={() => setTerminalOpen(!terminalOpen)}
+          className="group flex items-center gap-2 px-3 py-2 bg-tactical-surface/80 backdrop-blur-xl border border-tactical-border text-tactical-ivory text-xs font-mono-tech rounded transition-all hover:border-tactical-amber hover:bg-tactical-amber/10"
+          title="Terminal (Ctrl+`)"
         >
-          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-          <TerminalIcon className="w-4 h-4 text-blue-400" />
-          <span className="font-bold uppercase">CLI TERMINAL</span>
-          <span className="text-[10px] text-tactical-dim hidden sm:inline">[^~]</span>
+          <TerminalIcon className="w-4 h-4 text-tactical-amber" />
+          <span>TERMINAL</span>
+          <kbd className="px-1.5 py-0.5 bg-tactical-base border border-tactical-border text-[9px] font-mono rounded">Ctrl+`</kbd>
         </button>
       </div>
     </main>

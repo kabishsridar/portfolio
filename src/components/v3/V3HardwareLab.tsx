@@ -74,9 +74,9 @@ export default function V3HardwareLab() {
   const current = units[activeUnit];
 
   return (
-    <section id="v3-hardware" className="relative w-full bg-tactical-base/95 py-24 border-b border-tactical-border overflow-hidden font-mono-tech">
+    <section id="v3-hardware" className="relative w-full bg-transparent py-24 border-b border-tactical-border overflow-hidden font-mono-tech">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pl-10 md:pl-24 space-y-12">
-        
+
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-tactical-border pb-6">
           <div>
@@ -85,10 +85,10 @@ export default function V3HardwareLab() {
               <span>LABORATORY 03 // EMBEDDED SILICON DIAGNOSTICS</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-black text-tactical-ivory tracking-tight uppercase">
-              HARDWARE <span className="text-blue-400"><V3TextDecrypt text="TELEMETRY" /></span> &amp; OSCILLOSCOPE
+              HARDWARE <span className="text-blue-400"><V3TextDecrypt text="TELEMETRY" /></span> & OSCILLOSCOPE
             </h2>
           </div>
-          
+
           {/* Clock Speed Multiplier Switcher */}
           <div className="flex items-center space-x-2 text-xs">
             <span className="text-tactical-dim uppercase font-bold text-[10px]">CLOCK BUS:</span>
@@ -99,7 +99,7 @@ export default function V3HardwareLab() {
                 className={`px-2.5 py-1 border text-[10px] font-bold uppercase transition-all ${
                   clockFrequency === clk
                     ? "border-blue-500 bg-blue-500/20 text-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.3)]"
-                    : "border-tactical-border bg-tactical-base text-tactical-muted hover:text-tactical-ivory"
+                    : "border-tactical-border bg-transparent text-tactical-muted hover:text-tactical-ivory"
                 }`}
               >
                 {clk}
@@ -118,8 +118,8 @@ export default function V3HardwareLab() {
                 onClick={() => setActiveUnit(idx)}
                 className={`p-4 border transition-all text-left flex flex-col justify-between space-y-3 ${
                   isSelected
-                    ? "border-blue-500 bg-tactical-surface shadow-[0_0_20px_rgba(59,130,246,0.25)]"
-                    : "border-tactical-border bg-tactical-surface/50 text-tactical-muted hover:text-tactical-ivory"
+                    ? "border-blue-500 bg-transparent shadow-[0_0_20px_rgba(59,130,246,0.25)]"
+                    : "border-tactical-border bg-transparent text-tactical-muted hover:text-tactical-ivory"
                 }`}
               >
                 <div className="flex items-center justify-between text-[10px]">
@@ -141,10 +141,10 @@ export default function V3HardwareLab() {
 
         {/* 2-Column Split: Telemetry Specs & Real-Time Canvas Oscilloscope */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left 6 Cols: Unit Specs & Diagnostic Buffer */}
           <div className="lg:col-span-6 space-y-6">
-            <V3TiltCard className="border border-tactical-border bg-tactical-surface/90 backdrop-blur-xl p-6 sm:p-7 space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.8)]">
+            <V3TiltCard className="border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 sm:p-7 space-y-6 shadow-[0_15px_40px_rgba(0,0,0,0.8)] group hover:border-tactical-amber/50 transition-colors">
               <div className="flex flex-wrap items-center justify-between border-b border-tactical-border pb-4 gap-4 text-xs">
                 <div className="flex items-center space-x-3">
                   <Cpu className="w-4 h-4 text-blue-400" />
@@ -171,7 +171,7 @@ export default function V3HardwareLab() {
               {/* 4 Metric Readouts */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {current.metrics.map((m, i) => (
-                  <div key={i} className="p-3.5 border border-tactical-border/70 bg-tactical-base/80 space-y-1">
+                  <div key={i} className="p-3.5 border border-tactical-border/70 bg-transparent space-y-1">
                     <span className="text-[10px] text-tactical-dim block uppercase">{m.label}</span>
                     <span className="text-sm font-bold text-tactical-ivory block">{m.val}</span>
                   </div>
@@ -179,7 +179,7 @@ export default function V3HardwareLab() {
               </div>
 
               {/* Real-Time Hardware Diagnostic Log */}
-              <div className="p-4 border border-tactical-border/80 bg-tactical-base/95 space-y-2 text-xs">
+              <div className="p-4 border border-tactical-border/80 bg-transparent space-y-2 text-xs">
                 <div className="flex items-center justify-between text-[10px] text-tactical-dim pb-1 border-b border-tactical-border/50">
                   <span className="flex items-center gap-1.5 text-tactical-amber font-bold">
                     <Terminal className="w-3.5 h-3.5" /> LIVE BUS DIAGNOSTIC BUFFER

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Cpu, Server, Terminal, Zap, Activity } from "lucide-react";
 import V3CounterMetric from "./V3CounterMetric";
+import V3TiltCard from "./V3TiltCard";
 
 export default function V3RadarMatrix() {
   const [activeTab, setActiveTab] = useState(0);
@@ -49,15 +50,15 @@ export default function V3RadarMatrix() {
   const current = domains[activeTab];
 
   return (
-    <section id="v3-radar" className="relative w-full bg-tactical-base/90 py-24 border-b border-tactical-border overflow-hidden">
+    <section id="v3-radar" className="relative w-full bg-transparent py-24 border-b border-tactical-border overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pl-10 md:pl-24 space-y-12">
-        
+
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-tactical-border pb-6 font-mono-tech">
           <div>
             <div className="flex items-center space-x-2 text-xs text-blue-400 tracking-widest uppercase mb-2">
               <Zap className="w-3.5 h-3.5" />
-              <span>STACK 03 // 3D HARDWARE &amp; AI RADAR</span>
+              <span>STACK 03 // 3D HARDWARE & AI RADAR</span>
             </div>
             <h2 className="text-4xl sm:text-5xl font-black text-tactical-ivory tracking-tight uppercase">
               TECHNICAL <span className="text-blue-400">ARSENAL</span>
@@ -79,8 +80,8 @@ export default function V3RadarMatrix() {
                 onClick={() => setActiveTab(i)}
                 className={`p-5 border transition-all text-left flex items-start justify-between ${
                   isSelected
-                    ? "border-blue-500 bg-tactical-surface shadow-[0_0_20px_rgba(59,130,246,0.2)]"
-                    : "border-tactical-border bg-tactical-surface/50 text-tactical-muted hover:text-tactical-ivory"
+                    ? "border-blue-500 bg-transparent shadow-[0_0_20px_rgba(59,130,246,0.2)]"
+                    : "border-tactical-border bg-transparent text-tactical-muted hover:text-tactical-ivory"
                 }`}
               >
                 <div>
@@ -97,8 +98,8 @@ export default function V3RadarMatrix() {
           })}
         </div>
 
-        {/* Skill Telemetry Meters */}
-        <div className="border border-tactical-border bg-tactical-surface/90 backdrop-blur-xl p-6 sm:p-8 font-mono-tech space-y-6 shadow-[0_15px_35px_rgba(0,0,0,0.8)]">
+        {/* Skill Telemetry Meters - Inside Tilt Card */}
+        <V3TiltCard className="border border-tactical-border/50 bg-transparent backdrop-blur-xl p-6 sm:p-8 font-mono-tech space-y-6 shadow-[0_15px_35px_rgba(0,0,0,0.8)] group hover:border-tactical-amber/50 transition-colors">
           <div className="flex flex-wrap items-center justify-between border-b border-tactical-border pb-3 text-xs">
             <span className="text-tactical-ivory font-bold uppercase flex items-center gap-2">
               <Activity className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
@@ -121,7 +122,7 @@ export default function V3RadarMatrix() {
                   </span>
                 </div>
 
-                <div className="h-2.5 w-full bg-tactical-base border border-tactical-border overflow-hidden">
+                <div className="h-2.5 w-full bg-transparent border border-tactical-border overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-tactical-border via-blue-500 to-blue-400 transition-all duration-700 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
                     style={{ width: `${s.level}%` }}
@@ -132,10 +133,10 @@ export default function V3RadarMatrix() {
           </div>
 
           <div className="pt-4 border-t border-tactical-border flex flex-wrap items-center justify-between text-[11px] text-tactical-dim">
-            <span>TYPE &apos;skills&apos; IN TERMINAL EMULATOR FOR CLI SPECS</span>
+            <span>TYPE 'skills' IN TERMINAL EMULATOR FOR CLI SPECS</span>
             <span className="text-tactical-green">DETERMINISTIC VERIFICATION COMPLETE</span>
           </div>
-        </div>
+        </V3TiltCard>
 
       </div>
     </section>
