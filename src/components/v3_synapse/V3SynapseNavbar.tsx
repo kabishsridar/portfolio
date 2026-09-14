@@ -1,68 +1,73 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { FileText, Cpu, ArrowUpRight, Sparkles } from "lucide-react";
+import { FileText, Sparkles, ArrowRight } from "lucide-react";
 import VersionSwitcher from "@/components/VersionSwitcher";
+
+const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
 
 interface V3SynapseNavbarProps {
   onOpenResume: () => void;
 }
 
 export default function V3SynapseNavbar({ onOpenResume }: V3SynapseNavbarProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   return (
     <header className="fixed top-5 left-0 right-0 z-50 px-4 sm:px-8 max-w-7xl mx-auto flex items-center justify-between pointer-events-none">
       {/* Brand logo pill */}
-      <div className="pointer-events-auto flex items-center space-x-3 bg-[#0a0a14]/80 backdrop-blur-xl border border-purple-500/20 px-4 py-2 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-500 to-fuchsia-400 p-0.5 flex items-center justify-center shadow-[0_0_12px_rgba(168,85,247,0.6)]">
-          <div className="w-full h-full bg-[#0a0a14] rounded-full flex items-center justify-center">
-            <span className="text-xs font-black text-white font-mono tracking-tighter">KS</span>
-          </div>
+      <div className="pointer-events-auto flex items-center space-x-3 bg-[#0a0a14]/85 backdrop-blur-2xl border border-purple-500/25 px-3 py-1.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+        <div className="relative w-8 h-8 rounded-full overflow-hidden border border-purple-400/60 shadow-[0_0_12px_rgba(168,85,247,0.6)]">
+          <Image
+            src={`${basePath}/kabish.jpg`}
+            alt="Kabish Sridar"
+            fill
+            className="object-cover"
+          />
         </div>
         <div className="flex flex-col pr-2">
           <span className="text-xs font-bold tracking-tight text-white flex items-center gap-1.5">
             KABISH SRIDAR
             <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping inline-block" />
           </span>
-          <span className="text-[9px] uppercase tracking-widest text-purple-300/70 font-mono">
+          <span className="text-[9px] uppercase tracking-widest text-purple-300/80 font-mono">
             Edge AI & Metrology
           </span>
         </div>
       </div>
 
-      {/* Floating Center Navigation Pill (inspired by reference video: Surfaces, Neural, Metrology, Dossier) */}
-      <nav className="pointer-events-auto hidden md:flex items-center space-x-1 bg-[#0a0a14]/80 backdrop-blur-xl border border-purple-500/20 px-3 py-1.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)] text-xs font-medium text-neutral-300">
+      {/* Floating Center Navigation Pill (matching reference video top pill) */}
+      <nav className="pointer-events-auto hidden md:flex items-center space-x-1 bg-[#0a0a14]/85 backdrop-blur-2xl border border-purple-500/25 px-4 py-2 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.6)] text-xs font-medium text-neutral-300">
+        <span className="text-purple-400 font-bold mr-2 text-sm">✦</span>
         <a
-          href="#vision"
-          className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-purple-500/15 transition-all"
+          href="#stage-hero"
+          className="px-3 py-1 rounded-full hover:text-white hover:bg-purple-500/20 transition-all"
         >
-          Vision
+          Surfaces
         </a>
         <a
-          href="#kinetic-carousel"
-          className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-purple-500/15 transition-all"
+          href="#stage-carousel"
+          className="px-3 py-1 rounded-full hover:text-white hover:bg-purple-500/20 transition-all"
         >
-          Systems
+          Neural
         </a>
         <a
-          href="#metrology"
-          className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-purple-500/15 transition-all"
+          href="#stage-statement"
+          className="px-3 py-1 rounded-full hover:text-white hover:bg-purple-500/20 transition-all"
         >
-          Metrology
+          Studio
         </a>
         <a
-          href="#selected-work"
-          className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-purple-500/15 transition-all"
+          href="#stage-work"
+          className="px-3 py-1 rounded-full hover:text-white hover:bg-purple-500/20 transition-all"
         >
-          Selected Work
+          Changelog
         </a>
         <a
-          href="#credentials"
-          className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-purple-500/15 transition-all"
+          href="#stage-cta"
+          className="px-3 py-1 rounded-full hover:text-white hover:bg-purple-500/20 transition-all"
         >
-          Credentials
+          Deploy
         </a>
       </nav>
 
@@ -74,10 +79,10 @@ export default function V3SynapseNavbar({ onOpenResume }: V3SynapseNavbarProps) 
 
         <button
           onClick={onOpenResume}
-          className="flex items-center space-x-1.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-[0_0_20px_rgba(147,51,234,0.5)] hover:shadow-[0_0_28px_rgba(147,51,234,0.8)] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+          className="flex items-center space-x-1.5 bg-white hover:bg-neutral-200 text-neutral-950 text-xs font-bold px-4 py-2 rounded-full shadow-[0_0_24px_rgba(255,255,255,0.4)] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
         >
-          <FileText className="w-3.5 h-3.5 text-purple-200" />
-          <span>Resume</span>
+          <FileText className="w-3.5 h-3.5 text-neutral-900" />
+          <span>Get Started</span>
         </button>
       </div>
     </header>
