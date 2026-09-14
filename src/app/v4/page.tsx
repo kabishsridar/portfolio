@@ -188,10 +188,13 @@ export default function V4Page() {
             </span>
           </div>
 
-          <div className="hidden md:flex items-center space-x-7 text-xs font-medium text-neutral-400">
+          <div className="hidden lg:flex items-center space-x-6 text-xs font-medium text-neutral-400 pl-4">
             <a href="#about" className="hover:text-white transition-colors">About</a>
             <a href="#projects" className="hover:text-white transition-colors">Projects</a>
             <a href="#skills" className="hover:text-white transition-colors">Skills</a>
+          </div>
+
+          <div className="hidden lg:flex items-center space-x-6 text-xs font-medium text-neutral-400 pr-4">
             <a href="#publications" className="hover:text-white transition-colors">Research</a>
             <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </div>
@@ -426,91 +429,139 @@ export default function V4Page() {
 
           {/* Clean Grid of Project Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProjects.map((p) => (
-              <div
-                key={p.id}
-                className={`v4-project-card group p-6 rounded-2xl bg-white/[0.02] border transition-all duration-300 flex flex-col justify-between hover:bg-white/[0.04] hover:-translate-y-1.5 ${
-                  selectedProject.id === p.id ? "border-emerald-400/50 shadow-[0_0_25px_rgba(52,211,153,0.15)]" : "border-white/[0.08] hover:border-white/[0.2]"
-                }`}
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-emerald-400 font-mono font-medium">{p.code}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-white/[0.06] text-neutral-300 text-[10px] font-medium">
-                      {p.status}
-                    </span>
+            {filteredProjects.map((p) => {
+              const isSelected = selectedProject.id === p.id;
+              return (
+                <div
+                  key={p.id}
+                  onClick={() => {
+                    setSelectedProject(p);
+                    const el = document.getElementById("project-spec-drawer");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                  }}
+                  className={`v4-project-card group p-6 rounded-2xl bg-white/[0.02] border transition-all duration-300 flex flex-col justify-between cursor-pointer hover:bg-white/[0.04] hover:-translate-y-1.5 ${
+                    isSelected
+                      ? "border-emerald-400 bg-emerald-500/[0.03] shadow-[0_0_30px_rgba(52,211,153,0.2)] ring-1 ring-emerald-400/40"
+                      : "border-white/[0.08] hover:border-white/[0.25]"
+                  }`}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-[11px]">
+                      <span className="text-emerald-400 font-mono font-medium">{p.code}</span>
+                      <div className="flex items-center gap-1.5">
+                        {isSelected && (
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-400 text-black text-[10px] font-bold tracking-wide uppercase">
+                            DISPLAYING
+                          </span>
+                        )}
+                        <span className="px-2 py-0.5 rounded-full bg-white/[0.06] text-neutral-300 text-[10px] font-medium">
+                          {p.status}
+                        </span>
+                      </div>
+                    </div>
+
+                    <h3 className="block text-lg font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
+                      {p.title}
+                    </h3>
+
+                    <p className="text-xs text-neutral-400 leading-relaxed line-clamp-3">
+                      {p.summary}
+                    </p>
                   </div>
 
-                  <Link
-                    href={`/projects/${p.id}`}
-                    className="block text-lg font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug"
-                  >
-                    {p.title}
-                  </Link>
+                  <div className="pt-6 space-y-4">
+                    {/* Key Benchmark Pill */}
+                    <div className="p-2.5 rounded-xl bg-emerald-500/[0.08] border border-emerald-500/20 flex items-center justify-between">
+                      <span className="text-[10px] text-neutral-400 font-medium">Benchmark</span>
+                      <span className="text-xs font-bold text-emerald-300">{p.keyMetric}</span>
+                    </div>
 
-                  <p className="text-xs text-neutral-400 leading-relaxed line-clamp-3">
-                    {p.summary}
-                  </p>
-                </div>
+                    {/* Tech Stack Chips */}
+                    <div className="flex flex-wrap gap-1.5">
+                      {p.stack.slice(0, 4).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06] text-[10px] text-neutral-400"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {p.stack.length > 4 && (
+                        <span className="px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[10px] text-neutral-500">
+                          +{p.stack.length - 4}
+                        </span>
+                      )}
+                    </div>
 
-                <div className="pt-6 space-y-4">
-                  {/* Key Benchmark Pill */}
-                  <div className="p-2.5 rounded-xl bg-emerald-500/[0.08] border border-emerald-500/20 flex items-center justify-between">
-                    <span className="text-[10px] text-neutral-400 font-medium">Benchmark</span>
-                    <span className="text-xs font-bold text-emerald-300">{p.keyMetric}</span>
-                  </div>
-
-                  {/* Tech Stack Chips */}
-                  <div className="flex flex-wrap gap-1.5">
-                    {p.stack.slice(0, 4).map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-0.5 rounded-md bg-white/[0.04] border border-white/[0.06] text-[10px] text-neutral-400"
+                    {/* Action Buttons: Display and Full Explanation */}
+                    <div className="flex items-center space-x-2 pt-1 border-t border-white/[0.06]">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProject(p);
+                          const el = document.getElementById("project-spec-drawer");
+                          if (el) {
+                            el.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }
+                        }}
+                        className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 ${
+                          isSelected
+                            ? "bg-emerald-400 text-neutral-950 font-bold shadow-md"
+                            : "bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/[0.1]"
+                        }`}
                       >
-                        {tech}
-                      </span>
-                    ))}
-                    {p.stack.length > 4 && (
-                      <span className="px-1.5 py-0.5 rounded-md bg-white/[0.04] text-[10px] text-neutral-500">
-                        +{p.stack.length - 4}
-                      </span>
-                    )}
-                  </div>
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>{isSelected ? "Displaying Now" : "Display Below"}</span>
+                      </button>
 
-                  {/* Navigation Buttons */}
-                  <div className="flex items-center space-x-2 pt-1 border-t border-white/[0.06]">
-                    <Link
-                      href={`/projects/${p.id}`}
-                      className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-400 text-neutral-950 hover:bg-emerald-300 transition-all flex items-center justify-center space-x-1 shadow-sm"
-                    >
-                      <span>Full Explanation</span>
-                      <ArrowUpRight className="w-3.5 h-3.5" />
-                    </Link>
-
-                    <button
-                      onClick={() => setSelectedProject(p)}
-                      className="py-2 px-3 rounded-lg text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] text-neutral-300 hover:text-white transition-all border border-white/[0.08]"
-                      title="Quick Preview Architecture"
-                    >
-                      <span>Preview</span>
-                    </button>
+                      <Link
+                        href={`/projects/${p.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="py-2 px-3 rounded-lg text-xs font-medium bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 hover:text-white transition-all border border-emerald-500/30 flex items-center space-x-1"
+                        title="Open Dedicated Full Explanation Page"
+                      >
+                        <span>Full Page</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Deep Interactive Architecture Drawer of Selected Project */}
           {selectedProject && (
-            <div className="p-8 rounded-2xl bg-gradient-to-b from-white/[0.05] to-white/[0.01] border border-white/[0.1] space-y-6">
+            <div
+              id="project-spec-drawer"
+              key={selectedProject.id}
+              className="scroll-mt-24 p-8 rounded-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.01] border border-emerald-400/30 space-y-6 animate-in fade-in zoom-in-95 duration-300 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
+            >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.08] pb-4">
-                <div>
-                  <span className="text-xs text-emerald-400 font-mono font-medium">{selectedProject.code}</span>
-                  <h3 className="text-xl font-bold text-white">{selectedProject.title}</h3>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-emerald-400 font-mono font-medium">{selectedProject.code}</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-400/10 border border-emerald-400/30 text-emerald-400 font-semibold uppercase">
+                      ACTIVE PREVIEW
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">{selectedProject.title}</h3>
                 </div>
-                <div className="flex items-center space-x-2 text-xs text-neutral-400">
-                  <Activity className="w-4 h-4 text-emerald-400" />
-                  <span>Architecture Specification</span>
+                <div className="flex items-center space-x-3 text-xs">
+                  <div className="flex items-center space-x-1.5 text-neutral-400">
+                    <Activity className="w-4 h-4 text-emerald-400" />
+                    <span>Live Blueprint Specification</span>
+                  </div>
+                  <Link
+                    href={`/projects/${selectedProject.id}`}
+                    className="px-3 py-1.5 rounded-lg bg-emerald-400 text-black font-bold text-xs hover:bg-emerald-300 transition-all flex items-center space-x-1"
+                  >
+                    <span>Full Explanation</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               </div>
 

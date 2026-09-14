@@ -2,8 +2,8 @@ export function generateStaticParams() {
   return [
     { id: "emo-rex" },
     { id: "rasi-feed-plc" },
-    { id: "thali-nutrition-vision" },
-    { id: "handwriting-ocr-engine" },
+    { id: "thali-calorie-vision" },
+    { id: "handwriting-ocr" },
     { id: "picam-profiler" },
     { id: "kyc-platform" },
   ];

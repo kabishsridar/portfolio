@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { X, CheckCircle2, GitBranch, Cpu, Activity, ShieldCheck, Zap, ExternalLink, ArrowUpRight } from "lucide-react";
 import { Project } from "@/data/projects";
 
@@ -108,13 +109,13 @@ export default function V2ProjectModal({ project, onClose }: V2ProjectModalProps
                   <span>VISIT OM90 DEVICE PORTAL</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
-                <a
-                  href={`/portfolio/projects/${project.id}`}
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 border border-tactical-border bg-tactical-base text-tactical-ivory text-xs uppercase hover:border-tactical-green hover:text-tactical-green transition-colors"
+                <Link
+                  href={`/projects/${project.id}`}
+                  className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 border border-tactical-border bg-tactical-base text-tactical-ivory text-xs uppercase hover:border-tactical-green hover:text-tactical-green transition-colors"
                 >
                   <span>FULL PAGE EXPLANATION</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
+                </Link>
               </div>
             </div>
           )}
