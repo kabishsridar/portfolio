@@ -11,7 +11,15 @@ import {
   ArrowRight,
   ExternalLink,
   ChevronRight,
-  FileText
+  ChevronLeft,
+  FileText,
+  Eye,
+  Activity,
+  Cpu,
+  Layers,
+  Code2,
+  CheckCircle,
+  Sparkles,
 } from "lucide-react";
 import VersionSwitcher from "@/components/VersionSwitcher";
 import ResumeModal from "@/components/ResumeModal";
@@ -35,7 +43,9 @@ export default function V4ExactValentinPage() {
   const [greeting, setGreeting] = useState("Good morning!");
   const [tickerIndex, setTickerIndex] = useState(0);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
-  const [activeProjectIdx, setActiveProjectIdx] = useState(0);
+  const [activeCircularIdx, setActiveCircularIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0]>(projects[0]);
 
   // Valentin's exact 3D rotating text choices
   const tickerWords = ["Metrology", "Edge Vision", "PLC Systems", "Robotics", "Deep AI"];
@@ -144,9 +154,9 @@ export default function V4ExactValentinPage() {
           scrollTrigger: {
             trigger: revealContainerRef.current,
             start: "top top",
-            end: "+=260%",
+            end: "+=100%",
             pin: true,
-            scrub: 1.2,
+            scrub: 1.1,
           },
         });
 
@@ -193,7 +203,14 @@ export default function V4ExactValentinPage() {
     };
   }, []);
 
-  const selectedProject = projects[activeProjectIdx] || projects[0];
+  const filteredProjects = projects.filter((p) => {
+    if (activeTab === "all") return true;
+    if (activeTab === "vision") return p.category.includes("Vision");
+    if (activeTab === "industrial") return p.category.includes("Industrial");
+    if (activeTab === "deep") return p.category.includes("Deep") || p.category.includes("Cloud");
+    return true;
+  });
+
   const activeImageSrc =
     projectShowcaseImages[selectedProject.id] ||
     `${basePath}/proj_emotionsim_hud.jpg`;
@@ -500,132 +517,500 @@ export default function V4ExactValentinPage() {
       {/* ========================================================================= */}
       {/* 4. EXACT PROJECT SHOWCASE (PORTFOLIO PROJECTS ONLY — BOXER REMOVED)       */}
       {/* ========================================================================= */}
+      {/* ========================================================================= */}
+      {/* 4. PROJECTS: 3D CIRCULAR SLIDER + V2 CARDS IN V4 THEME + DISPLAY DRAWER   */}
+      {/* ========================================================================= */}
       <section
         id="valentin-projects"
-        className="py-28 border-t border-white/10 bg-[#0c0d10]"
+        className="py-24 border-t border-white/10 bg-[#0c0d10]"
       >
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 space-y-16">
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
-            <div className="space-y-2">
-              <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
-                Projects I worked on 2024–2026 (Portfolio)
-              </span>
-              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-white uppercase">
-                Selected Works
-              </h2>
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 space-y-20">
+
+          {/* --------------------------------------------------------------------- */}
+          {/* 4A. CIRCULAR 3D SLIDER OF ALL PROJECTS                                */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
+              <div className="space-y-2">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00] font-bold">
+                  01 // 3D Cylindrical Reel
+                </span>
+                <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
+                  Circular Reel of All Projects
+                </h2>
+                <p className="text-sm text-white/60 font-light max-w-xl">
+                  Interactive 3D cylindrical carousel showcasing all 6 optical metrology, industrial PLC, and edge computer vision deployments.
+                </p>
+              </div>
+
+              {/* Slider Controls */}
+              <div className="flex items-center space-x-3">
+                <span className="text-xs font-mono text-white/40 mr-2">
+                  0{activeCircularIdx + 1} / 0{projects.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveCircularIdx((prev) => (prev > 0 ? prev - 1 : projects.length - 1))
+                  }
+                  className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 hover:border-[#ff3d00] text-white flex items-center justify-center transition-all cursor-pointer"
+                  aria-label="Previous project"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveCircularIdx((prev) => (prev < projects.length - 1 ? prev + 1 : 0))
+                  }
+                  className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 hover:border-[#ff3d00] text-white flex items-center justify-center transition-all cursor-pointer"
+                  aria-label="Next project"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            <div className="text-xs font-mono text-white/50">
-              0{activeProjectIdx + 1} / 0{projects.length}
+            {/* 3D Perspective Viewport */}
+            <div
+              className="relative w-full h-[520px] flex items-center justify-center overflow-hidden py-4"
+              style={{ perspective: "1800px" }}
+            >
+              <div
+                className="relative w-[340px] sm:w-[420px] h-[480px] flex items-center justify-center"
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {projects.map((p, idx) => {
+                  const count = projects.length;
+                  const offset = idx - activeCircularIdx;
+                  const angle = offset * 38;
+                  const rad = (angle * Math.PI) / 180;
+                  const radius = 560;
+                  const transX = Math.sin(rad) * radius;
+                  const transZ = (Math.cos(rad) - 1) * radius;
+                  const isCenter = idx === activeCircularIdx;
+                  const isNear = Math.abs(offset) <= 2 || Math.abs(offset) >= count - 2;
+
+                  if (!isNear) return null;
+
+                  return (
+                    <div
+                      key={p.id}
+                      onClick={() => {
+                        setActiveCircularIdx(idx);
+                        setSelectedProject(p);
+                      }}
+                      className={`absolute inset-0 rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-700 cursor-pointer select-none bg-[#111319] border ${
+                        isCenter
+                          ? "border-[#ff3d00] shadow-[0_0_50px_rgba(255,61,0,0.35)] ring-1 ring-[#ff3d00]/60 z-30 opacity-100"
+                          : "border-white/10 opacity-60 hover:opacity-90 z-10 hover:border-white/30"
+                      }`}
+                      style={{
+                        transform: `translateX(${transX}px) translateZ(${transZ}px) rotateY(${angle * 0.85}deg)`,
+                        transformStyle: "preserve-3d",
+                      }}
+                    >
+                      {/* Top info */}
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-white/10 text-[#ff3d00] border border-[#ff3d00]/30">
+                            {p.code}
+                          </span>
+                          <span className="text-[10px] font-mono text-white/50 bg-white/5 px-2 py-0.5 rounded-full">
+                            {p.status}
+                          </span>
+                        </div>
+
+                        {/* Visual Thumbnail */}
+                        <div className="relative w-full h-36 rounded-xl overflow-hidden bg-black/60 border border-white/10 mt-2">
+                          <Image
+                            src={projectShowcaseImages[p.id] || `${basePath}/proj_emotionsim_hud.jpg`}
+                            alt={p.title}
+                            fill
+                            className="object-cover object-center"
+                            sizes="400px"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                          <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/80 backdrop-blur-md text-[10px] font-mono text-[#ff3d00]">
+                            {p.keyMetric}
+                          </div>
+                        </div>
+
+                        <div>
+                          <h3 className="text-base sm:text-lg font-bold text-white line-clamp-1 mt-1">
+                            {p.title}
+                          </h3>
+                          <p className="text-xs text-white/60 font-light line-clamp-2 mt-1">
+                            {p.summary}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Bottom action pills */}
+                      <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProject(p);
+                            const el = document.getElementById("project-spec-drawer");
+                            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-[#ff3d00] hover:text-white text-xs font-semibold text-white/90 transition-all flex items-center space-x-1 cursor-pointer"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>Inspect Blueprint</span>
+                        </button>
+
+                        <Link
+                          href={`/projects/${p.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-8 h-8 rounded-lg bg-[#ff3d00]/20 hover:bg-[#ff3d00] text-[#ff3d00] hover:text-white border border-[#ff3d00]/40 flex items-center justify-center transition-all"
+                          title="Open Full Page"
+                        >
+                          <ArrowUpRight className="w-4 h-4" />
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Circular Reel Indicator Dots */}
+            <div className="flex items-center justify-center space-x-2 pt-2">
+              {projects.map((p, idx) => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    setActiveCircularIdx(idx);
+                    setSelectedProject(p);
+                  }}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${
+                    idx === activeCircularIdx
+                      ? "w-8 bg-[#ff3d00]"
+                      : "w-2 bg-white/20 hover:bg-white/40"
+                  }`}
+                  aria-label={`Go to project ${idx + 1}`}
+                />
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Column 1 (Left): Project List Selector */}
-            <div className="lg:col-span-3 space-y-3">
-              {projects.slice(0, 4).map((proj, idx) => {
-                const isActive = idx === activeProjectIdx;
+          {/* --------------------------------------------------------------------- */}
+          {/* 4B. ALL PROJECT CARDS SAME AS V2 WITH V4 THEME                        */}
+          {/* --------------------------------------------------------------------- */}
+          <div className="space-y-10 pt-10 border-t border-white/10">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+              <div className="space-y-2">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00] font-bold">
+                  02 // Detailed Schematics &amp; Blueprints
+                </span>
+                <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white uppercase">
+                  All Project Specifications
+                </h2>
+              </div>
+
+              {/* Category Filter Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 text-xs">
+                <button
+                  onClick={() => setActiveTab("all")}
+                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
+                    activeTab === "all"
+                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  All ({projects.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab("vision")}
+                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
+                    activeTab === "vision"
+                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  Vision &amp; Metrology
+                </button>
+                <button
+                  onClick={() => setActiveTab("industrial")}
+                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
+                    activeTab === "industrial"
+                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  Industrial &amp; PLC
+                </button>
+                <button
+                  onClick={() => setActiveTab("deep")}
+                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
+                    activeTab === "deep"
+                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  Deep Learning / OCR
+                </button>
+              </div>
+            </div>
+
+            {/* Grid of All Project Cards (V2 Cards with V4 Theme) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProjects.map((p) => {
+                const isSelected = selectedProject.id === p.id;
                 return (
-                  <button
-                    key={proj.id}
-                    onClick={() => setActiveProjectIdx(idx)}
-                    className={`w-full text-left p-4 rounded-xl transition-all border ${
-                      isActive
-                        ? "bg-white/[0.08] border-[#ff3d00] text-white"
-                        : "bg-transparent border-white/[0.06] text-white/40 hover:text-white hover:border-white/20"
+                  <div
+                    key={p.id}
+                    onClick={() => {
+                      setSelectedProject(p);
+                      const el = document.getElementById("project-spec-drawer");
+                      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }}
+                    className={`group p-6 rounded-2xl bg-white/[0.03] border transition-all duration-300 flex flex-col justify-between cursor-pointer hover:bg-white/[0.05] hover:-translate-y-1.5 ${
+                      isSelected
+                        ? "border-[#ff3d00] bg-[#ff3d00]/[0.04] shadow-[0_0_35px_rgba(255,61,0,0.25)] ring-1 ring-[#ff3d00]/50"
+                        : "border-white/10 hover:border-white/30"
                     }`}
                   >
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block">
-                      {proj.code}
-                    </span>
-                    <p className="text-sm font-semibold tracking-tight mt-1">{proj.title}</p>
-                    <span className="text-[11px] text-[#ff3d00] font-mono block mt-1">
-                      {proj.keyMetric}
-                    </span>
-                  </button>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="text-[#ff3d00] font-mono font-bold tracking-wider">{p.code}</span>
+                        <div className="flex items-center gap-1.5">
+                          {isSelected && (
+                            <span className="px-2 py-0.5 rounded-full bg-[#ff3d00] text-white text-[10px] font-black tracking-wider uppercase animate-pulse">
+                              DISPLAYING
+                            </span>
+                          )}
+                          <span className="px-2 py-0.5 rounded-full bg-white/10 text-white/70 text-[10px] font-mono">
+                            {p.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      <h3 className="block text-lg font-bold text-white group-hover:text-[#ff3d00] transition-colors leading-snug">
+                        {p.title}
+                      </h3>
+
+                      <p className="text-xs text-white/60 leading-relaxed font-light line-clamp-3">
+                        {p.summary}
+                      </p>
+                    </div>
+
+                    <div className="pt-6 space-y-4">
+                      {/* Key Benchmark Pill */}
+                      <div className="p-3 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between">
+                        <span className="text-[10px] text-white/50 font-mono uppercase">Benchmark</span>
+                        <span className="text-xs font-bold font-mono text-[#ff3d00]">{p.keyMetric}</span>
+                      </div>
+
+                      {/* Tech Stack Chips */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {p.stack.slice(0, 4).map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-white/70"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {p.stack.length > 4 && (
+                          <span className="px-1.5 py-0.5 rounded bg-white/5 text-[10px] font-mono text-white/40">
+                            +{p.stack.length - 4}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Action Buttons: Display and Full Explanation */}
+                      <div className="flex items-center space-x-2 pt-2 border-t border-white/10">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProject(p);
+                            const el = document.getElementById("project-spec-drawer");
+                            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }}
+                          className={`flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 cursor-pointer ${
+                            isSelected
+                              ? "bg-[#ff3d00] text-white font-bold shadow-[0_0_20px_rgba(255,61,0,0.5)]"
+                              : "bg-white/10 hover:bg-white/20 text-white border border-white/15"
+                          }`}
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>{isSelected ? "Displaying Now" : "Display Below"}</span>
+                        </button>
+
+                        <Link
+                          href={`/projects/${p.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="py-2 px-3 rounded-lg text-xs font-medium bg-[#ff3d00]/15 hover:bg-[#ff3d00]/30 text-[#ff3d00] hover:text-white transition-all border border-[#ff3d00]/30 flex items-center space-x-1"
+                          title="Open Dedicated Full Page"
+                        >
+                          <span>Full Page</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
 
-            {/* Column 2 (Center): Dynamic Image Switching Area (Real Engineering Image — NO BOXER) */}
-            <div className="lg:col-span-5 relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#111216] border border-white/10 shadow-2xl group">
-              <Image
+            {/* ----------------------------------------------------------------- */}
+            {/* 4C. DEEP ARCHITECTURE DRAWER ("DISPLAYING NOW")                  */}
+            {/* ----------------------------------------------------------------- */}
+            {selectedProject && (
+              <div
+                id="project-spec-drawer"
                 key={selectedProject.id}
-                src={activeImageSrc}
-                alt={selectedProject.title}
-                fill
-                className="object-cover object-center transition-all duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 600px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              
-              <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-black/70 backdrop-blur-md border border-white/10">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff3d00] block">
-                  Active Display • {selectedProject.category}
-                </span>
-                <p className="text-sm font-bold text-white mt-1">{selectedProject.title}</p>
-              </div>
-            </div>
+                className="scroll-mt-24 p-8 sm:p-10 rounded-3xl bg-gradient-to-b from-[#14161f] to-[#0c0d12] border border-[#ff3d00]/40 space-y-8 animate-in fade-in zoom-in-95 duration-300 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
+              >
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xs text-[#ff3d00] font-mono font-bold uppercase tracking-wider">
+                        {selectedProject.code}
+                      </span>
+                      <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#ff3d00]/20 border border-[#ff3d00]/40 text-[#ff3d00] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00] animate-ping" />
+                        ACTIVE PREVIEW • DISPLAYING NOW
+                      </span>
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                      {selectedProject.title}
+                    </h3>
+                  </div>
 
-            {/* Column 3 (Right): Valentin Exact Metadata Hierarchy */}
-            <div className="lg:col-span-4 space-y-8 pl-0 lg:pl-6">
-              <div className="space-y-2">
-                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                  Year
-                </span>
-                <p className="text-4xl font-black text-white">2026</p>
-              </div>
-
-              <div className="space-y-2">
-                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                  Role
-                </span>
-                <p className="text-base font-semibold text-white">
-                  Lead Embedded AI &amp; Robotics Engineer
-                </p>
-                <span className="text-xs text-white/50 block font-mono">
-                  Architecture • Algorithm Design • Hardware Rig
-                </span>
-              </div>
-
-              <div className="space-y-2">
-                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                  Description
-                </span>
-                <p className="text-xs text-white/70 leading-relaxed font-light">
-                  {selectedProject.summary}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                  Hardware &amp; Frameworks
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {selectedProject.stack.map((s) => (
-                    <span
-                      key={s}
-                      className="text-[11px] font-mono px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white/80"
+                  <div className="flex items-center space-x-3">
+                    <Link
+                      href={`/projects/${selectedProject.id}`}
+                      className="px-4 py-2 rounded-xl bg-[#ff3d00] text-white font-bold text-xs hover:bg-[#ff5722] shadow-[0_0_20px_rgba(255,61,0,0.4)] transition-all flex items-center space-x-1.5"
                     >
-                      {s}
-                    </span>
-                  ))}
+                      <span>Full Project Page</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+
+                {/* External Device Portal Banner (for Elongation Detector) */}
+                {selectedProject.externalWebsite && (
+                  <div className="p-5 rounded-2xl bg-gradient-to-r from-[#ff3d00]/20 via-[#ff5722]/10 to-transparent border border-[#ff3d00]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span className="text-[10px] text-[#ff3d00] font-mono font-bold uppercase tracking-widest block">
+                        OFFICIAL DEDICATED DEVICE WEBSITE
+                      </span>
+                      <h4 className="text-base font-bold text-white mt-0.5">
+                        {selectedProject.externalWebsite.label}
+                      </h4>
+                      <p className="text-xs text-white/70 mt-1">
+                        {selectedProject.externalWebsite.description}
+                      </p>
+                    </div>
+                    <a
+                      href={selectedProject.externalWebsite.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-4 py-2 rounded-xl bg-white text-black font-bold text-xs hover:bg-[#ff3d00] hover:text-white transition-all flex items-center space-x-1.5 shrink-0"
+                    >
+                      <span>Launch Site</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                )}
+
+                {/* Grid Layout: Visual Showcase + Architecture */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                  
+                  {/* Left Column: Visual Schematic Image */}
+                  <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden bg-black/80 border border-white/10 shadow-2xl">
+                    <Image
+                      src={projectShowcaseImages[selectedProject.id] || `${basePath}/proj_emotionsim_hud.jpg`}
+                      alt={selectedProject.title}
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, 500px"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 inset-x-4 p-3 rounded-xl bg-black/80 backdrop-blur-md border border-white/10 flex items-center justify-between">
+                      <div>
+                        <span className="text-[10px] font-mono text-[#ff3d00] uppercase block">
+                          Verified Key Metric
+                        </span>
+                        <p className="text-xs font-bold text-white">{selectedProject.keyMetric}</p>
+                      </div>
+                      <span className="text-[10px] font-mono text-white/50">
+                        {selectedProject.category}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Signal Flow & Specs */}
+                  <div className="lg:col-span-7 space-y-6">
+                    {/* Pipeline Signal Flow */}
+                    <div className="space-y-3">
+                      <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">
+                        Hardware-Software Signal Architecture
+                      </span>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
+                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
+                          <span className="text-[10px] text-white/40 block">01 // INPUT</span>
+                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.input}</span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
+                          <span className="text-[10px] text-white/40 block">02 // INFERENCE</span>
+                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.processing}</span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
+                          <span className="text-[10px] text-white/40 block">03 // HARDWARE</span>
+                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.hardwareOrStorage}</span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
+                          <span className="text-[10px] text-white/40 block">04 // TELEMETRY</span>
+                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.output}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Technical Specs List */}
+                    <div className="space-y-3">
+                      <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                        Key Specifications
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        {selectedProject.specs.map((sp) => (
+                          <div
+                            key={sp.label}
+                            className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between gap-2"
+                          >
+                            <span className="text-white/50 font-mono">{sp.label}</span>
+                            <span className="font-bold text-white font-mono text-right">{sp.value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Engineering Highlights */}
+                    <div className="space-y-2 pt-2 border-t border-white/10">
+                      <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                        Engineering Highlights
+                      </span>
+                      <ul className="space-y-1.5 text-xs text-white/70 leading-relaxed font-light">
+                        {selectedProject.highlights.map((hl, i) => (
+                          <li key={i} className="flex items-start space-x-2">
+                            <span className="text-[#ff3d00] font-bold mt-0.5">•</span>
+                            <span>{hl}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                  </div>
                 </div>
               </div>
-
-              <div className="pt-4 border-t border-white/10">
-                <a
-                  href="#valentin-ending-reveal"
-                  className="inline-flex items-center space-x-1.5 text-xs font-mono uppercase tracking-wider text-[#ff3d00] hover:text-white transition-colors"
-                >
-                  <span>All projects</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-
+            )}
           </div>
 
         </div>
@@ -637,7 +1022,7 @@ export default function V4ExactValentinPage() {
       <section
         id="valentin-ending-reveal"
         ref={revealContainerRef}
-        className="relative h-[280vh] bg-[#0c0d10]"
+        className="relative h-[160vh] bg-[#0c0d10]"
       >
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
           
@@ -646,18 +1031,20 @@ export default function V4ExactValentinPage() {
             ref={sofaRevealLayerRef}
             className="absolute inset-0 w-full h-full z-10 flex items-center justify-between px-6 sm:px-16 pointer-events-none opacity-0"
           >
-            {/* Cinematic Full Screen Seated Armchair Image */}
-            <div className="absolute inset-0 w-full h-full">
-              <Image
-                src={`${basePath}/kabish_valentin_v4.jpg`}
-                alt="Kabish Sridar seated in emerald armchair"
-                fill
-                className="object-cover object-center filter brightness-[0.88] contrast-[1.05]"
-                sizes="100vw"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-black/85" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-black/60" />
+            {/* Cinematic Seated Armchair Image — Framed so head, sunglasses and face are fully visible */}
+            <div className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden">
+              <div className="relative w-full max-w-[900px] h-full">
+                <Image
+                  src={`${basePath}/kabish_valentin_v4.jpg`}
+                  alt="Kabish Sridar seated in emerald armchair"
+                  fill
+                  className="object-contain sm:object-cover object-[center_12%] filter brightness-[0.92] contrast-[1.05]"
+                  sizes="100vw"
+                  priority
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/40 to-black/90 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-black/60 pointer-events-none" />
             </div>
 
             <div className="relative z-20 max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pointer-events-auto">
@@ -877,7 +1264,7 @@ export default function V4ExactValentinPage() {
       {/* ========================================================================= */}
       {/* 6. FOOTER                                                                 */}
       {/* ========================================================================= */}
-      <footer className="py-16 border-t border-white/10 bg-[#07080a] text-xs font-mono text-white/40">
+      <footer className="py-8 border-t border-white/10 bg-[#07080a] text-xs font-mono text-white/40">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center space-x-3">
             <span className="text-white font-bold tracking-wider">KABISH SRIDAR</span>
