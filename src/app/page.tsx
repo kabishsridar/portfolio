@@ -45,9 +45,6 @@ export default function Home() {
       {/* Floating Scroll Progress Telemetry HUD */}
       <V3ScrollProgressHUD />
 
-      {/* Floating 3-Way Version Switcher */}
-      <VersionSwitcher />
-
       {/* V3 Kinetic Navbar */}
       <V3Navbar
         onToggleTerminal={() => setTerminalOpen((prev) => !prev)}

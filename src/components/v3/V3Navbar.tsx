@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Terminal, Zap, ShieldCheck } from "lucide-react";
+import VersionSwitcher from "@/components/VersionSwitcher";
 
 interface V3NavbarProps {
   onToggleTerminal: () => void;
@@ -58,8 +59,8 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
           <span className="text-tactical-amber">SRMIST AI & ML</span>
         </div>
 
-        {/* Right: Anchors & Terminal Trigger */}
-        <div className="flex items-center space-x-4">
+        {/* Right: Anchors & Switcher & Terminal Trigger */}
+        <div className="flex items-center space-x-3">
           <nav className="hidden md:flex items-center space-x-4 text-[11px] uppercase tracking-wider text-tactical-muted">
             <a href="#v3-projects" className="hover:text-blue-400 transition-colors">
               // WORK
@@ -74,6 +75,8 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
               // TRANSMIT
             </a>
           </nav>
+
+          <VersionSwitcher />
 
           <button
             onClick={onToggleTerminal}

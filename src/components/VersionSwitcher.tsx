@@ -14,9 +14,9 @@ export default function VersionSwitcher() {
   const isV1 = !isV2 && !pathname.includes("/projects");
 
   return (
-    <aside
+    <div
       aria-label="Portfolio Version Switcher"
-      className="fixed top-3 left-1/2 -translate-x-1/2 z-[60] flex items-center bg-[#0a0c10]/95 border border-white/15 backdrop-blur-xl p-1 font-mono-tech text-xs shadow-[0_4px_25px_rgba(0,0,0,0.9)] rounded-full"
+      className="inline-flex items-center bg-[#0a0c10]/95 border border-white/15 backdrop-blur-xl p-0.5 font-mono-tech text-xs shadow-md rounded-full"
     >
       <div className="flex items-center space-x-1">
         <Link
@@ -45,6 +45,6 @@ export default function VersionSwitcher() {
           <span>VERSION 2</span>
         </Link>
       </div>
-    </aside>
+    </div>
   );
 }

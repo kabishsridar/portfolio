@@ -170,9 +170,6 @@ export default function V4Page() {
 
   return (
     <div ref={containerRef} className="min-h-screen bg-[#0a0c10] text-[#e6edf3] font-sans antialiased selection:bg-emerald-500 selection:text-black">
-      {/* Floating 4-Way Version Switcher */}
-      <VersionSwitcher />
-
       {/* Neat Minimal Navbar */}
       <nav className="fixed top-0 inset-x-0 z-40 h-16 border-b border-white/[0.08] bg-[#0a0c10]/80 backdrop-blur-xl transition-all">
         <div className="max-w-6xl mx-auto px-6 h-full flex items-center justify-between">
@@ -188,18 +185,19 @@ export default function V4Page() {
             </span>
           </div>
 
-          <div className="hidden lg:flex items-center space-x-6 text-xs font-medium text-neutral-400 pl-4">
+          {/* Center Navigation Links */}
+          <div className="hidden md:flex items-center space-x-6 text-xs font-medium text-neutral-400">
             <a href="#about" className="hover:text-white transition-colors">About</a>
             <a href="#projects" className="hover:text-white transition-colors">Projects</a>
             <a href="#skills" className="hover:text-white transition-colors">Skills</a>
-          </div>
-
-          <div className="hidden lg:flex items-center space-x-6 text-xs font-medium text-neutral-400 pr-4">
             <a href="#publications" className="hover:text-white transition-colors">Research</a>
             <a href="#contact" className="hover:text-white transition-colors">Contact</a>
           </div>
 
+          {/* Right: Version Switcher & Resume Button */}
           <div className="flex items-center space-x-3">
+            <VersionSwitcher />
+
             <button
               onClick={() => setIsResumeOpen(true)}
               className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-neutral-200 hover:bg-emerald-500 hover:text-black hover:border-emerald-400 transition-all duration-200 shadow-sm"
