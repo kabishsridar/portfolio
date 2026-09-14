@@ -27,9 +27,10 @@ export default function V4ExactValentinPage() {
   const cursorFollowerRef = useRef<HTMLDivElement>(null);
   const heroImageWrapRef = useRef<HTMLDivElement>(null);
 
-  // Intro reveal overlay refs
+  // Intro reveal overlay refs — two triangular panels split diagonally
   const introOverlayRef = useRef<HTMLDivElement>(null);
-  const introClipRef = useRef<HTMLDivElement>(null);
+  const introPanelTopRef = useRef<HTMLDivElement>(null);   // top-right triangle
+  const introPanelBotRef = useRef<HTMLDivElement>(null);   // bottom-left triangle
 
   // Ending reveal refs
   const revealContainerRef = useRef<HTMLDivElement>(null);
@@ -78,27 +79,29 @@ export default function V4ExactValentinPage() {
     return () => clearInterval(interval);
   }, [tickerWords.length]);
 
-  // ─── PAGE LOAD DIAGONAL WHITE REVEAL (once only) ───────────────────────────
+  // ─── PAGE LOAD DIAGONAL SPLIT REVEAL (Valentin Cheval style — once only) ──
   useEffect(() => {
-    // Only run on first mount
-    const overlay = introOverlayRef.current;
-    const clip = introClipRef.current;
-    if (!overlay || !clip) return;
+    const panelTop = introPanelTopRef.current; // top-right triangle
+    const panelBot = introPanelBotRef.current; // bottom-left triangle
+    if (!panelTop || !panelBot) return;
 
-    // Start: white fully covers the screen (clip-path fully visible)
-    gsap.set(overlay, { opacity: 1 });
+    // Hold for a beat, then split the two panels apart
+    const tl = gsap.timeline({ delay: 0.5 });
 
-    // After a tiny delay, animate the diagonal clip-path away
-    const tl = gsap.timeline({ delay: 0.15 });
-    tl.to(clip, {
-      clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
-      duration: 1.2,
-      ease: "power4.inOut",
-      onComplete: () => {
-        setIntroVisible(false);
-        if (overlay) overlay.style.display = "none";
+    // Top-right panel slides up and to the right
+    tl.to(
+      panelTop,
+      { y: "-105%", x: "105%", ease: "power4.inOut", duration: 1.1 },
+      0
+    );
+    // Bottom-left panel slides down and to the left
+    tl.to(
+      panelBot,
+      { y: "105%", x: "-105%", ease: "power4.inOut", duration: 1.1,
+        onComplete: () => setIntroVisible(false)
       },
-    });
+      0
+    );
 
     return () => { tl.kill(); };
   }, []);
@@ -282,19 +285,34 @@ export default function V4ExactValentinPage() {
         fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
-      {/* ── PAGE LOAD DIAGONAL WHITE INTRO REVEAL ── */}
+      {/* ── PAGE LOAD DIAGONAL SPLIT REVEAL (Valentin Cheval style) ── */}
       {introVisible && (
         <div
           ref={introOverlayRef}
-          className="fixed inset-0 z-[9999] pointer-events-none"
-          style={{ opacity: 1 }}
+          className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden"
         >
-          {/* White diagonal clip that sweeps from top-left to bottom-right */}
+          {/* Name branding — bottom-left, same as Valentin */}
+          <div className="absolute bottom-8 left-8 z-10 flex items-baseline space-x-2 text-[15px] tracking-tight select-none">
+            <span className="font-bold text-neutral-900">Kabish</span>
+            <span className="text-neutral-500 font-normal">Sridar</span>
+          </div>
+
+          {/* Top-Right Triangle Panel */}
           <div
-            ref={introClipRef}
-            className="absolute inset-0 bg-white"
+            ref={introPanelTopRef}
+            className="absolute inset-0 bg-[#e8e8e4]"
             style={{
-              clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+              clipPath: "polygon(100% 0%, 0% 0%, 100% 100%)",
+              willChange: "transform",
+            }}
+          />
+          {/* Bottom-Left Triangle Panel */}
+          <div
+            ref={introPanelBotRef}
+            className="absolute inset-0 bg-[#e8e8e4]"
+            style={{
+              clipPath: "polygon(0% 0%, 0% 100%, 100% 100%)",
+              willChange: "transform",
             }}
           />
         </div>
@@ -365,120 +383,97 @@ export default function V4ExactValentinPage() {
       </header>
 
       {/* ===================================================================== */}
-      {/* 2. HERO SECTION                                                        */}
+      {/* 2. HERO: FULL-SCREEN WITH SOFA IMAGE + VALENTIN-STYLE TYPOGRAPHY      */}
       {/* ===================================================================== */}
       <section
         id="valentin-hero"
-        className="relative min-h-screen pt-28 pb-16 px-6 sm:px-12 flex flex-col justify-between overflow-hidden"
+        className="relative h-screen min-h-[600px] overflow-hidden"
+        style={{ fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
       >
-        <div className="max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1 my-auto">
-          {/* Left Column */}
-          <div className="lg:col-span-6 space-y-8">
-            <div className="space-y-2 border-l border-white/10 pl-4 py-1">
-              <span className="text-[10px] uppercase font-mono tracking-widest text-[#ff3d00]">
-                Disciplines &amp; Scope
-              </span>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/70 font-mono">
-                <li>• Optical Metrology</li>
-                <li>• Edge Vision</li>
-                <li>• PLC Automation</li>
-                <li>• Autonomous Systems</li>
-              </ul>
-            </div>
+        {/* Full-screen seated portrait as background */}
+        <div className="absolute inset-0 w-full h-full">
+          <Image
+            src={`${basePath}/kabish_valentin_v4.jpg`}
+            alt="Kabish Sridar seated in armchair"
+            fill
+            priority
+            className="object-cover object-[center_8%] filter brightness-[0.55] contrast-[1.08]"
+            sizes="100vw"
+          />
+          {/* Subtle left vignette to allow text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        </div>
 
-            <p className="text-sm sm:text-base text-white/70 max-w-lg font-light leading-relaxed">
-              Award-finalist AI/ML &amp; Embedded Systems Engineer. I architect hardware-software solutions for sub-millimeter optical metrology, automated factory PLCs, and real-time edge computer vision.
-            </p>
-
-            <div className="space-y-1 pt-2">
-              <p className="text-xs uppercase tracking-widest text-white/40 font-mono">
-                Hi there! this is Kabish Sridar
-              </p>
-              <h1 className="text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight text-white uppercase leading-[1.02]">
-                Engineering
-                <br />
-                <span className="text-white/40">for</span>{" "}
-                <span className="inline-block relative h-[1.1em] overflow-hidden align-top text-[#ff3d00] font-black">
-                  <span
-                    key={tickerIndex}
-                    className="inline-block animate-in slide-in-from-bottom-6 duration-500"
-                  >
-                    {tickerWords[tickerIndex]}
-                  </span>
-                </span>
-              </h1>
-            </div>
-
-            <div className="flex items-center space-x-6 pt-2">
-              <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
-                <Image src={`${basePath}/red-dot-white.BCoP2Tnu.svg`} alt="Red Dot Award" width={38} height={38} className="h-full w-auto object-contain" />
-              </div>
-              <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
-                <Image src={`${basePath}/uxdesign-white._MZKNTN5.svg`} alt="UX Design Award" width={38} height={38} className="h-full w-auto object-contain" />
-              </div>
-              <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
-                <Image src={`${basePath}/dfa-white.BALS8Xtv.svg`} alt="DFA Award" width={38} height={38} className="h-full w-auto object-contain" />
-              </div>
-              <span className="text-xs font-mono text-white/40 pl-2 border-l border-white/10">
-                MVP Finalist • KYC Datathon 2.0
-              </span>
-            </div>
-
-            <div className="pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">Precision Tol.</span>
-                <p className="text-xl font-bold text-white tracking-tight">0.1 mm</p>
-                <span className="text-[11px] text-white/50 block">PiCam Sub-Pixel Metrology</span>
-              </div>
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">Recognition</span>
-                <p className="text-xl font-bold text-[#ff3d00] tracking-tight">MVP Finalist</p>
-                <span className="text-[11px] text-white/50 block">KYC Datathon 2.0</span>
-              </div>
-              <div className="space-y-1 col-span-2 sm:col-span-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">Hardware Control</span>
-                <p className="text-xl font-bold text-white tracking-tight">ABB AC500</p>
-                <span className="text-[11px] text-white/50 block">IEC 61131-3 PLC Automation</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Hero Portrait */}
-          <div className="lg:col-span-6 flex justify-center items-center relative">
-            <div
-              ref={heroImageWrapRef}
-              className="relative w-full max-w-[460px] aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-[#111216] transition-transform will-change-transform group"
-            >
-              <Image
-                src={`${basePath}/kabish_valentin_v4.jpg`}
-                alt="Kabish Sridar in tailored black suit and coolers"
-                fill
-                priority
-                className="object-cover object-[center_5%] filter contrast-[1.05] brightness-[0.98] group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 100vw, 500px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-transparent opacity-85" />
-              <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none" />
-              <div className="absolute bottom-5 inset-x-5 p-4 rounded-xl bg-black/75 backdrop-blur-xl border border-white/10 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00] block">
-                    SRM INSTITUTE OF SCIENCE AND TECHNOLOGY
-                  </span>
-                  <p className="text-xs font-semibold text-white">B.Tech CSE (AI &amp; ML) • CGPA 8.7</p>
-                </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-pulse" />
-              </div>
-            </div>
+        {/* ── Top-left name stack (like Valentin) ── */}
+        <div className="absolute top-28 left-6 sm:left-12 z-20 space-y-0.5">
+          <p className="text-[11px] text-white/55 tracking-wide" style={{ fontFamily: "inherit" }}>
+            Hi there! this is
+          </p>
+          <div className="flex items-baseline space-x-2">
+            <span className="text-[17px] font-bold text-white tracking-tight">Kabish</span>
+            <span className="text-[17px] font-normal text-white/45 tracking-tight">Sridar</span>
           </div>
         </div>
 
-        <div className="max-w-[1440px] w-full mx-auto pt-8 border-t border-white/[0.08] flex items-center justify-between text-xs text-white/40 font-mono">
-          <span>CHENNAI, INDIA • 10.7905° N, 78.7047° E</span>
-          <span className="text-white/60">AVAILABLE FOR ROLES &amp; INDUSTRIAL CONTRACTS</span>
+        {/* ── GIANT bottom-aligned display headline ── */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 px-6 sm:px-12 pb-10 sm:pb-12">
+          <h1
+            className="uppercase leading-[0.88] tracking-[-0.02em] text-white font-black select-none"
+            style={{ fontSize: "clamp(52px, 10vw, 140px)" }}
+          >
+            <div>ENGINEERING</div>
+            <div>FOR EDGE</div>
+            <div className="text-[#ff3d00] inline-block relative overflow-hidden" style={{ minWidth: "4ch" }}>
+              <span
+                key={tickerIndex}
+                className="inline-block animate-in slide-in-from-bottom-8 duration-500"
+              >
+                {tickerWords[tickerIndex].toUpperCase()}
+              </span>
+            </div>
+          </h1>
         </div>
 
-        {/* Bottom gradient blend into next section */}
-        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-transparent to-[#0e0f13] pointer-events-none" />
+        {/* ── Right side panel — what I do + bio + awards ── */}
+        <div className="absolute bottom-10 right-6 sm:right-12 z-20 flex flex-col items-end space-y-5 max-w-[280px] sm:max-w-xs">
+          {/* Disciplines */}
+          <div className="space-y-0.5 text-right">
+            <p className="text-[11px] text-white/40 font-mono uppercase tracking-widest mb-2">What I do</p>
+            {["AI/ML Pipeline Design", "Embedded Vision Systems", "Industrial PLC Automation"].map((s) => (
+              <p key={s} className="text-sm text-white/80 font-light">{s}</p>
+            ))}
+          </div>
+
+          {/* How can I help link */}
+          <a
+            href="#contact"
+            className="flex items-center space-x-1 text-sm text-white underline underline-offset-4 decoration-white/40 hover:decoration-[#ff3d00] hover:text-[#ff3d00] transition-colors"
+          >
+            <span>How can I help?</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+
+          {/* Bio snippet */}
+          <p className="text-[11px] text-white/55 font-light leading-relaxed text-right">
+            Award-finalist AI/ML &amp; Embedded Systems Engineer. I build sub-mm optical metrology, factory PLC systems, and edge neural pipelines.
+          </p>
+
+          {/* Award logos */}
+          <div className="flex items-center space-x-3 opacity-60">
+            <Image src={`${basePath}/red-dot-white.BCoP2Tnu.svg`} alt="Red Dot" width={28} height={28} className="h-7 w-auto object-contain" />
+            <Image src={`${basePath}/uxdesign-white._MZKNTN5.svg`} alt="UX Design" width={28} height={28} className="h-7 w-auto object-contain" />
+            <Image src={`${basePath}/dfa-white.BALS8Xtv.svg`} alt="DFA" width={28} height={28} className="h-7 w-auto object-contain" />
+          </div>
+        </div>
+
+        {/* Scroll cue */}
+        <div className="absolute bottom-10 left-6 sm:left-12 z-20">
+          <span className="text-[11px] text-white/40 font-mono">(Scroll down)</span>
+        </div>
+
+        {/* Bottom blend into next section */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-b from-transparent to-[#0e0f13] pointer-events-none" />
       </section>
 
       {/* ===================================================================== */}
