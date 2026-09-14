@@ -25,9 +25,12 @@ export default function V4ExactValentinPage() {
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorFollowerRef = useRef<HTMLDivElement>(null);
   const heroImageWrapRef = useRef<HTMLDivElement>(null);
-  const heroTextRef = useRef<HTMLDivElement>(null);
+  
+  // Ending reveal refs
   const revealContainerRef = useRef<HTMLDivElement>(null);
-  const sofaRevealedImageRef = useRef<HTMLDivElement>(null);
+  const orangeCardLayerRef = useRef<HTMLDivElement>(null);
+  const standingActorRef = useRef<HTMLDivElement>(null);
+  const sofaRevealLayerRef = useRef<HTMLDivElement>(null);
 
   const [greeting, setGreeting] = useState("Good morning!");
   const [tickerIndex, setTickerIndex] = useState(0);
@@ -37,7 +40,7 @@ export default function V4ExactValentinPage() {
   // Valentin's exact 3D rotating text choices
   const tickerWords = ["Metrology", "Edge Vision", "PLC Systems", "Robotics", "Deep AI"];
 
-  // Mapping actual portfolio project visual showcases (replacing boxing image)
+  // Mapping actual portfolio project visual showcases (NO BOXER)
   const projectShowcaseImages: { [key: string]: string } = {
     "emo-rex": `${basePath}/proj_emotionsim_hud.jpg`,
     "rasi-feed-plc": `${basePath}/proj_plc_industrial.jpg`,
@@ -117,35 +120,7 @@ export default function V4ExactValentinPage() {
     window.addEventListener("mousemove", onMouseMove);
 
     const ctx = gsap.context(() => {
-      // 2. HERO ZOOM ON SCROLL & TEXT FLOAT UP (Valentin's exact hero scroll sequence)
-      if (heroImageWrapRef.current && heroTextRef.current) {
-        gsap.to(heroImageWrapRef.current, {
-          scrollTrigger: {
-            trigger: "#valentin-hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-          scale: 1.15,
-          y: 80,
-          opacity: 0.25,
-          ease: "none",
-        });
-
-        gsap.to(heroTextRef.current, {
-          scrollTrigger: {
-            trigger: "#valentin-hero",
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-          y: -120,
-          opacity: 0,
-          ease: "none",
-        });
-      }
-
-      // 3. HORIZONTAL MOVING STRIP IN INTRO
+      // 2. HORIZONTAL MOVING STRIP IN INTRO
       gsap.to(".valentin-moving-strip", {
         scrollTrigger: {
           trigger: "#valentin-intro",
@@ -157,22 +132,54 @@ export default function V4ExactValentinPage() {
         ease: "none",
       });
 
-      // 4. BOTTOM REVEAL TRANSITION: Standing Portrait wipes/unmasks to reveal the Seated Sofa Portrait
-      if (sofaRevealedImageRef.current && revealContainerRef.current) {
-        gsap.fromTo(
-          sofaRevealedImageRef.current,
-          { clipPath: "inset(100% 0% 0% 0%)", scale: 1.08 },
+      // 3. EXACT VALENTIN ENDING REVEAL CHOREOGRAPHY
+      // Pinned transition where standing suit scales up and slides right to reveal seated armchair on left
+      if (
+        revealContainerRef.current &&
+        orangeCardLayerRef.current &&
+        standingActorRef.current &&
+        sofaRevealLayerRef.current
+      ) {
+        const revealTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: revealContainerRef.current,
+            start: "top top",
+            end: "+=260%",
+            pin: true,
+            scrub: 1.2,
+          },
+        });
+
+        // Email marquee slides across
+        revealTl.to(".valentin-passing-email", { xPercent: -35, ease: "none", duration: 1 }, 0);
+
+        // Orange glowing testimonial & contact card dissolves out cleanly before background reveals
+        revealTl.to(
+          orangeCardLayerRef.current,
+          { opacity: 0, ease: "power1.inOut", duration: 0.25 },
+          0.05
+        );
+
+        // Standing transparent cutout actor scales up and slides smoothly off to the right
+        revealTl.to(
+          standingActorRef.current,
           {
-            clipPath: "inset(0% 0% 0% 0%)",
-            scale: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: revealContainerRef.current,
-              start: "top 80%",
-              end: "bottom bottom",
-              scrub: 1.2,
-            },
-          }
+            scale: 2.3,
+            xPercent: 75,
+            yPercent: 12,
+            opacity: 0,
+            ease: "power2.inOut",
+            duration: 0.75,
+          },
+          0.15
+        );
+
+        // Seated sofa image & headline emerge into full crisp focus only after the quote card is gone
+        revealTl.fromTo(
+          sofaRevealLayerRef.current,
+          { opacity: 0, scale: 1.06 },
+          { opacity: 1, scale: 1.0, ease: "power2.out", duration: 0.6 },
+          0.35
         );
       }
     }, containerRef);
@@ -231,7 +238,7 @@ export default function V4ExactValentinPage() {
             </span>
           </Link>
 
-          {/* Socials / Links Bar (Valentin exact style: Socials / li / dr / tw) */}
+          {/* Socials / Links Bar (Valentin exact style: Socials / li / gh / em) */}
           <div className="hidden md:flex items-center space-x-2 text-xs text-white/70 font-mono">
             <span className="text-white/40">Socials /</span>
             <a
@@ -297,101 +304,57 @@ export default function V4ExactValentinPage() {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. HERO: LANDSCAPE VIEW OF KABISH SEATED (NO WINE GLASS) + ZOOM ON SCROLL */}
+      {/* 2. HERO: VALENTIN CHEVAL STYLE WITH FAVORITE SEATED PORTRAIT              */}
       {/* ========================================================================= */}
       <section
         id="valentin-hero"
-        className="relative min-h-screen pt-28 pb-16 flex flex-col justify-between overflow-hidden"
+        className="relative min-h-screen pt-28 pb-16 px-6 sm:px-12 flex flex-col justify-between overflow-hidden"
       >
-        {/* Full Landscape Background Image of Kabish Seated in Black Suit & Coolers (Hands resting, NO GLASS) */}
-        <div
-          ref={heroImageWrapRef}
-          className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden"
-        >
-          <Image
-            src={`${basePath}/kabish_hero_landscape.jpg`}
-            alt="Kabish Sridar wide landscape portrait in black suit and coolers — Valentin Cheval style"
-            fill
-            priority
-            className="object-cover object-center filter brightness-[0.85] contrast-[1.05]"
-            sizes="100vw"
-          />
-          {/* Subtle Dark Vignette Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-[#0c0d10]/60" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0d10]/90 via-[#0c0d10]/30 to-transparent" />
-        </div>
-
-        {/* Foreground Hero Content Container */}
-        <div
-          ref={heroTextRef}
-          className="relative z-10 max-w-[1440px] w-full mx-auto px-6 sm:px-12 flex-1 flex flex-col justify-between my-auto"
-        >
-          {/* Top Scope & CTA */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start pt-6">
-            <div className="md:col-span-6 space-y-2">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff3d00] block">
+        <div className="max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1 my-auto">
+          
+          {/* Left Column: Scope, Bio, Headline with 3D Rotating Ticker */}
+          <div className="lg:col-span-6 space-y-8">
+            <div className="space-y-2 border-l border-white/10 pl-4 py-1">
+              <span className="text-[10px] uppercase font-mono tracking-widest text-[#ff3d00]">
                 Disciplines &amp; Scope
               </span>
-              <ul className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-white/80 font-mono">
-                <li>Website Design</li>
-                <li>•</li>
-                <li>Optical Metrology</li>
-                <li>•</li>
-                <li>Edge Vision</li>
-                <li>•</li>
-                <li>PLC Automation</li>
+              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/70 font-mono">
+                <li>• Optical Metrology</li>
+                <li>• Edge Vision</li>
+                <li>• PLC Automation</li>
+                <li>• Autonomous Systems</li>
               </ul>
             </div>
 
-            <div className="md:col-span-6 flex md:justify-end items-center">
-              <a
-                href={`mailto:${profileData.contact.email}`}
-                className="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-white hover:text-[#ff3d00] transition-colors group"
-              >
-                <span>How can I help?</span>
-                <span className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#ff3d00] transition-colors">
-                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                </span>
-              </a>
-            </div>
-          </div>
-
-          {/* Center Main Headline with 3D Rotating Ticker */}
-          <div className="py-16 md:py-24 space-y-6 max-w-4xl">
-            <div className="space-y-1">
-              <p className="text-sm font-mono uppercase tracking-widest text-white/50">
-                Hi there! this is
-              </p>
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-                Kabish <span className="text-white/40">Sridar</span>
-              </h2>
-            </div>
-
-            {/* Valentin's EXACT Giant Typographic Structure */}
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.95] text-white">
-              Engineering
-              <br />
-              <span className="text-white/30 font-medium">for</span>{" "}
-              <span className="inline-block relative h-[1.1em] overflow-hidden align-top text-[#ff3d00]">
-                <span
-                  key={tickerIndex}
-                  className="inline-block animate-in slide-in-from-bottom-8 duration-500 font-black"
-                >
-                  {tickerWords[tickerIndex]}
-                </span>
-              </span>
-            </h1>
-
-            <p className="text-sm sm:text-base text-white/70 max-w-xl font-light leading-relaxed">
-              Award-finalist AI/ML &amp; Embedded Systems Engineer. Specializing in high-precision optical metrology, edge computer vision, and deterministic PLC process automation.
+            <p className="text-sm sm:text-base text-white/70 max-w-lg font-light leading-relaxed">
+              Award-finalist AI/ML &amp; Embedded Systems Engineer. I architect hardware-software solutions for sub-millimeter optical metrology, automated factory PLCs, and real-time edge computer vision.
             </p>
 
-            {/* Official Valentin Award Badges (Red Dot, UX Design, DFA) */}
-            <div className="flex items-center space-x-6 pt-4">
+            <div className="space-y-1 pt-2">
+              <p className="text-xs uppercase tracking-widest text-white/40 font-mono">
+                Hi there! this is Kabish Sridar
+              </p>
+              <h1 className="text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight text-white uppercase leading-[1.02]">
+                Engineering
+                <br />
+                <span className="text-white/40">for</span>{" "}
+                <span className="inline-block relative h-[1.1em] overflow-hidden align-top text-[#ff3d00] font-black">
+                  <span
+                    key={tickerIndex}
+                    className="inline-block animate-in slide-in-from-bottom-6 duration-500"
+                  >
+                    {tickerWords[tickerIndex]}
+                  </span>
+                </span>
+              </h1>
+            </div>
+
+            {/* Official Valentin Award Badges */}
+            <div className="flex items-center space-x-6 pt-2">
               <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
                 <Image
                   src={`${basePath}/red-dot-white.BCoP2Tnu.svg`}
-                  alt="Award Logo"
+                  alt="Red Dot Award"
                   width={38}
                   height={38}
                   className="h-full w-auto object-contain"
@@ -409,7 +372,7 @@ export default function V4ExactValentinPage() {
               <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
                 <Image
                   src={`${basePath}/dfa-white.BALS8Xtv.svg`}
-                  alt="Design for Asia Award"
+                  alt="DFA Award"
                   width={38}
                   height={38}
                   className="h-full w-auto object-contain"
@@ -419,18 +382,69 @@ export default function V4ExactValentinPage() {
                 MVP Finalist • KYC Datathon 2.0
               </span>
             </div>
+
+            {/* Metric Counters Strip */}
+            <div className="pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
+                  Precision Tol.
+                </span>
+                <p className="text-xl font-bold text-white tracking-tight">0.1 mm</p>
+                <span className="text-[11px] text-white/50 block">PiCam Sub-Pixel Metrology</span>
+              </div>
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
+                  Recognition
+                </span>
+                <p className="text-xl font-bold text-[#ff3d00] tracking-tight">MVP Finalist</p>
+                <span className="text-[11px] text-white/50 block">KYC Datathon 2.0</span>
+              </div>
+              <div className="space-y-1 col-span-2 sm:col-span-1">
+                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
+                  Hardware Control
+                </span>
+                <p className="text-xl font-bold text-white tracking-tight">ABB AC500</p>
+                <span className="text-[11px] text-white/50 block">IEC 61131-3 PLC Automation</span>
+              </div>
+            </div>
           </div>
 
-          {/* Bottom Bar Indicator */}
-          <div className="border-t border-white/10 pt-6 flex items-center justify-between text-xs font-mono text-white/40">
-            <span>SRM UNIVERSITY • CHENNAI, TAMIL NADU</span>
-            <a
-              href="#valentin-intro"
-              className="text-[#ff3d00] hover:text-white transition-colors"
+          {/* Right Column: Seated Hero Portrait (Kabish's Favorite Portrait with NO Glass) */}
+          <div className="lg:col-span-6 flex justify-center items-center relative">
+            <div
+              ref={heroImageWrapRef}
+              className="relative w-full max-w-[460px] aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-[#111216] transition-transform will-change-transform group"
             >
-              (Scroll down)
-            </a>
+              <Image
+                src={`${basePath}/kabish_valentin_v4.jpg`}
+                alt="Kabish Sridar in tailored black suit and coolers — Valentin Cheval style"
+                fill
+                priority
+                className="object-cover object-center filter contrast-[1.05] brightness-[0.98] group-hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 768px) 100vw, 500px"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-transparent opacity-85" />
+              <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none" />
+
+              {/* Exact Bottom HUD Badge from User Screenshot */}
+              <div className="absolute bottom-5 inset-x-5 p-4 rounded-xl bg-black/75 backdrop-blur-xl border border-white/10 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00] block">
+                    SRM INSTITUTE OF SCIENCE AND TECHNOLOGY
+                  </span>
+                  <p className="text-xs font-semibold text-white">B.Tech CSE (AI &amp; ML) • CGPA 8.7</p>
+                </div>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-pulse" />
+              </div>
+            </div>
           </div>
+
+        </div>
+
+        <div className="max-w-[1440px] w-full mx-auto pt-8 border-t border-white/[0.08] flex items-center justify-between text-xs text-white/40 font-mono">
+          <span>CHENNAI, INDIA • 10.7905° N, 78.7047° E</span>
+          <span className="text-white/60">AVAILABLE FOR ROLES &amp; INDUSTRIAL CONTRACTS</span>
         </div>
       </section>
 
@@ -492,7 +506,6 @@ export default function V4ExactValentinPage() {
       >
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 space-y-16">
           
-          {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
@@ -508,7 +521,6 @@ export default function V4ExactValentinPage() {
             </div>
           </div>
 
-          {/* Valentin 3-Column Layout: Left Thumbnails/Nav | Center Dynamic Switch Images | Right Metadata */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
             {/* Column 1 (Left): Project List Selector */}
@@ -537,7 +549,7 @@ export default function V4ExactValentinPage() {
               })}
             </div>
 
-            {/* Column 2 (Center): Dynamic Image Switching Area (Actual Project Imagery — NO BOXER) */}
+            {/* Column 2 (Center): Dynamic Image Switching Area (Real Engineering Image — NO BOXER) */}
             <div className="lg:col-span-5 relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#111216] border border-white/10 shadow-2xl group">
               <Image
                 key={selectedProject.id}
@@ -549,7 +561,6 @@ export default function V4ExactValentinPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               
-              {/* Bottom Badge in Center Image */}
               <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-black/70 backdrop-blur-md border border-white/10">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff3d00] block">
                   Active Display • {selectedProject.category}
@@ -558,7 +569,7 @@ export default function V4ExactValentinPage() {
               </div>
             </div>
 
-            {/* Column 3 (Right): Valentin Exact Metadata Hierarchy (Year / Role / Description / All projects) */}
+            {/* Column 3 (Right): Valentin Exact Metadata Hierarchy */}
             <div className="lg:col-span-4 space-y-8 pl-0 lg:pl-6">
               <div className="space-y-2">
                 <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
@@ -588,7 +599,6 @@ export default function V4ExactValentinPage() {
                 </p>
               </div>
 
-              {/* Hardware Stack Pills */}
               <div className="space-y-2">
                 <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
                   Hardware &amp; Frameworks
@@ -622,107 +632,242 @@ export default function V4ExactValentinPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. ENDING REVEAL: STANDING IMAGE WIPES/UNMASKS TO REVEAL THE SOFA IMAGE   */}
+      {/* 5. EXACT VALENTIN ENDING REVEAL (STANDING SLIDES RIGHT TO REVEAL SOFA)   */}
       {/* ========================================================================= */}
       <section
         id="valentin-ending-reveal"
         ref={revealContainerRef}
-        className="relative min-h-screen py-24 border-t border-white/10 bg-[#090a0d] flex items-center overflow-hidden"
+        className="relative h-[280vh] bg-[#0c0d10]"
       >
-        <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
           
-          {/* Left Column: Heading & Contact Transition */}
-          <div className="lg:col-span-6 space-y-8">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00] block">
-              (Transition &amp; Identity)
-            </span>
-            <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight leading-[1.05]">
-              Built with precision.
-              <br />
-              <span className="text-white/40">Ready for deployment.</span>
-            </h2>
-
-            <p className="text-sm sm:text-base text-white/70 max-w-lg font-light leading-relaxed">
-              From academic research in real-time computer vision to industrial plant commissioning on ABB AC500 PLCs, every line of code and hardware pin is engineered for reliability.
-            </p>
-
-            <div className="space-y-4 pt-4 border-t border-white/10">
-              <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                Direct Contact
-              </span>
-              <a
-                href={`mailto:${profileData.contact.email}`}
-                className="text-2xl sm:text-4xl font-bold text-white hover:text-[#ff3d00] transition-colors tracking-tight block uppercase break-all font-mono"
-              >
-                {profileData.contact.email}
-              </a>
+          {/* Layer A (Background): Full Screen Revealed Seated Sofa / Armchair Image & Re-emerging Headline */}
+          <div
+            ref={sofaRevealLayerRef}
+            className="absolute inset-0 w-full h-full z-10 flex items-center justify-between px-6 sm:px-16 pointer-events-none opacity-0"
+          >
+            {/* Cinematic Full Screen Seated Armchair Image */}
+            <div className="absolute inset-0 w-full h-full">
+              <Image
+                src={`${basePath}/kabish_valentin_v4.jpg`}
+                alt="Kabish Sridar seated in emerald armchair"
+                fill
+                className="object-cover object-center filter brightness-[0.88] contrast-[1.05]"
+                sizes="100vw"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-black/85" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-black/60" />
             </div>
 
-            <div className="flex items-center space-x-4 pt-2">
-              <a
-                href={`mailto:${profileData.contact.email}`}
-                className="px-6 py-3 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_20px_rgba(255,61,0,0.4)] transition-all flex items-center space-x-2"
-              >
-                <span>Initiate Conversation</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
+            <div className="relative z-20 max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pointer-events-auto">
+              {/* Left Column: Re-emerging Giant Hero Headline */}
+              <div className="lg:col-span-7 space-y-4">
+                <span className="text-xs font-mono uppercase tracking-widest text-white/50 block">
+                  Hi there! this is Kabish Sridar
+                </span>
+                <h2 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white tracking-tight leading-[1.05]">
+                  Engineering
+                  <br />
+                  <span className="text-white/40">for</span>{" "}
+                  <span className="text-[#ff3d00]">{tickerWords[tickerIndex]}</span>
+                </h2>
+                <p className="text-sm sm:text-base text-white/70 font-light leading-relaxed max-w-lg pt-2">
+                  Ready to deploy high-precision optical metrology pipelines, edge embedded neural processors, or industrial automation firmware for your team.
+                </p>
 
-              <button
-                onClick={() => setIsResumeOpen(true)}
-                className="px-5 py-3 rounded-full text-xs font-semibold border border-white/20 hover:border-white/50 text-white bg-white/5 transition-all"
-              >
-                Download Resume PDF
-              </button>
+                <div className="pt-4 flex items-center space-x-4">
+                  <a
+                    href={`mailto:${profileData.contact.email}`}
+                    className="px-6 py-3.5 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_25px_rgba(255,61,0,0.5)] transition-all flex items-center space-x-2"
+                  >
+                    <span>Let&apos;s talk!</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                  <button
+                    onClick={() => setIsResumeOpen(true)}
+                    className="px-5 py-3.5 rounded-full text-xs font-semibold border border-white/20 hover:border-white/50 text-white bg-white/10 backdrop-blur-md transition-all"
+                  >
+                    Download Resume PDF
+                  </button>
+                </div>
+
+                <div className="pt-6">
+                  <span className="text-[11px] font-mono text-white/40 tracking-wider">
+                    (Scroll down)
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Column: Capabilities & Credentials Badges */}
+              <div className="lg:col-span-5 space-y-6 lg:pl-12">
+                <div className="space-y-3">
+                  <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                    Focus Areas
+                  </span>
+                  <ul className="space-y-2 text-sm text-white/80 font-mono">
+                    <li className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
+                      <span>Sub-Pixel Optical Metrology (0.1 mm)</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
+                      <span>Edge Computer Vision &amp; TensorRT</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
+                      <span>Industrial PLC &amp; SCADA Automation</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00]">
+                      Academic Distinction
+                    </span>
+                    <div className="w-2 h-2 rounded-full bg-[#ff3d00] animate-pulse" />
+                  </div>
+                  <p className="text-sm font-bold text-white">SRM Institute of Science and Technology</p>
+                  <p className="text-xs text-white/60">B.Tech Computer Science (AI &amp; ML) • CGPA 8.7</p>
+                </div>
+
+                {/* Awards Row */}
+                <div className="flex items-center space-x-4 pt-1">
+                  <Image
+                    src={`${basePath}/red-dot-white.BCoP2Tnu.svg`}
+                    alt="Red Dot Award"
+                    width={32}
+                    height={32}
+                    className="opacity-60"
+                  />
+                  <Image
+                    src={`${basePath}/uxdesign-white._MZKNTN5.svg`}
+                    alt="UX Design Award"
+                    width={32}
+                    height={32}
+                    className="opacity-60"
+                  />
+                  <Image
+                    src={`${basePath}/dfa-white.BALS8Xtv.svg`}
+                    alt="DFA Award"
+                    width={32}
+                    height={32}
+                    className="opacity-60"
+                  />
+                  <span className="text-[11px] font-mono text-white/40 border-l border-white/10 pl-3">
+                    KYC Datathon 2.0 MVP Finalist
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Scroll Wipe Transition — Standing Portrait unmasks to reveal the Seated Sofa Portrait */}
-          <div className="lg:col-span-6 flex justify-center items-center">
-            <div className="relative w-full max-w-[440px] aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.9)] bg-[#111216]">
-              
-              {/* Base Layer: Standing Suit Portrait */}
-              <div className="absolute inset-0 w-full h-full">
-                <Image
-                  src={`${basePath}/kabish_standing_suit.jpg`}
-                  alt="Kabish Sridar standing in black suit and coolers"
-                  fill
-                  className="object-cover object-center filter brightness-[0.92] contrast-[1.05]"
-                  sizes="(max-width: 768px) 100vw, 500px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[10px] font-mono text-white/70">
-                  Standing Pose
-                </div>
-              </div>
+          {/* Layer B (Middle): Warm Sunrise Glow Testimonial & Contact Card */}
+          <div
+            ref={orangeCardLayerRef}
+            className="absolute inset-0 w-full h-full z-20 flex flex-col justify-between p-8 sm:p-16 transition-opacity"
+            style={{
+              background: "radial-gradient(ellipse 90% 60% at 50% 15%, #ff5500 0%, #ff7722 28%, #fff2ec 65%, #f4f3f0 100%)",
+            }}
+          >
+            {/* Top dark gradient vignette for readable nav */}
+            <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
 
-              {/* Reveal Layer: Seated Sofa Portrait wipes down over standing image */}
-              <div
-                ref={sofaRevealedImageRef}
-                className="absolute inset-0 w-full h-full will-change-[clip-path,transform]"
-              >
-                <Image
-                  src={`${basePath}/kabish_hero_landscape.jpg`}
-                  alt="Kabish Sridar seated in emerald armchair revealed on scroll"
-                  fill
-                  className="object-cover object-center filter brightness-[0.95] contrast-[1.08]"
-                  sizes="(max-width: 768px) 100vw, 500px"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[#ff3d00]/20 border border-[#ff3d00]/40 text-[10px] font-mono text-[#ff3d00]">
-                  Sofa Reveal ✦
-                </div>
+            {/* Giant Passing Email Ticker behind standing person */}
+            <div className="absolute bottom-20 left-0 w-full overflow-hidden pointer-events-none select-none opacity-15">
+              <div className="valentin-passing-email whitespace-nowrap text-8xl sm:text-[11vw] font-black uppercase tracking-tighter text-black">
+                {profileData.contact.email} • {profileData.contact.email} • {profileData.contact.email} • {profileData.contact.email}
               </div>
+            </div>
 
-              {/* Bottom HUD Tag */}
-              <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-black/75 backdrop-blur-md border border-white/10 flex items-center justify-between z-20">
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00] block">
-                    Verified Credentials
+            <div className="relative z-10 max-w-[1440px] w-full mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center flex-1 my-auto">
+              {/* Left Column: Socials & Contact */}
+              <div className="md:col-span-4 space-y-6">
+                <div className="space-y-2">
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">
+                    Socials
                   </span>
-                  <p className="text-xs font-bold text-white">Kabish Sridar • CSE (AI &amp; ML)</p>
+                  <div className="flex flex-col space-y-1 text-sm font-semibold text-neutral-900">
+                    <a
+                      href="https://www.linkedin.com/in/kabish-sridar-20587437b"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-[#ff3d00] transition-colors"
+                    >
+                      LinkedIn
+                    </a>
+                    <a
+                      href="https://github.com/kabishsridar"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-[#ff3d00] transition-colors"
+                    >
+                      GitHub
+                    </a>
+                  </div>
                 </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-ping" />
+
+                <div className="space-y-2">
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">
+                    Contact me
+                  </span>
+                  <div className="flex flex-col space-y-1 text-sm font-semibold text-neutral-900">
+                    <a
+                      href={`mailto:${profileData.contact.email}`}
+                      className="hover:text-[#ff3d00] transition-colors"
+                    >
+                      {profileData.contact.email}
+                    </a>
+                    <span className="text-xs text-neutral-600 font-normal">
+                      +91 91768 76594 • Chennai, India
+                    </span>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-black/10">
+                  <span className="text-xs font-mono text-neutral-500 block">
+                    Got an embedded or AI challenge?
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 mt-1 tracking-tight">
+                    Let&apos;s make something happen together
+                  </h3>
+                </div>
               </div>
+
+              {/* Spacer in Center where standing cutout is placed */}
+              <div className="hidden md:block md:col-span-3" />
+
+              {/* Right Column: Quote */}
+              <div className="md:col-span-5 space-y-4 md:pl-6">
+                <p className="text-2xl sm:text-4xl lg:text-5xl font-light text-neutral-950 leading-tight">
+                  As an engineer and builder, I believe in{" "}
+                  <span className="font-bold text-[#ff3d00]">service above self</span>.
+                </p>
+                <p className="text-sm sm:text-base text-neutral-700 font-light leading-relaxed max-w-lg">
+                  Being an embedded AI engineer is about serving real physical needs. It&apos;s dedicating yourself to finding the right balance between real-time inference speed and hardware reliability.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Layer C (Foreground): Standing Suit Cutout Actor (Scales up & Slides Right on scroll) */}
+          <div
+            ref={standingActorRef}
+            className="absolute z-30 pointer-events-none will-change-transform flex justify-center items-end bottom-0 left-1/2 -translate-x-1/2"
+            style={{
+              transformOrigin: "center bottom",
+            }}
+          >
+            <div className="relative h-[78vh] sm:h-[82vh] lg:h-[86vh] w-auto aspect-[848/1264]">
+              <Image
+                src={`${basePath}/kabish_standing_cutout.png`}
+                alt="Kabish Sridar standing in black suit and coolers"
+                fill
+                priority
+                className="object-contain object-bottom filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.45)]"
+                sizes="(max-width: 768px) 80vw, 600px"
+              />
             </div>
           </div>
 
