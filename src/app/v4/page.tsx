@@ -40,7 +40,6 @@ export default function V4ExactValentinPage() {
 
   // Carousel refs
   const carouselSectionRef = useRef<HTMLDivElement>(null);
-  const carouselAutoRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isDraggingRef = useRef(false);
   const dragStartXRef = useRef(0);
 
@@ -202,46 +201,39 @@ export default function V4ExactValentinPage() {
     };
   }, []);
 
-  // ─── AUTO-SLIDING CAROUSEL ────────────────────────────────────────────────
-  const startAutoSlide = useCallback(() => {
-    if (carouselAutoRef.current) clearInterval(carouselAutoRef.current);
-    carouselAutoRef.current = setInterval(() => {
-      if (!isDraggingRef.current) {
-        setActiveCircularIdx((prev) => (prev < projects.length - 1 ? prev + 1 : 0));
-      }
-    }, 2800);
-  }, []);
-
-  const stopAutoSlide = useCallback(() => {
-    if (carouselAutoRef.current) {
-      clearInterval(carouselAutoRef.current);
-      carouselAutoRef.current = null;
-    }
-  }, []);
+  // ─── SCROLL-DRIVEN CAROUSEL ───────────────────────────────────────────────
+  // Carousel rotates as you scroll through its section; drag/click override.
+  const scrollCarouselIdxRef = useRef(0); // fractional scroll index
 
   useEffect(() => {
     const section = carouselSectionRef.current;
     if (!section) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            startAutoSlide();
-          } else {
-            stopAutoSlide();
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(section);
+    gsap.registerPlugin(ScrollTrigger);
 
-    return () => {
-      observer.disconnect();
-      stopAutoSlide();
-    };
-  }, [startAutoSlide, stopAutoSlide]);
+    const st = ScrollTrigger.create({
+      trigger: section,
+      start: "top 80%",
+      end: "bottom 20%",
+      onUpdate: (self) => {
+        if (isDraggingRef.current) return;
+        // Map scroll progress 0→1 to index 0→(n-1), smoothly
+        const raw = self.progress * (projects.length - 1);
+        const idx = Math.round(raw);
+        if (idx !== scrollCarouselIdxRef.current) {
+          scrollCarouselIdxRef.current = idx;
+          setActiveCircularIdx(idx);
+        }
+      },
+    });
+
+    return () => { st.kill(); };
+  }, []);
+
+  // stub so existing onClick refs compile
+  const startAutoSlide = useCallback(() => {}, []);
+  const stopAutoSlide = useCallback(() => {}, []);
+  void stopAutoSlide;
 
   // Drag/swipe support for carousel
   const handleCarouselPointerDown = (e: React.PointerEvent) => {
@@ -260,8 +252,6 @@ export default function V4ExactValentinPage() {
         setActiveCircularIdx((prev) => (prev > 0 ? prev - 1 : projects.length - 1));
       }
     }
-    // Restart auto-slide after manual interaction
-    startAutoSlide();
   };
 
   const filteredProjects = projects.filter((p) => {
@@ -397,12 +387,12 @@ export default function V4ExactValentinPage() {
             alt="Kabish Sridar seated in armchair"
             fill
             priority
-            className="object-cover object-[center_8%] filter brightness-[0.55] contrast-[1.08]"
+            className="object-cover object-[center_22%]"
             sizes="100vw"
           />
-          {/* Subtle left vignette to allow text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+          {/* Light left overlay for text legibility — full brightness on image */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         </div>
 
         {/* ── Top-left name stack (like Valentin) ── */}
@@ -530,45 +520,65 @@ export default function V4ExactValentinPage() {
       </section>
 
       {/* ===================================================================== */}
-      {/* 3B. PORTRAIT + SEATED IMAGE ABOVE PROJECTS                            */}
+      {/* 3B. PHILOSOPHY QUOTE — TEXT LEFT, PORTRAIT IMAGE RIGHT                */}
       {/* ===================================================================== */}
-      <section className="relative bg-[#0c0d10] py-0 overflow-hidden">
+      <section className="relative bg-[#0c0d10] py-20 sm:py-28 overflow-hidden">
         {/* Top blend from intro */}
         <div className="absolute top-0 inset-x-0 h-20 bg-gradient-to-b from-[#0e0f13] to-transparent pointer-events-none z-10" />
 
-        {/* Full-width seated/landscape image — fixed enlarged, NOT moving up */}
-        <div className="relative w-full" style={{ height: "80vh", minHeight: 480 }}>
-          <Image
-            src={`${basePath}/kabish_hero_landscape.jpg`}
-            alt="Kabish Sridar — landscape portrait"
-            fill
-            priority
-            className="object-cover object-[center_18%] filter brightness-[0.7] contrast-[1.08] saturate-[1.1]"
-            sizes="100vw"
-          />
-          {/* Dark overlays for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/70 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0c0d10] pointer-events-none" />
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Left: philosophy text */}
+          <div className="space-y-6">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00]">
+              As an engineer and builder
+            </span>
+            <h2 className="text-4xl sm:text-5xl xl:text-6xl font-black uppercase text-white leading-[1.05] tracking-tight">
+              I believe in{" "}
+              <span className="text-[#ff3d00]">service above self.</span>
+            </h2>
+            <p className="text-base text-white/65 font-light leading-relaxed max-w-lg">
+              Being an embedded AI engineer is about serving real physical needs — dedicating yourself to finding the right balance between real-time inference speed and hardware reliability.
+            </p>
+            <div className="pt-4 flex items-center gap-4">
+              <a
+                href={`mailto:${profileData.contact.email}`}
+                className="px-6 py-3 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_20px_rgba(255,61,0,0.35)] transition-all flex items-center space-x-2"
+              >
+                <span>Let&apos;s talk!</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
 
-          {/* Overlay text */}
-          <div className="absolute inset-0 flex items-center px-6 sm:px-16 max-w-[1440px] mx-auto w-full">
-            <div className="space-y-4 max-w-2xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00]">
-                As an engineer and builder
-              </span>
-              <h2 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white leading-[1.05] tracking-tight">
-                I believe in{" "}
-                <span className="text-[#ff3d00]">service above self.</span>
-              </h2>
-              <p className="text-sm sm:text-base text-white/70 font-light leading-relaxed max-w-lg">
-                Being an embedded AI engineer is about serving real physical needs — dedicating yourself to finding the right balance between real-time inference speed and hardware reliability.
-              </p>
+          {/* Right: portrait card */}
+          <div className="flex justify-center lg:justify-end">
+            <div
+              ref={heroImageWrapRef}
+              className="relative w-full max-w-[400px] lg:max-w-[440px] aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.75)] bg-[#111216] transition-transform will-change-transform group"
+            >
+              <Image
+                src={`${basePath}/kabish_valentin_v4.jpg`}
+                alt="Kabish Sridar — portrait"
+                fill
+                className="object-cover object-[center_8%] group-hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 1024px) 100vw, 440px"
+              />
+              {/* Slight bottom gradient for HUD badge */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+              <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none" />
+              <div className="absolute bottom-4 inset-x-4 p-3 rounded-xl bg-black/70 backdrop-blur-xl border border-white/10 flex items-center justify-between">
+                <div>
+                  <span className="text-[9px] font-mono uppercase tracking-wider text-[#ff3d00] block">SRM Institute of Science and Technology</span>
+                  <p className="text-[11px] font-semibold text-white">B.Tech CSE (AI &amp; ML) • CGPA 8.7</p>
+                </div>
+                <div className="w-2 h-2 rounded-full bg-[#ff3d00] animate-pulse" />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom blend into projects */}
-        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-b from-transparent to-[#0c0d10] pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-b from-transparent to-[#0c0d10] pointer-events-none" />
       </section>
 
       {/* ===================================================================== */}
