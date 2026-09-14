@@ -431,52 +431,61 @@ export default function Version3KineticTimeline() {
         </div>
 
         {/* ============================================================== */}
-        {/* 2. 3D KINETIC CARD CAROUSEL (00:01 - 00:03 in reference video) */}
+        {/* 2. CIRCULAR 3D CYLINDRICAL CAROUSEL SLIDER */}
         {/* ============================================================== */}
         {/* Giant Background Typography Track ("Design that ships...") */}
         <div
           ref={giantTextTrackRef}
           className="absolute inset-x-0 flex items-center pointer-events-none select-none z-10 opacity-0 whitespace-nowrap"
         >
-          <span className="text-[15vw] font-black tracking-tighter text-white/5 uppercase leading-none">
+          <span className="text-[15vw] font-black tracking-tighter text-white/10 uppercase leading-none">
             Design that ships • Intelligence that deploys • 
           </span>
         </div>
 
-        {/* 3D Perspective Rotating Cards Track */}
+        {/* 3D Circular Cylindrical Slider Container */}
         <div
           ref={carouselTrackRef}
           id="stage-carousel"
           className="absolute inset-0 flex items-center justify-center z-20 opacity-0 pointer-events-auto"
-          style={{ perspective: "1400px" }}
+          style={{ perspective: "1800px" }}
         >
-          <div className="flex items-center space-x-8 px-12">
+          {/* Circular carousel ring with curved distribution */}
+          <div className="relative w-[400px] h-[500px] flex items-center justify-center" style={{ transformStyle: "preserve-3d" }}>
             {carouselCards.map((card, idx) => {
+              const count = carouselCards.length;
+              // Circular angle on a cylinder (spread over 120 degrees)
+              const angle = (idx - activeCardIndex) * (140 / (count - 1));
+              const rad = (angle * Math.PI) / 180;
+              const radius = 560; // cylindrical radius
+              const transX = Math.sin(rad) * radius;
+              const transZ = (Math.cos(rad) - 1) * radius;
               const isCenter = idx === activeCardIndex;
+
               return (
                 <div
                   key={card.id}
                   onClick={() => setActiveCardIndex(idx)}
-                  className={`relative w-[340px] sm:w-[400px] h-[480px] rounded-3xl bg-gradient-to-b ${card.color} border ${
+                  className={`absolute inset-0 w-[340px] sm:w-[400px] h-[480px] rounded-3xl bg-[#0e0c1a] border ${
                     card.border
-                  } p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col justify-between transition-all duration-500 cursor-pointer ${
+                  } p-8 shadow-[0_24px_70px_rgba(0,0,0,0.9)] flex flex-col justify-between transition-all duration-700 cursor-pointer select-none ${
                     isCenter
-                      ? "scale-105 ring-2 ring-purple-400/50 shadow-[0_0_50px_rgba(168,85,247,0.4)]"
-                      : "opacity-75 hover:opacity-100 hover:scale-95"
+                      ? "ring-2 ring-purple-400/80 shadow-[0_0_50px_rgba(168,85,247,0.5)] z-30"
+                      : "opacity-85 hover:opacity-100 z-10"
                   }`}
                   style={{
-                    transform: `rotateY(${(idx - activeCardIndex) * -12}deg) translateZ(${isCenter ? 40 : -50}px)`,
+                    transform: `translateX(${transX}px) translateZ(${transZ}px) rotateY(${angle * 0.85}deg)`,
                     transformStyle: "preserve-3d"
                   }}
                 >
                   <div>
                     <div className="flex items-center justify-between mb-6">
-                      <span className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-black/60 border border-white/10 text-neutral-200">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider font-bold bg-purple-950/80 border border-purple-500/30 text-purple-200">
                         {card.badge}
                       </span>
                       <Link
                         href={card.url}
-                        className="w-8 h-8 rounded-full bg-white/10 hover:bg-purple-500 text-white flex items-center justify-center transition-colors"
+                        className="w-9 h-9 rounded-full bg-white/10 hover:bg-purple-600 text-white flex items-center justify-center transition-colors shadow-md"
                       >
                         <ArrowUpRight className="w-4 h-4" />
                       </Link>
@@ -489,13 +498,13 @@ export default function Version3KineticTimeline() {
                       {card.subtitle}
                     </div>
 
-                    <p className="text-xs text-neutral-300/80 leading-relaxed font-light mb-6">
+                    <p className="text-xs text-neutral-300 leading-relaxed font-light mb-6">
                       {card.description}
                     </p>
                   </div>
 
                   <div>
-                    <div className="p-4 rounded-xl bg-black/60 border border-white/10 mb-4">
+                    <div className="p-4 rounded-xl bg-black/80 border border-purple-500/20 mb-4">
                       <div className="text-[10px] font-mono text-neutral-400 uppercase">
                         {card.statLabel}
                       </div>
@@ -507,9 +516,9 @@ export default function Version3KineticTimeline() {
                     <div className="flex items-center justify-between pt-1">
                       <Link
                         href={card.url}
-                        className="text-xs font-mono text-purple-300 hover:text-white font-medium inline-flex items-center gap-1"
+                        className="text-xs font-mono text-purple-300 hover:text-white font-semibold inline-flex items-center gap-1"
                       >
-                        Explore Spec &rarr;
+                        Deep Dive Spec &rarr;
                       </Link>
 
                       {card.extUrl && (
@@ -517,9 +526,9 @@ export default function Version3KineticTimeline() {
                           href={card.extUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[11px] font-mono text-emerald-400 hover:underline flex items-center gap-1"
+                          className="text-[11px] font-mono text-emerald-400 font-bold hover:underline flex items-center gap-1"
                         >
-                          <ExternalLink className="w-3 h-3" /> Live Portal
+                          <ExternalLink className="w-3 h-3" /> om90.in Portal
                         </a>
                       )}
                     </div>
@@ -528,51 +537,126 @@ export default function Version3KineticTimeline() {
               );
             })}
           </div>
+
+          {/* Bottom Explore Collection Pill (Video match) */}
+          <div className="absolute bottom-12 left-1/2 -translate-x-1/2 pointer-events-auto">
+            <button
+              onClick={() => setActiveCardIndex((prev) => (prev + 1) % carouselCards.length)}
+              className="px-6 py-2.5 rounded-full bg-white hover:bg-neutral-200 text-neutral-950 font-bold text-xs tracking-wider uppercase transition-all shadow-[0_0_24px_rgba(255,255,255,0.4)] flex items-center gap-2"
+            >
+              <span>Explore the collection</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* ============================================================== */}
-        {/* 3. "BEYOND EVERY LIMIT" + STAR MOTIF (00:04 - 00:06) */}
+        {/* 3. "BEYOND EVERY LIMIT" + CLICKABLE OPAQUE PORTFOLIO CARD */}
         {/* ============================================================== */}
         <div
           ref={statementStageRef}
           id="stage-statement"
           className="absolute inset-0 flex items-center justify-center px-6 z-20 opacity-0 pointer-events-auto"
         >
-          <div className="max-w-6xl w-full mx-auto text-center relative">
+          <div className="max-w-6xl w-full mx-auto text-center relative flex flex-col items-center justify-center">
             {/* Massive Split Typography ("Beyond" top-left, "every limit" bottom-right) */}
-            <div className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white/95 uppercase leading-none select-none">
-              <div className="text-left">Beyond</div>
-            </div>
-
-            {/* Glowing Centerpiece 4-point Sparkle Star */}
-            <div
-              ref={starMotifRef}
-              className="my-6 sm:my-10 w-24 h-24 sm:w-32 sm:h-32 mx-auto rounded-full bg-gradient-to-tr from-purple-500 via-fuchsia-400 to-white p-1 shadow-[0_0_70px_rgba(168,85,247,0.8)] flex items-center justify-center"
-            >
-              <div className="w-full h-full bg-[#080812] rounded-full flex items-center justify-center">
-                <svg
-                  className="w-12 h-12 sm:w-16 sm:h-16 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.9)] animate-pulse"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-                </svg>
+            <div className="w-full flex justify-start">
+              <div className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white/95 uppercase leading-none select-none">
+                Beyond
               </div>
             </div>
 
-            <div className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white/95 uppercase leading-none select-none">
-              <div className="text-right">every limit</div>
+            {/* Glowing 4-Point Star that scales up and reveals the Clickable Opaque Flagship Metrology Card */}
+            <div
+              ref={starMotifRef}
+              className="my-4 w-full max-w-lg mx-auto flex items-center justify-center relative"
+            >
+              {/* Opaque Clickable Portfolio Feature Card */}
+              <div className="relative w-full rounded-3xl bg-[#0e0c1a] border-2 border-purple-500/70 p-6 sm:p-8 shadow-[0_0_80px_rgba(168,85,247,0.55)] text-left flex flex-col justify-between">
+                {/* 4-point star badge */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-8 h-8 rounded-full bg-purple-600/30 border border-purple-400 flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.8)]">
+                      <svg className="w-4 h-4 text-purple-200" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+                      </svg>
+                    </div>
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-300">
+                      FLAGSHIP METROLOGY SYSTEM
+                    </span>
+                  </div>
+
+                  <a
+                    href="https://om90.in/devices/elongation-detector"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>om90.in portal</span>
+                  </a>
+                </div>
+
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-1">
+                  PiCam 0.1 mm Micro-Gap Profiler
+                </h3>
+                <p className="text-xs text-purple-300/90 font-mono mb-4">
+                  Raspberry Pi & PiCamera v2/v3 Native Edge Inspection Rig
+                </p>
+
+                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-light mb-6">
+                  Engineered calibrated sub-pixel contouring and dynamic homography targets to perform zero-contact industrial gap measurement strictly within <strong className="text-white font-semibold">0.1 mm tolerance</strong>.
+                </p>
+
+                <div className="grid grid-cols-3 gap-2.5 p-3 rounded-2xl bg-black/90 border border-purple-500/30 mb-6">
+                  <div>
+                    <div className="text-[10px] font-mono text-neutral-400">TOLERANCE</div>
+                    <div className="text-base font-mono font-black text-emerald-400">0.1 mm</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-mono text-neutral-400">STREAM RATE</div>
+                    <div className="text-base font-mono font-black text-purple-300">30 FPS</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] font-mono text-neutral-400">HARDWARE</div>
+                    <div className="text-base font-mono font-black text-white">Raspberry Pi</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-purple-500/20">
+                  <Link
+                    href="/projects/gap-measurement"
+                    className="px-5 py-2.5 rounded-full bg-white hover:bg-neutral-200 text-neutral-950 font-bold text-xs flex items-center gap-2 transition-all shadow-md"
+                  >
+                    <span>Inspect Full Explanation</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
+
+                  <button
+                    onClick={() => setResumeOpen(true)}
+                    className="text-xs font-mono text-purple-300 hover:text-white font-semibold"
+                  >
+                    View Resume &rarr;
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full flex justify-end">
+              <div className="text-6xl sm:text-8xl md:text-9xl font-black tracking-tight text-white/95 uppercase leading-none select-none">
+                every limit
+              </div>
             </div>
 
             {/* Live Metrics Overlay Grid (matching video stats) */}
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left">
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-left w-full">
               {[
                 { val: "0.1 mm", label: "Tolerance", sub: "OM90 Sub-Millimeter" },
                 { val: "30 FPS", label: "Edge Throughput", sub: "Raspberry Pi & PiCam" },
                 { val: "MVP Finalist", label: "Datathon", sub: "KYC Datathon 2.0" },
                 { val: "8.7 CGPA", label: "Academic", sub: "SRMIST Computer Science" }
               ].map((m) => (
-                <div key={m.label} className="bg-black/60 border border-purple-500/20 p-4 rounded-2xl backdrop-blur-xl">
+                <div key={m.label} className="bg-black/90 border border-purple-500/30 p-4 rounded-2xl backdrop-blur-xl">
                   <div className="text-xl sm:text-2xl font-mono font-black text-white">{m.val}</div>
                   <div className="text-[10px] font-mono text-purple-300 uppercase tracking-wider mt-1">{m.label}</div>
                   <div className="text-[9px] text-neutral-400 mt-0.5">{m.sub}</div>
