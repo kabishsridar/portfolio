@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
@@ -8,18 +8,11 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import Lenis from "lenis";
 import {
   ArrowUpRight,
-  ArrowRight,
-  ExternalLink,
   ChevronRight,
   ChevronLeft,
   FileText,
   Eye,
-  Activity,
-  Cpu,
-  Layers,
-  Code2,
-  CheckCircle,
-  Sparkles,
+  ExternalLink,
 } from "lucide-react";
 import VersionSwitcher from "@/components/VersionSwitcher";
 import ResumeModal from "@/components/ResumeModal";
@@ -33,12 +26,22 @@ export default function V4ExactValentinPage() {
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorFollowerRef = useRef<HTMLDivElement>(null);
   const heroImageWrapRef = useRef<HTMLDivElement>(null);
-  
+
+  // Intro reveal overlay refs
+  const introOverlayRef = useRef<HTMLDivElement>(null);
+  const introClipRef = useRef<HTMLDivElement>(null);
+
   // Ending reveal refs
   const revealContainerRef = useRef<HTMLDivElement>(null);
   const orangeCardLayerRef = useRef<HTMLDivElement>(null);
   const standingActorRef = useRef<HTMLDivElement>(null);
   const sofaRevealLayerRef = useRef<HTMLDivElement>(null);
+
+  // Carousel refs
+  const carouselSectionRef = useRef<HTMLDivElement>(null);
+  const carouselAutoRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
 
   const [greeting, setGreeting] = useState("Good morning!");
   const [tickerIndex, setTickerIndex] = useState(0);
@@ -46,11 +49,10 @@ export default function V4ExactValentinPage() {
   const [activeCircularIdx, setActiveCircularIdx] = useState(0);
   const [activeTab, setActiveTab] = useState<string>("all");
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[0]>(projects[0]);
+  const [introVisible, setIntroVisible] = useState(true);
 
-  // Valentin's exact 3D rotating text choices
   const tickerWords = ["Metrology", "Edge Vision", "PLC Systems", "Robotics", "Deep AI"];
 
-  // Mapping actual portfolio project visual showcases (NO BOXER)
   const projectShowcaseImages: { [key: string]: string } = {
     "emo-rex": `${basePath}/proj_emotionsim_hud.jpg`,
     "rasi-feed-plc": `${basePath}/proj_plc_industrial.jpg`,
@@ -60,7 +62,7 @@ export default function V4ExactValentinPage() {
     "kyc-platform": `${basePath}/proj_plc_industrial.jpg`,
   };
 
-  // Time Greeting Calculation (like Valentin)
+  // Greeting
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good morning!");
@@ -68,7 +70,7 @@ export default function V4ExactValentinPage() {
     else setGreeting("Good evening!");
   }, []);
 
-  // Kinetic 3D Ticker rotation
+  // Ticker rotation
   useEffect(() => {
     const interval = setInterval(() => {
       setTickerIndex((prev) => (prev + 1) % tickerWords.length);
@@ -76,7 +78,32 @@ export default function V4ExactValentinPage() {
     return () => clearInterval(interval);
   }, [tickerWords.length]);
 
-  // Smooth Lenis + GSAP ScrollTrigger Sequence Matching Valentin Cheval
+  // ─── PAGE LOAD DIAGONAL WHITE REVEAL (once only) ───────────────────────────
+  useEffect(() => {
+    // Only run on first mount
+    const overlay = introOverlayRef.current;
+    const clip = introClipRef.current;
+    if (!overlay || !clip) return;
+
+    // Start: white fully covers the screen (clip-path fully visible)
+    gsap.set(overlay, { opacity: 1 });
+
+    // After a tiny delay, animate the diagonal clip-path away
+    const tl = gsap.timeline({ delay: 0.15 });
+    tl.to(clip, {
+      clipPath: "polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%)",
+      duration: 1.2,
+      ease: "power4.inOut",
+      onComplete: () => {
+        setIntroVisible(false);
+        if (overlay) overlay.style.display = "none";
+      },
+    });
+
+    return () => { tl.kill(); };
+  }, []);
+
+  // ─── LENIS + GSAP SCROLL ANIMATIONS ────────────────────────────────────────
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -92,45 +119,33 @@ export default function V4ExactValentinPage() {
     gsap.ticker.add(ticker);
     gsap.ticker.lagSmoothing(0);
 
-    // 1. Custom Valentin Red Dot Cursor Tracking
+    // Cursor tracking
     const onMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       if (cursorDotRef.current) {
         gsap.to(cursorDotRef.current, {
-          x: clientX,
-          y: clientY,
-          duration: 0.1,
-          ease: "power2.out",
+          x: clientX, y: clientY, duration: 0.1, ease: "power2.out",
         });
       }
       if (cursorFollowerRef.current) {
         gsap.to(cursorFollowerRef.current, {
-          x: clientX,
-          y: clientY,
-          duration: 0.4,
-          ease: "power3.out",
+          x: clientX, y: clientY, duration: 0.4, ease: "power3.out",
         });
       }
-
-      // Parallax on seated hero image
       if (heroImageWrapRef.current) {
         const xOffset = (clientX / window.innerWidth - 0.5) * 20;
         const yOffset = (clientY / window.innerHeight - 0.5) * 14;
         gsap.to(heroImageWrapRef.current, {
-          x: xOffset,
-          y: yOffset,
-          rotateY: xOffset * 0.2,
-          rotateX: -yOffset * 0.2,
-          duration: 1.2,
-          ease: "power2.out",
+          x: xOffset, y: yOffset,
+          rotateY: xOffset * 0.2, rotateX: -yOffset * 0.2,
+          duration: 1.2, ease: "power2.out",
         });
       }
     };
-
     window.addEventListener("mousemove", onMouseMove);
 
     const ctx = gsap.context(() => {
-      // 2. HORIZONTAL MOVING STRIP IN INTRO
+      // Moving strip
       gsap.to(".valentin-moving-strip", {
         scrollTrigger: {
           trigger: "#valentin-intro",
@@ -142,8 +157,7 @@ export default function V4ExactValentinPage() {
         ease: "none",
       });
 
-      // 3. EXACT VALENTIN ENDING REVEAL CHOREOGRAPHY
-      // Pinned transition where standing suit scales up and slides right to reveal seated armchair on left
+      // Ending reveal choreography
       if (
         revealContainerRef.current &&
         orangeCardLayerRef.current &&
@@ -160,31 +174,13 @@ export default function V4ExactValentinPage() {
           },
         });
 
-        // Email marquee slides across
         revealTl.to(".valentin-passing-email", { xPercent: -35, ease: "none", duration: 1 }, 0);
-
-        // Orange glowing testimonial & contact card dissolves out cleanly before background reveals
-        revealTl.to(
-          orangeCardLayerRef.current,
-          { opacity: 0, ease: "power1.inOut", duration: 0.25 },
-          0.05
-        );
-
-        // Standing transparent cutout actor scales up and slides smoothly off to the right
+        revealTl.to(orangeCardLayerRef.current, { opacity: 0, ease: "power1.inOut", duration: 0.25 }, 0.05);
         revealTl.to(
           standingActorRef.current,
-          {
-            scale: 2.3,
-            xPercent: 75,
-            yPercent: 12,
-            opacity: 0,
-            ease: "power2.inOut",
-            duration: 0.75,
-          },
+          { scale: 2.3, xPercent: 75, yPercent: 12, opacity: 0, ease: "power2.inOut", duration: 0.75 },
           0.15
         );
-
-        // Seated sofa image & headline emerge into full crisp focus only after the quote card is gone
         revealTl.fromTo(
           sofaRevealLayerRef.current,
           { opacity: 0, scale: 1.06 },
@@ -203,6 +199,68 @@ export default function V4ExactValentinPage() {
     };
   }, []);
 
+  // ─── AUTO-SLIDING CAROUSEL ────────────────────────────────────────────────
+  const startAutoSlide = useCallback(() => {
+    if (carouselAutoRef.current) clearInterval(carouselAutoRef.current);
+    carouselAutoRef.current = setInterval(() => {
+      if (!isDraggingRef.current) {
+        setActiveCircularIdx((prev) => (prev < projects.length - 1 ? prev + 1 : 0));
+      }
+    }, 2800);
+  }, []);
+
+  const stopAutoSlide = useCallback(() => {
+    if (carouselAutoRef.current) {
+      clearInterval(carouselAutoRef.current);
+      carouselAutoRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    const section = carouselSectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            startAutoSlide();
+          } else {
+            stopAutoSlide();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      stopAutoSlide();
+    };
+  }, [startAutoSlide, stopAutoSlide]);
+
+  // Drag/swipe support for carousel
+  const handleCarouselPointerDown = (e: React.PointerEvent) => {
+    isDraggingRef.current = true;
+    dragStartXRef.current = e.clientX;
+  };
+
+  const handleCarouselPointerUp = (e: React.PointerEvent) => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    const dx = e.clientX - dragStartXRef.current;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) {
+        setActiveCircularIdx((prev) => (prev < projects.length - 1 ? prev + 1 : 0));
+      } else {
+        setActiveCircularIdx((prev) => (prev > 0 ? prev - 1 : projects.length - 1));
+      }
+    }
+    // Restart auto-slide after manual interaction
+    startAutoSlide();
+  };
+
   const filteredProjects = projects.filter((p) => {
     if (activeTab === "all") return true;
     if (activeTab === "vision") return p.category.includes("Vision");
@@ -214,6 +272,7 @@ export default function V4ExactValentinPage() {
   const activeImageSrc =
     projectShowcaseImages[selectedProject.id] ||
     `${basePath}/proj_emotionsim_hud.jpg`;
+  void activeImageSrc;
 
   return (
     <div
@@ -223,7 +282,25 @@ export default function V4ExactValentinPage() {
         fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
-      {/* Valentin's Custom Red Interactive Cursor */}
+      {/* ── PAGE LOAD DIAGONAL WHITE INTRO REVEAL ── */}
+      {introVisible && (
+        <div
+          ref={introOverlayRef}
+          className="fixed inset-0 z-[9999] pointer-events-none"
+          style={{ opacity: 1 }}
+        >
+          {/* White diagonal clip that sweeps from top-left to bottom-right */}
+          <div
+            ref={introClipRef}
+            className="absolute inset-0 bg-white"
+            style={{
+              clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            }}
+          />
+        </div>
+      )}
+
+      {/* Cursor */}
       <div
         ref={cursorDotRef}
         className="pointer-events-none fixed top-0 left-0 w-3 h-3 -ml-1.5 -mt-1.5 rounded-full bg-[#ff3d00] z-50 mix-blend-difference hidden md:block"
@@ -233,18 +310,14 @@ export default function V4ExactValentinPage() {
         className="pointer-events-none fixed top-0 left-0 w-8 h-8 -ml-4 -mt-4 rounded-full border border-[#ff3d00]/40 z-40 hidden md:block transition-transform duration-75"
       />
 
-      {/* ========================================================================= */}
-      {/* 1. VALENTIN HEADER & TOP NAVIGATION                                       */}
-      {/* ========================================================================= */}
+      {/* ===================================================================== */}
+      {/* 1. HEADER                                                              */}
+      {/* ===================================================================== */}
       <header className="fixed top-0 inset-x-0 z-40 h-20 bg-[#0c0d10]/90 backdrop-blur-md border-b border-white/[0.08]">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 h-full flex items-center justify-between">
-          
-          {/* Greeting & Logo */}
           <Link href="/v4" className="flex items-center space-x-3 group">
             <div className="flex flex-col">
-              <span className="text-[11px] text-white/50 tracking-wider">
-                {greeting}
-              </span>
+              <span className="text-[11px] text-white/50 tracking-wider">{greeting}</span>
               <div className="flex items-baseline space-x-1.5 text-base font-bold tracking-tight text-white group-hover:text-[#ff3d00] transition-colors">
                 <span>Kabish</span>
                 <span className="text-white/40 font-normal">Sridar</span>
@@ -255,60 +328,31 @@ export default function V4ExactValentinPage() {
             </span>
           </Link>
 
-          {/* Socials / Links Bar (Valentin exact style: Socials / li / gh / em) */}
           <div className="hidden md:flex items-center space-x-2 text-xs text-white/70 font-mono">
             <span className="text-white/40">Socials /</span>
-            <a
-              href="https://www.linkedin.com/in/kabish-sridar-20587437b"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline"
-            >
-              li
-            </a>
+            <a href="https://www.linkedin.com/in/kabish-sridar-20587437b" target="_blank" rel="noreferrer" className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline">li</a>
             <span className="text-white/30">/</span>
-            <a
-              href="https://github.com/kabishsridar"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline"
-            >
-              gh
-            </a>
+            <a href="https://github.com/kabishsridar" target="_blank" rel="noreferrer" className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline">gh</a>
             <span className="text-white/30">/</span>
-            <a
-              href={`mailto:${profileData.contact.email}`}
-              className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline"
-            >
-              em
-            </a>
+            <a href={`mailto:${profileData.contact.email}`} className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline">em</a>
           </div>
 
-          {/* Menu / Index */}
           <nav className="hidden lg:flex items-center space-x-6 text-xs uppercase tracking-wider text-white/80">
-            <a href="#valentin-hero" className="hover:text-[#ff3d00] transition-colors">
-              Index <span className="text-white/30">/</span>
-            </a>
-            <a href="#valentin-intro" className="hover:text-[#ff3d00] transition-colors">
-              About <span className="text-white/30">/</span>
-            </a>
-            <a href="#valentin-projects" className="hover:text-[#ff3d00] transition-colors">
-              Projects
-            </a>
+            <a href="#valentin-hero" className="hover:text-[#ff3d00] transition-colors">Index <span className="text-white/30">/</span></a>
+            <a href="#valentin-intro" className="hover:text-[#ff3d00] transition-colors">About <span className="text-white/30">/</span></a>
+            <a href="#valentin-projects" className="hover:text-[#ff3d00] transition-colors">Projects</a>
           </nav>
 
-          {/* Right Action Buttons */}
           <div className="flex items-center space-x-3 sm:space-x-4">
             <VersionSwitcher />
-
             <button
+              type="button"
               onClick={() => setIsResumeOpen(true)}
               className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-white/15 bg-white/5 hover:border-white/40 text-white transition-all"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Resume</span>
             </button>
-
             <a
               href={`mailto:${profileData.contact.email}`}
               className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_20px_rgba(255,61,0,0.4)] transition-all"
@@ -320,16 +364,15 @@ export default function V4ExactValentinPage() {
         </div>
       </header>
 
-      {/* ========================================================================= */}
-      {/* 2. HERO: VALENTIN CHEVAL STYLE WITH FAVORITE SEATED PORTRAIT              */}
-      {/* ========================================================================= */}
+      {/* ===================================================================== */}
+      {/* 2. HERO SECTION                                                        */}
+      {/* ===================================================================== */}
       <section
         id="valentin-hero"
         className="relative min-h-screen pt-28 pb-16 px-6 sm:px-12 flex flex-col justify-between overflow-hidden"
       >
         <div className="max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1 my-auto">
-          
-          {/* Left Column: Scope, Bio, Headline with 3D Rotating Ticker */}
+          {/* Left Column */}
           <div className="lg:col-span-6 space-y-8">
             <div className="space-y-2 border-l border-white/10 pl-4 py-1">
               <span className="text-[10px] uppercase font-mono tracking-widest text-[#ff3d00]">
@@ -366,67 +409,41 @@ export default function V4ExactValentinPage() {
               </h1>
             </div>
 
-            {/* Official Valentin Award Badges */}
             <div className="flex items-center space-x-6 pt-2">
               <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
-                <Image
-                  src={`${basePath}/red-dot-white.BCoP2Tnu.svg`}
-                  alt="Red Dot Award"
-                  width={38}
-                  height={38}
-                  className="h-full w-auto object-contain"
-                />
+                <Image src={`${basePath}/red-dot-white.BCoP2Tnu.svg`} alt="Red Dot Award" width={38} height={38} className="h-full w-auto object-contain" />
               </div>
               <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
-                <Image
-                  src={`${basePath}/uxdesign-white._MZKNTN5.svg`}
-                  alt="UX Design Award"
-                  width={38}
-                  height={38}
-                  className="h-full w-auto object-contain"
-                />
+                <Image src={`${basePath}/uxdesign-white._MZKNTN5.svg`} alt="UX Design Award" width={38} height={38} className="h-full w-auto object-contain" />
               </div>
               <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
-                <Image
-                  src={`${basePath}/dfa-white.BALS8Xtv.svg`}
-                  alt="DFA Award"
-                  width={38}
-                  height={38}
-                  className="h-full w-auto object-contain"
-                />
+                <Image src={`${basePath}/dfa-white.BALS8Xtv.svg`} alt="DFA Award" width={38} height={38} className="h-full w-auto object-contain" />
               </div>
               <span className="text-xs font-mono text-white/40 pl-2 border-l border-white/10">
                 MVP Finalist • KYC Datathon 2.0
               </span>
             </div>
 
-            {/* Metric Counters Strip */}
             <div className="pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
-                  Precision Tol.
-                </span>
+                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">Precision Tol.</span>
                 <p className="text-xl font-bold text-white tracking-tight">0.1 mm</p>
                 <span className="text-[11px] text-white/50 block">PiCam Sub-Pixel Metrology</span>
               </div>
               <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
-                  Recognition
-                </span>
+                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">Recognition</span>
                 <p className="text-xl font-bold text-[#ff3d00] tracking-tight">MVP Finalist</p>
                 <span className="text-[11px] text-white/50 block">KYC Datathon 2.0</span>
               </div>
               <div className="space-y-1 col-span-2 sm:col-span-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
-                  Hardware Control
-                </span>
+                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">Hardware Control</span>
                 <p className="text-xl font-bold text-white tracking-tight">ABB AC500</p>
                 <span className="text-[11px] text-white/50 block">IEC 61131-3 PLC Automation</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Seated Hero Portrait (Kabish's Favorite Portrait with NO Glass) */}
+          {/* Right Column: Hero Portrait */}
           <div className="lg:col-span-6 flex justify-center items-center relative">
             <div
               ref={heroImageWrapRef}
@@ -434,17 +451,14 @@ export default function V4ExactValentinPage() {
             >
               <Image
                 src={`${basePath}/kabish_valentin_v4.jpg`}
-                alt="Kabish Sridar in tailored black suit and coolers — Valentin Cheval style"
+                alt="Kabish Sridar in tailored black suit and coolers"
                 fill
                 priority
-                className="object-cover object-center filter contrast-[1.05] brightness-[0.98] group-hover:scale-105 transition-transform duration-700"
+                className="object-cover object-[center_5%] filter contrast-[1.05] brightness-[0.98] group-hover:scale-105 transition-transform duration-700"
                 sizes="(max-width: 768px) 100vw, 500px"
               />
-
               <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-transparent opacity-85" />
               <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none" />
-
-              {/* Exact Bottom HUD Badge from User Screenshot */}
               <div className="absolute bottom-5 inset-x-5 p-4 rounded-xl bg-black/75 backdrop-blur-xl border border-white/10 flex items-center justify-between">
                 <div>
                   <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00] block">
@@ -456,23 +470,27 @@ export default function V4ExactValentinPage() {
               </div>
             </div>
           </div>
-
         </div>
 
         <div className="max-w-[1440px] w-full mx-auto pt-8 border-t border-white/[0.08] flex items-center justify-between text-xs text-white/40 font-mono">
           <span>CHENNAI, INDIA • 10.7905° N, 78.7047° E</span>
           <span className="text-white/60">AVAILABLE FOR ROLES &amp; INDUSTRIAL CONTRACTS</span>
         </div>
+
+        {/* Bottom gradient blend into next section */}
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-b from-transparent to-[#0e0f13] pointer-events-none" />
       </section>
 
-      {/* ========================================================================= */}
-      {/* 3. MOVING TEXT STRIP IN LINE & ABOUT SECTION                              */}
-      {/* ========================================================================= */}
+      {/* ===================================================================== */}
+      {/* 3. MOVING TEXT STRIP & ABOUT                                          */}
+      {/* ===================================================================== */}
       <section
         id="valentin-intro"
-        className="py-24 border-t border-white/10 bg-[#0e0f13] overflow-hidden"
+        className="relative py-24 border-t border-white/10 bg-[#0e0f13] overflow-hidden"
       >
-        {/* Valentin Moving Strip in Line */}
+        {/* Top gradient blend from hero */}
+        <div className="absolute top-0 inset-x-0 h-20 bg-gradient-to-b from-[#0c0d10] to-transparent pointer-events-none" />
+
         <div className="valentin-moving-strip whitespace-nowrap text-5xl sm:text-7xl font-black uppercase text-white/[0.04] tracking-tight mb-16 select-none flex space-x-8">
           <span>OPTICAL METROLOGY • EDGE VISION • PLC SYSTEMS • ROBOTICS •</span>
           <span>OPTICAL METROLOGY • EDGE VISION • PLC SYSTEMS • ROBOTICS •</span>
@@ -495,7 +513,6 @@ export default function V4ExactValentinPage() {
             <p>
               From zero-contact <strong>0.1 mm mechanical gap metrology</strong> calibrated via homography checkerboard matrices, to real-time multi-ingredient feed batch scaling on an <strong>ABB AC500 PLC</strong>, my systems unite modern deep neural networks with rugged industrial hardware.
             </p>
-
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-white/10 font-mono">
               <div>
                 <span className="text-3xl font-black text-white tracking-tight">0.1 mm</span>
@@ -512,24 +529,69 @@ export default function V4ExactValentinPage() {
             </div>
           </div>
         </div>
+
+        {/* Bottom gradient blend */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-b from-transparent to-[#0c0d10] pointer-events-none" />
       </section>
 
-      {/* ========================================================================= */}
-      {/* 4. EXACT PROJECT SHOWCASE (PORTFOLIO PROJECTS ONLY — BOXER REMOVED)       */}
-      {/* ========================================================================= */}
-      {/* ========================================================================= */}
-      {/* 4. PROJECTS: 3D CIRCULAR SLIDER + V2 CARDS IN V4 THEME + DISPLAY DRAWER   */}
-      {/* ========================================================================= */}
+      {/* ===================================================================== */}
+      {/* 3B. PORTRAIT + SEATED IMAGE ABOVE PROJECTS                            */}
+      {/* ===================================================================== */}
+      <section className="relative bg-[#0c0d10] py-0 overflow-hidden">
+        {/* Top blend from intro */}
+        <div className="absolute top-0 inset-x-0 h-20 bg-gradient-to-b from-[#0e0f13] to-transparent pointer-events-none z-10" />
+
+        {/* Full-width seated/landscape image — fixed enlarged, NOT moving up */}
+        <div className="relative w-full" style={{ height: "80vh", minHeight: 480 }}>
+          <Image
+            src={`${basePath}/kabish_hero_landscape.jpg`}
+            alt="Kabish Sridar — landscape portrait"
+            fill
+            priority
+            className="object-cover object-[center_18%] filter brightness-[0.7] contrast-[1.08] saturate-[1.1]"
+            sizes="100vw"
+          />
+          {/* Dark overlays for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/70 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0c0d10] pointer-events-none" />
+
+          {/* Overlay text */}
+          <div className="absolute inset-0 flex items-center px-6 sm:px-16 max-w-[1440px] mx-auto w-full">
+            <div className="space-y-4 max-w-2xl">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00]">
+                As an engineer and builder
+              </span>
+              <h2 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white leading-[1.05] tracking-tight">
+                I believe in{" "}
+                <span className="text-[#ff3d00]">service above self.</span>
+              </h2>
+              <p className="text-sm sm:text-base text-white/70 font-light leading-relaxed max-w-lg">
+                Being an embedded AI engineer is about serving real physical needs — dedicating yourself to finding the right balance between real-time inference speed and hardware reliability.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom blend into projects */}
+        <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-b from-transparent to-[#0c0d10] pointer-events-none" />
+      </section>
+
+      {/* ===================================================================== */}
+      {/* 4. PROJECTS: 3D AUTO-CAROUSEL + V2 CARDS + DRAWER                     */}
+      {/* ===================================================================== */}
       <section
         id="valentin-projects"
-        className="py-24 border-t border-white/10 bg-[#0c0d10]"
+        className="py-24 bg-[#0c0d10]"
       >
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 space-y-20">
 
-          {/* --------------------------------------------------------------------- */}
-          {/* 4A. CIRCULAR 3D SLIDER OF ALL PROJECTS                                */}
-          {/* --------------------------------------------------------------------- */}
-          <div className="space-y-8">
+          {/* ----------------------------------------------------------------- */}
+          {/* 4A. AUTO-SLIDING 3D CIRCULAR CAROUSEL                             */}
+          {/* ----------------------------------------------------------------- */}
+          <div
+            ref={carouselSectionRef}
+            className="space-y-8"
+          >
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
               <div className="space-y-2">
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00] font-bold">
@@ -539,20 +601,20 @@ export default function V4ExactValentinPage() {
                   Circular Reel of All Projects
                 </h2>
                 <p className="text-sm text-white/60 font-light max-w-xl">
-                  Interactive 3D cylindrical carousel showcasing all 6 optical metrology, industrial PLC, and edge computer vision deployments.
+                  Auto-sliding 3D cylindrical carousel. Click, drag, or let it scroll through all 6 deployments.
                 </p>
               </div>
 
-              {/* Slider Controls */}
               <div className="flex items-center space-x-3">
                 <span className="text-xs font-mono text-white/40 mr-2">
                   0{activeCircularIdx + 1} / 0{projects.length}
                 </span>
                 <button
                   type="button"
-                  onClick={() =>
-                    setActiveCircularIdx((prev) => (prev > 0 ? prev - 1 : projects.length - 1))
-                  }
+                  onClick={() => {
+                    setActiveCircularIdx((prev) => (prev > 0 ? prev - 1 : projects.length - 1));
+                    startAutoSlide();
+                  }}
                   className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 hover:border-[#ff3d00] text-white flex items-center justify-center transition-all cursor-pointer"
                   aria-label="Previous project"
                 >
@@ -560,9 +622,10 @@ export default function V4ExactValentinPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() =>
-                    setActiveCircularIdx((prev) => (prev < projects.length - 1 ? prev + 1 : 0))
-                  }
+                  onClick={() => {
+                    setActiveCircularIdx((prev) => (prev < projects.length - 1 ? prev + 1 : 0));
+                    startAutoSlide();
+                  }}
                   className="w-10 h-10 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 hover:border-[#ff3d00] text-white flex items-center justify-center transition-all cursor-pointer"
                   aria-label="Next project"
                 >
@@ -571,10 +634,13 @@ export default function V4ExactValentinPage() {
               </div>
             </div>
 
-            {/* 3D Perspective Viewport */}
+            {/* 3D Viewport — drag enabled */}
             <div
-              className="relative w-full h-[520px] flex items-center justify-center overflow-hidden py-4"
+              className="relative w-full h-[520px] flex items-center justify-center overflow-hidden py-4 cursor-grab active:cursor-grabbing select-none"
               style={{ perspective: "1800px" }}
+              onPointerDown={handleCarouselPointerDown}
+              onPointerUp={handleCarouselPointerUp}
+              onPointerLeave={handleCarouselPointerUp}
             >
               <div
                 className="relative w-[340px] sm:w-[420px] h-[480px] flex items-center justify-center"
@@ -583,13 +649,17 @@ export default function V4ExactValentinPage() {
                 {projects.map((p, idx) => {
                   const count = projects.length;
                   const offset = idx - activeCircularIdx;
-                  const angle = offset * 38;
+                  // Handle wrap-around for circular effect
+                  const wrappedOffset =
+                    offset > count / 2 ? offset - count :
+                    offset < -count / 2 ? offset + count : offset;
+                  const angle = wrappedOffset * 38;
                   const rad = (angle * Math.PI) / 180;
                   const radius = 560;
                   const transX = Math.sin(rad) * radius;
                   const transZ = (Math.cos(rad) - 1) * radius;
                   const isCenter = idx === activeCircularIdx;
-                  const isNear = Math.abs(offset) <= 2 || Math.abs(offset) >= count - 2;
+                  const isNear = Math.abs(wrappedOffset) <= 2;
 
                   if (!isNear) return null;
 
@@ -599,6 +669,7 @@ export default function V4ExactValentinPage() {
                       onClick={() => {
                         setActiveCircularIdx(idx);
                         setSelectedProject(p);
+                        startAutoSlide();
                       }}
                       className={`absolute inset-0 rounded-3xl p-6 sm:p-7 flex flex-col justify-between transition-all duration-700 cursor-pointer select-none bg-[#111319] border ${
                         isCenter
@@ -610,7 +681,6 @@ export default function V4ExactValentinPage() {
                         transformStyle: "preserve-3d",
                       }}
                     >
-                      {/* Top info */}
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-white/10 text-[#ff3d00] border border-[#ff3d00]/30">
@@ -621,7 +691,6 @@ export default function V4ExactValentinPage() {
                           </span>
                         </div>
 
-                        {/* Visual Thumbnail */}
                         <div className="relative w-full h-36 rounded-xl overflow-hidden bg-black/60 border border-white/10 mt-2">
                           <Image
                             src={projectShowcaseImages[p.id] || `${basePath}/proj_emotionsim_hud.jpg`}
@@ -637,16 +706,11 @@ export default function V4ExactValentinPage() {
                         </div>
 
                         <div>
-                          <h3 className="text-base sm:text-lg font-bold text-white line-clamp-1 mt-1">
-                            {p.title}
-                          </h3>
-                          <p className="text-xs text-white/60 font-light line-clamp-2 mt-1">
-                            {p.summary}
-                          </p>
+                          <h3 className="text-base sm:text-lg font-bold text-white line-clamp-1 mt-1">{p.title}</h3>
+                          <p className="text-xs text-white/60 font-light line-clamp-2 mt-1">{p.summary}</p>
                         </div>
                       </div>
 
-                      {/* Bottom action pills */}
                       <div className="pt-3 border-t border-white/10 flex items-center justify-between">
                         <button
                           type="button"
@@ -661,7 +725,6 @@ export default function V4ExactValentinPage() {
                           <Eye className="w-3.5 h-3.5" />
                           <span>Inspect Blueprint</span>
                         </button>
-
                         <Link
                           href={`/projects/${p.id}`}
                           onClick={(e) => e.stopPropagation()}
@@ -677,7 +740,7 @@ export default function V4ExactValentinPage() {
               </div>
             </div>
 
-            {/* Circular Reel Indicator Dots */}
+            {/* Indicator Dots */}
             <div className="flex items-center justify-center space-x-2 pt-2">
               {projects.map((p, idx) => (
                 <button
@@ -685,11 +748,10 @@ export default function V4ExactValentinPage() {
                   onClick={() => {
                     setActiveCircularIdx(idx);
                     setSelectedProject(p);
+                    startAutoSlide();
                   }}
                   className={`h-2 rounded-full transition-all cursor-pointer ${
-                    idx === activeCircularIdx
-                      ? "w-8 bg-[#ff3d00]"
-                      : "w-2 bg-white/20 hover:bg-white/40"
+                    idx === activeCircularIdx ? "w-8 bg-[#ff3d00]" : "w-2 bg-white/20 hover:bg-white/40"
                   }`}
                   aria-label={`Go to project ${idx + 1}`}
                 />
@@ -697,9 +759,9 @@ export default function V4ExactValentinPage() {
             </div>
           </div>
 
-          {/* --------------------------------------------------------------------- */}
-          {/* 4B. ALL PROJECT CARDS SAME AS V2 WITH V4 THEME                        */}
-          {/* --------------------------------------------------------------------- */}
+          {/* ----------------------------------------------------------------- */}
+          {/* 4B. ALL PROJECT CARDS (V2 STYLE WITH V4 THEME)                    */}
+          {/* ----------------------------------------------------------------- */}
           <div className="space-y-10 pt-10 border-t border-white/10">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
               <div className="space-y-2">
@@ -711,52 +773,30 @@ export default function V4ExactValentinPage() {
                 </h2>
               </div>
 
-              {/* Category Filter Pills */}
+              {/* Filter Pills */}
               <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 text-xs">
-                <button
-                  onClick={() => setActiveTab("all")}
-                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
-                    activeTab === "all"
-                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  All ({projects.length})
-                </button>
-                <button
-                  onClick={() => setActiveTab("vision")}
-                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
-                    activeTab === "vision"
-                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  Vision &amp; Metrology
-                </button>
-                <button
-                  onClick={() => setActiveTab("industrial")}
-                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
-                    activeTab === "industrial"
-                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  Industrial &amp; PLC
-                </button>
-                <button
-                  onClick={() => setActiveTab("deep")}
-                  className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
-                    activeTab === "deep"
-                      ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
-                      : "text-white/50 hover:text-white"
-                  }`}
-                >
-                  Deep Learning / OCR
-                </button>
+                {[
+                  { key: "all", label: `All (${projects.length})` },
+                  { key: "vision", label: "Vision & Metrology" },
+                  { key: "industrial", label: "Industrial & PLC" },
+                  { key: "deep", label: "Deep Learning / OCR" },
+                ].map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`px-3.5 py-1.5 rounded-lg font-mono font-medium transition-all cursor-pointer ${
+                      activeTab === tab.key
+                        ? "bg-[#ff3d00] text-white shadow-[0_0_15px_rgba(255,61,0,0.4)]"
+                        : "text-white/50 hover:text-white"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Grid of All Project Cards (V2 Cards with V4 Theme) */}
+            {/* Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProjects.map((p) => {
                 const isSelected = selectedProject.id === p.id;
@@ -799,19 +839,14 @@ export default function V4ExactValentinPage() {
                     </div>
 
                     <div className="pt-6 space-y-4">
-                      {/* Key Benchmark Pill */}
                       <div className="p-3 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between">
                         <span className="text-[10px] text-white/50 font-mono uppercase">Benchmark</span>
                         <span className="text-xs font-bold font-mono text-[#ff3d00]">{p.keyMetric}</span>
                       </div>
 
-                      {/* Tech Stack Chips */}
                       <div className="flex flex-wrap gap-1.5">
                         {p.stack.slice(0, 4).map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-white/70"
-                          >
+                          <span key={tech} className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-white/70">
                             {tech}
                           </span>
                         ))}
@@ -822,7 +857,6 @@ export default function V4ExactValentinPage() {
                         )}
                       </div>
 
-                      {/* Action Buttons: Display and Full Explanation */}
                       <div className="flex items-center space-x-2 pt-2 border-t border-white/10">
                         <button
                           type="button"
@@ -858,16 +892,15 @@ export default function V4ExactValentinPage() {
               })}
             </div>
 
-            {/* ----------------------------------------------------------------- */}
-            {/* 4C. DEEP ARCHITECTURE DRAWER ("DISPLAYING NOW")                  */}
-            {/* ----------------------------------------------------------------- */}
+            {/* ---------------------------------------------------------------- */}
+            {/* 4C. DEEP ARCHITECTURE DRAWER                                     */}
+            {/* ---------------------------------------------------------------- */}
             {selectedProject && (
               <div
                 id="project-spec-drawer"
                 key={selectedProject.id}
                 className="scroll-mt-24 p-8 sm:p-10 rounded-3xl bg-gradient-to-b from-[#14161f] to-[#0c0d12] border border-[#ff3d00]/40 space-y-8 animate-in fade-in zoom-in-95 duration-300 shadow-[0_0_60px_rgba(0,0,0,0.8)]"
               >
-                {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2.5">
@@ -883,7 +916,6 @@ export default function V4ExactValentinPage() {
                       {selectedProject.title}
                     </h3>
                   </div>
-
                   <div className="flex items-center space-x-3">
                     <Link
                       href={`/projects/${selectedProject.id}`}
@@ -895,7 +927,6 @@ export default function V4ExactValentinPage() {
                   </div>
                 </div>
 
-                {/* External Device Portal Banner (for Elongation Detector) */}
                 {selectedProject.externalWebsite && (
                   <div className="p-5 rounded-2xl bg-gradient-to-r from-[#ff3d00]/20 via-[#ff5722]/10 to-transparent border border-[#ff3d00]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
@@ -905,9 +936,7 @@ export default function V4ExactValentinPage() {
                       <h4 className="text-base font-bold text-white mt-0.5">
                         {selectedProject.externalWebsite.label}
                       </h4>
-                      <p className="text-xs text-white/70 mt-1">
-                        {selectedProject.externalWebsite.description}
-                      </p>
+                      <p className="text-xs text-white/70 mt-1">{selectedProject.externalWebsite.description}</p>
                     </div>
                     <a
                       href={selectedProject.externalWebsite.url}
@@ -921,10 +950,7 @@ export default function V4ExactValentinPage() {
                   </div>
                 )}
 
-                {/* Grid Layout: Visual Showcase + Architecture */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                  
-                  {/* Left Column: Visual Schematic Image */}
                   <div className="lg:col-span-5 relative aspect-[4/3] rounded-2xl overflow-hidden bg-black/80 border border-white/10 shadow-2xl">
                     <Image
                       src={projectShowcaseImages[selectedProject.id] || `${basePath}/proj_emotionsim_hud.jpg`}
@@ -936,55 +962,38 @@ export default function V4ExactValentinPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent" />
                     <div className="absolute bottom-4 inset-x-4 p-3 rounded-xl bg-black/80 backdrop-blur-md border border-white/10 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] font-mono text-[#ff3d00] uppercase block">
-                          Verified Key Metric
-                        </span>
+                        <span className="text-[10px] font-mono text-[#ff3d00] uppercase block">Verified Key Metric</span>
                         <p className="text-xs font-bold text-white">{selectedProject.keyMetric}</p>
                       </div>
-                      <span className="text-[10px] font-mono text-white/50">
-                        {selectedProject.category}
-                      </span>
+                      <span className="text-[10px] font-mono text-white/50">{selectedProject.category}</span>
                     </div>
                   </div>
 
-                  {/* Right Column: Signal Flow & Specs */}
                   <div className="lg:col-span-7 space-y-6">
-                    {/* Pipeline Signal Flow */}
                     <div className="space-y-3">
                       <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">
                         Hardware-Software Signal Architecture
                       </span>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs">
-                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
-                          <span className="text-[10px] text-white/40 block">01 // INPUT</span>
-                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.input}</span>
-                        </div>
-                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
-                          <span className="text-[10px] text-white/40 block">02 // INFERENCE</span>
-                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.processing}</span>
-                        </div>
-                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
-                          <span className="text-[10px] text-white/40 block">03 // HARDWARE</span>
-                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.hardwareOrStorage}</span>
-                        </div>
-                        <div className="p-3 rounded-xl bg-black/60 border border-white/10">
-                          <span className="text-[10px] text-white/40 block">04 // TELEMETRY</span>
-                          <span className="text-white font-bold block mt-1 line-clamp-2">{selectedProject.architecture.output}</span>
-                        </div>
+                        {[
+                          { stage: "01 // INPUT", val: selectedProject.architecture.input },
+                          { stage: "02 // INFERENCE", val: selectedProject.architecture.processing },
+                          { stage: "03 // HARDWARE", val: selectedProject.architecture.hardwareOrStorage },
+                          { stage: "04 // TELEMETRY", val: selectedProject.architecture.output },
+                        ].map((item) => (
+                          <div key={item.stage} className="p-3 rounded-xl bg-black/60 border border-white/10">
+                            <span className="text-[10px] text-white/40 block">{item.stage}</span>
+                            <span className="text-white font-bold block mt-1 line-clamp-2">{item.val}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
 
-                    {/* Technical Specs List */}
                     <div className="space-y-3">
-                      <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                        Key Specifications
-                      </span>
+                      <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">Key Specifications</span>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                         {selectedProject.specs.map((sp) => (
-                          <div
-                            key={sp.label}
-                            className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between gap-2"
-                          >
+                          <div key={sp.label} className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between gap-2">
                             <span className="text-white/50 font-mono">{sp.label}</span>
                             <span className="font-bold text-white font-mono text-right">{sp.value}</span>
                           </div>
@@ -992,11 +1001,8 @@ export default function V4ExactValentinPage() {
                       </div>
                     </div>
 
-                    {/* Engineering Highlights */}
                     <div className="space-y-2 pt-2 border-t border-white/10">
-                      <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                        Engineering Highlights
-                      </span>
+                      <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">Engineering Highlights</span>
                       <ul className="space-y-1.5 text-xs text-white/70 leading-relaxed font-light">
                         {selectedProject.highlights.map((hl, i) => (
                           <li key={i} className="flex items-start space-x-2">
@@ -1006,39 +1012,40 @@ export default function V4ExactValentinPage() {
                         ))}
                       </ul>
                     </div>
-
                   </div>
                 </div>
               </div>
             )}
           </div>
-
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 5. EXACT VALENTIN ENDING REVEAL (STANDING SLIDES RIGHT TO REVEAL SOFA)   */}
-      {/* ========================================================================= */}
+      {/* ===================================================================== */}
+      {/* 5. ENDING REVEAL: ORANGE → SOFA TRANSITION                            */}
+      {/* ===================================================================== */}
       <section
         id="valentin-ending-reveal"
         ref={revealContainerRef}
         className="relative h-[160vh] bg-[#0c0d10]"
       >
+        {/* Top gradient blend from projects */}
+        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#0c0d10] to-transparent pointer-events-none z-[35]" />
+
         <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
-          
-          {/* Layer A (Background): Full Screen Revealed Seated Sofa / Armchair Image & Re-emerging Headline */}
+
+          {/* Layer A: Sofa/seated reveal (underneath, comes in after scroll) */}
           <div
             ref={sofaRevealLayerRef}
             className="absolute inset-0 w-full h-full z-10 flex items-center justify-between px-6 sm:px-16 pointer-events-none opacity-0"
           >
-            {/* Cinematic Seated Armchair Image — Framed so head, sunglasses and face are fully visible */}
+            {/* Full-screen seated portrait */}
             <div className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden">
               <div className="relative w-full max-w-[900px] h-full">
                 <Image
                   src={`${basePath}/kabish_valentin_v4.jpg`}
-                  alt="Kabish Sridar seated in emerald armchair"
+                  alt="Kabish Sridar seated in emerald armchair — face fully visible"
                   fill
-                  className="object-contain sm:object-cover object-[center_12%] filter brightness-[0.92] contrast-[1.05]"
+                  className="object-cover object-[center_8%] filter brightness-[0.92] contrast-[1.05]"
                   sizes="100vw"
                   priority
                 />
@@ -1048,7 +1055,6 @@ export default function V4ExactValentinPage() {
             </div>
 
             <div className="relative z-20 max-w-[1440px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pointer-events-auto">
-              {/* Left Column: Re-emerging Giant Hero Headline */}
               <div className="lg:col-span-7 space-y-4">
                 <span className="text-xs font-mono uppercase tracking-widest text-white/50 block">
                   Hi there! this is Kabish Sridar
@@ -1072,76 +1078,45 @@ export default function V4ExactValentinPage() {
                     <ArrowUpRight className="w-4 h-4" />
                   </a>
                   <button
+                    type="button"
                     onClick={() => setIsResumeOpen(true)}
-                    className="px-5 py-3.5 rounded-full text-xs font-semibold border border-white/20 hover:border-white/50 text-white bg-white/10 backdrop-blur-md transition-all"
+                    className="px-5 py-3.5 rounded-full text-xs font-semibold border border-white/20 hover:border-white/50 text-white bg-white/10 backdrop-blur-md transition-all cursor-pointer"
                   >
                     Download Resume PDF
                   </button>
                 </div>
-
-                <div className="pt-6">
-                  <span className="text-[11px] font-mono text-white/40 tracking-wider">
-                    (Scroll down)
-                  </span>
-                </div>
               </div>
 
-              {/* Right Column: Capabilities & Credentials Badges */}
               <div className="lg:col-span-5 space-y-6 lg:pl-12">
                 <div className="space-y-3">
-                  <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
-                    Focus Areas
-                  </span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">Focus Areas</span>
                   <ul className="space-y-2 text-sm text-white/80 font-mono">
-                    <li className="flex items-center space-x-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
-                      <span>Sub-Pixel Optical Metrology (0.1 mm)</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
-                      <span>Edge Computer Vision &amp; TensorRT</span>
-                    </li>
-                    <li className="flex items-center space-x-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
-                      <span>Industrial PLC &amp; SCADA Automation</span>
-                    </li>
+                    {[
+                      "Sub-Pixel Optical Metrology (0.1 mm)",
+                      "Edge Computer Vision & TensorRT",
+                      "Industrial PLC & SCADA Automation",
+                    ].map((item) => (
+                      <li key={item} className="flex items-center space-x-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#ff3d00]" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00]">
-                      Academic Distinction
-                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00]">Academic Distinction</span>
                     <div className="w-2 h-2 rounded-full bg-[#ff3d00] animate-pulse" />
                   </div>
                   <p className="text-sm font-bold text-white">SRM Institute of Science and Technology</p>
                   <p className="text-xs text-white/60">B.Tech Computer Science (AI &amp; ML) • CGPA 8.7</p>
                 </div>
 
-                {/* Awards Row */}
                 <div className="flex items-center space-x-4 pt-1">
-                  <Image
-                    src={`${basePath}/red-dot-white.BCoP2Tnu.svg`}
-                    alt="Red Dot Award"
-                    width={32}
-                    height={32}
-                    className="opacity-60"
-                  />
-                  <Image
-                    src={`${basePath}/uxdesign-white._MZKNTN5.svg`}
-                    alt="UX Design Award"
-                    width={32}
-                    height={32}
-                    className="opacity-60"
-                  />
-                  <Image
-                    src={`${basePath}/dfa-white.BALS8Xtv.svg`}
-                    alt="DFA Award"
-                    width={32}
-                    height={32}
-                    className="opacity-60"
-                  />
+                  <Image src={`${basePath}/red-dot-white.BCoP2Tnu.svg`} alt="Red Dot Award" width={32} height={32} className="opacity-60" />
+                  <Image src={`${basePath}/uxdesign-white._MZKNTN5.svg`} alt="UX Design Award" width={32} height={32} className="opacity-60" />
+                  <Image src={`${basePath}/dfa-white.BALS8Xtv.svg`} alt="DFA Award" width={32} height={32} className="opacity-60" />
                   <span className="text-[11px] font-mono text-white/40 border-l border-white/10 pl-3">
                     KYC Datathon 2.0 MVP Finalist
                   </span>
@@ -1150,7 +1125,7 @@ export default function V4ExactValentinPage() {
             </div>
           </div>
 
-          {/* Layer B (Middle): Warm Sunrise Glow Testimonial & Contact Card */}
+          {/* Layer B: Orange warm glow card (front layer, fades out on scroll) */}
           <div
             ref={orangeCardLayerRef}
             className="absolute inset-0 w-full h-full z-20 flex flex-col justify-between p-8 sm:p-16 transition-opacity"
@@ -1158,10 +1133,9 @@ export default function V4ExactValentinPage() {
               background: "radial-gradient(ellipse 90% 60% at 50% 15%, #ff5500 0%, #ff7722 28%, #fff2ec 65%, #f4f3f0 100%)",
             }}
           >
-            {/* Top dark gradient vignette for readable nav */}
             <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none" />
 
-            {/* Giant Passing Email Ticker behind standing person */}
+            {/* Passing email ticker */}
             <div className="absolute bottom-20 left-0 w-full overflow-hidden pointer-events-none select-none opacity-15">
               <div className="valentin-passing-email whitespace-nowrap text-8xl sm:text-[11vw] font-black uppercase tracking-tighter text-black">
                 {profileData.contact.email} • {profileData.contact.email} • {profileData.contact.email} • {profileData.contact.email}
@@ -1169,63 +1143,37 @@ export default function V4ExactValentinPage() {
             </div>
 
             <div className="relative z-10 max-w-[1440px] w-full mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center flex-1 my-auto">
-              {/* Left Column: Socials & Contact */}
+              {/* Left: Socials & Contact */}
               <div className="md:col-span-4 space-y-6">
                 <div className="space-y-2">
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">
-                    Socials
-                  </span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">Socials</span>
                   <div className="flex flex-col space-y-1 text-sm font-semibold text-neutral-900">
-                    <a
-                      href="https://www.linkedin.com/in/kabish-sridar-20587437b"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:text-[#ff3d00] transition-colors"
-                    >
-                      LinkedIn
-                    </a>
-                    <a
-                      href="https://github.com/kabishsridar"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:text-[#ff3d00] transition-colors"
-                    >
-                      GitHub
-                    </a>
+                    <a href="https://www.linkedin.com/in/kabish-sridar-20587437b" target="_blank" rel="noreferrer" className="hover:text-[#ff3d00] transition-colors">LinkedIn</a>
+                    <a href="https://github.com/kabishsridar" target="_blank" rel="noreferrer" className="hover:text-[#ff3d00] transition-colors">GitHub</a>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">
-                    Contact me
-                  </span>
+                  <span className="text-xs font-mono uppercase tracking-widest text-[#ff3d00] font-bold block">Contact me</span>
                   <div className="flex flex-col space-y-1 text-sm font-semibold text-neutral-900">
-                    <a
-                      href={`mailto:${profileData.contact.email}`}
-                      className="hover:text-[#ff3d00] transition-colors"
-                    >
+                    <a href={`mailto:${profileData.contact.email}`} className="hover:text-[#ff3d00] transition-colors break-all">
                       {profileData.contact.email}
                     </a>
-                    <span className="text-xs text-neutral-600 font-normal">
-                      +91 91768 76594 • Chennai, India
-                    </span>
+                    <span className="text-xs text-neutral-600 font-normal">+91 91768 76594 • Chennai, India</span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-black/10">
-                  <span className="text-xs font-mono text-neutral-500 block">
-                    Got an embedded or AI challenge?
-                  </span>
+                  <span className="text-xs font-mono text-neutral-500 block">Got an embedded or AI challenge?</span>
                   <h3 className="text-xl sm:text-2xl font-bold text-neutral-900 mt-1 tracking-tight">
                     Let&apos;s make something happen together
                   </h3>
                 </div>
               </div>
 
-              {/* Spacer in Center where standing cutout is placed */}
               <div className="hidden md:block md:col-span-3" />
 
-              {/* Right Column: Quote */}
+              {/* Right: Quote */}
               <div className="md:col-span-5 space-y-4 md:pl-6">
                 <p className="text-2xl sm:text-4xl lg:text-5xl font-light text-neutral-950 leading-tight">
                   As an engineer and builder, I believe in{" "}
@@ -1238,13 +1186,11 @@ export default function V4ExactValentinPage() {
             </div>
           </div>
 
-          {/* Layer C (Foreground): Standing Suit Cutout Actor (Scales up & Slides Right on scroll) */}
+          {/* Layer C: Standing cutout actor */}
           <div
             ref={standingActorRef}
             className="absolute z-30 pointer-events-none will-change-transform flex justify-center items-end bottom-0 left-1/2 -translate-x-1/2"
-            style={{
-              transformOrigin: "center bottom",
-            }}
+            style={{ transformOrigin: "center bottom" }}
           >
             <div className="relative h-[78vh] sm:h-[82vh] lg:h-[86vh] w-auto aspect-[848/1264]">
               <Image
@@ -1261,51 +1207,142 @@ export default function V4ExactValentinPage() {
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 6. FOOTER                                                                 */}
-      {/* ========================================================================= */}
-      <footer className="py-8 border-t border-white/10 bg-[#07080a] text-xs font-mono text-white/40">
+      {/* ===================================================================== */}
+      {/* 6. CONTACTS SECTION                                                    */}
+      {/* ===================================================================== */}
+      <section
+        id="contact"
+        className="relative py-24 bg-[#07080a] border-t border-white/10 overflow-hidden"
+      >
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#ff3d00]/5 rounded-full blur-[120px]" />
+        </div>
+
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 relative z-10">
+          {/* Header */}
+          <div className="text-center space-y-4 mb-16">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
+              06 // Get In Touch
+            </span>
+            <h2 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white tracking-tight leading-tight">
+              Let&apos;s Build<br />
+              <span className="text-[#ff3d00]">Something Great</span>
+            </h2>
+            <p className="text-sm sm:text-base text-white/60 font-light max-w-xl mx-auto leading-relaxed">
+              Available for embedded AI projects, industrial automation contracts, and full-time engineering roles.
+            </p>
+          </div>
+
+          {/* Contact Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+            {/* Email Card */}
+            <a
+              href={`mailto:${profileData.contact.email}`}
+              className="group p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff3d00]/60 hover:bg-[#ff3d00]/[0.04] transition-all duration-300 flex flex-col space-y-4"
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#ff3d00]/20 border border-[#ff3d00]/30 flex items-center justify-center">
+                <span className="text-[#ff3d00] text-lg font-black">@</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1">Email</span>
+                <span className="text-sm font-semibold text-white group-hover:text-[#ff3d00] transition-colors break-all">
+                  {profileData.contact.email}
+                </span>
+              </div>
+              <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#ff3d00] transition-colors ml-auto" />
+            </a>
+
+            {/* LinkedIn Card */}
+            <a
+              href="https://www.linkedin.com/in/kabish-sridar-20587437b"
+              target="_blank"
+              rel="noreferrer"
+              className="group p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff3d00]/60 hover:bg-[#ff3d00]/[0.04] transition-all duration-300 flex flex-col space-y-4"
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#ff3d00]/20 border border-[#ff3d00]/30 flex items-center justify-center">
+                <span className="text-[#ff3d00] text-xs font-black font-mono">in</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1">LinkedIn</span>
+                <span className="text-sm font-semibold text-white group-hover:text-[#ff3d00] transition-colors">
+                  kabish-sridar
+                </span>
+              </div>
+              <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#ff3d00] transition-colors ml-auto" />
+            </a>
+
+            {/* GitHub Card */}
+            <a
+              href="https://github.com/kabishsridar"
+              target="_blank"
+              rel="noreferrer"
+              className="group p-8 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#ff3d00]/60 hover:bg-[#ff3d00]/[0.04] transition-all duration-300 flex flex-col space-y-4"
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#ff3d00]/20 border border-[#ff3d00]/30 flex items-center justify-center">
+                <span className="text-[#ff3d00] text-xs font-black font-mono">gh</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1">GitHub</span>
+                <span className="text-sm font-semibold text-white group-hover:text-[#ff3d00] transition-colors">
+                  kabishsridar
+                </span>
+              </div>
+              <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#ff3d00] transition-colors ml-auto" />
+            </a>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href={`mailto:${profileData.contact.email}`}
+              className="px-8 py-4 rounded-full text-sm font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_30px_rgba(255,61,0,0.5)] transition-all flex items-center space-x-2"
+            >
+              <span>Start a Conversation</span>
+              <ArrowUpRight className="w-4 h-4" />
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsResumeOpen(true)}
+              className="px-8 py-4 rounded-full text-sm font-semibold border border-white/20 hover:border-white/50 text-white bg-white/5 hover:bg-white/10 transition-all flex items-center space-x-2 cursor-pointer"
+            >
+              <FileText className="w-4 h-4" />
+              <span>Download Resume PDF</span>
+            </button>
+          </div>
+
+          {/* Location & Availability */}
+          <div className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-white/40">
+            <span>CHENNAI, TAMIL NADU, INDIA • 10.7905° N, 78.7047° E</span>
+            <div className="flex items-center space-x-2">
+              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-green-400">AVAILABLE FOR ROLES &amp; CONTRACTS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===================================================================== */}
+      {/* 7. FOOTER                                                              */}
+      {/* ===================================================================== */}
+      <footer className="py-8 border-t border-white/10 bg-[#04050a] text-xs font-mono text-white/40">
         <div className="max-w-[1440px] mx-auto px-6 sm:px-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center space-x-3">
             <span className="text-white font-bold tracking-wider">KABISH SRIDAR</span>
             <span>© {new Date().getFullYear()}</span>
             <span>CHENNAI, TAMIL NADU, INDIA</span>
           </div>
-
           <div className="flex items-center space-x-6">
-            <a
-              href="https://www.linkedin.com/in/kabish-sridar-20587437b"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#ff3d00] transition-colors"
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://github.com/kabishsridar"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#ff3d00] transition-colors"
-            >
-              GitHub
-            </a>
-            <a
-              href={`mailto:${profileData.contact.email}`}
-              className="hover:text-[#ff3d00] transition-colors"
-            >
-              Email
-            </a>
-            <button
-              onClick={() => setIsResumeOpen(true)}
-              className="hover:text-[#ff3d00] transition-colors uppercase"
-            >
+            <a href="https://www.linkedin.com/in/kabish-sridar-20587437b" target="_blank" rel="noreferrer" className="hover:text-[#ff3d00] transition-colors">LinkedIn</a>
+            <a href="https://github.com/kabishsridar" target="_blank" rel="noreferrer" className="hover:text-[#ff3d00] transition-colors">GitHub</a>
+            <a href={`mailto:${profileData.contact.email}`} className="hover:text-[#ff3d00] transition-colors">Email</a>
+            <button type="button" onClick={() => setIsResumeOpen(true)} className="hover:text-[#ff3d00] transition-colors uppercase cursor-pointer">
               Resume
             </button>
           </div>
         </div>
       </footer>
 
-      {/* Official Resume PDF Popup Modal */}
       <ResumeModal
         isOpen={isResumeOpen}
         onClose={() => setIsResumeOpen(false)}
