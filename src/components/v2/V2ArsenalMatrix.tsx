@@ -29,7 +29,7 @@ export default function V2ArsenalMatrix() {
         { title: "ABB AC500 PLC (Structured Text)", val: 90, benchmark: "10ms cyclic scan task" },
         { title: "Modbus TCP/IP Protocol", val: 88, benchmark: "Industrial SCADA register bus" },
         { title: "C / C++ Embedded Programming", val: 92, benchmark: "Hardware timers & interrupts" },
-        { title: "Raspberry Pi 4 & PiCamera", val: 95, benchmark: "Headless Linux edge rigs" },
+        { title: "Raspberry Pi & PiCamera v2/v3", val: 95, benchmark: "0.1 mm edge metrology rigs" },
       ],
     },
     {
@@ -40,8 +40,8 @@ export default function V2ArsenalMatrix() {
       skills: [
         { title: "Linux Systems & Kali/Debian", val: 94, benchmark: "V4L2 hardware passthrough" },
         { title: "Docker & Container Architecture", val: 90, benchmark: "Multi-stage zero-drift builds" },
-        { title: "Redis In-Memory Caching", val: 88, benchmark: "40% latency reduction" },
-        { title: "FastAPI & PostgreSQL / SQLite", val: 92, benchmark: "Dual-tier secure database vault" },
+        { title: "In-Memory State Buffering", val: 88, benchmark: "40% latency reduction" },
+        { title: "FastAPI & SQLite", val: 92, benchmark: "Lightweight secure database vault" },
       ],
     },
   ];

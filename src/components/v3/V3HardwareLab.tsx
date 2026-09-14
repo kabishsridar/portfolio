@@ -28,18 +28,18 @@ export default function V3HardwareLab() {
       log: "Cyclic scan completed. Rasi Feeds Silo 1-3 batch gates synchronized. Hardware watchdog: NOMINAL.",
     },
     {
-      name: "Raspberry Pi 4 Model B (8GB)",
+      name: "Raspberry Pi (Debian Headless)",
       class: "EDGE VISION RIG",
       accent: "text-tactical-green",
       border: "border-tactical-green",
       status: "HEADLESS LINUX // 42°C",
       metrics: [
-        { label: "V4L2 Device Passthrough", val: "/dev/video0 (PiCam v2)" },
-        { label: "Metrology Stream", val: "18 FPS (±0.04mm)" },
+        { label: "V4L2 Device Passthrough", val: "/dev/video0 (PiCam v2/v3)" },
+        { label: "Metrology Stream", val: "18 FPS (0.1 mm)" },
         { label: "Core SoC Temp", val: "42.6°C Ambient" },
         { label: "Memory Footprint", val: "142 MB Alpine Slim" },
       ],
-      log: "PiCamera macro telephoto lens calibrated. Homography matrix locked. Edge gap clearance: 0.84 mm.",
+      log: "PiCamera macro lens calibrated. Homography matrix locked. Edge gap clearance calibrated to 0.1 mm tolerance.",
     },
     {
       name: "ESP32-WROOM-32 (Dual Core)",
@@ -65,9 +65,9 @@ export default function V3HardwareLab() {
         { label: "Emotion Inference", val: "30.2 FPS (DeepFace)" },
         { label: "Thali Calorie mAP", val: "93.8% (YOLOv8)" },
         { label: "Cursive OCR Acc", val: "92.4% (CRNN + CTC)" },
-        { label: "Redis State Cache", val: "1.2 ms State Lookup" },
+        { label: "In-Memory State Buffer", val: "1.2 ms Lookup" },
       ],
-      log: "Neural tensor execution threads optimal. In-memory Redis state layer reducing DB read cycles by 40%.",
+      log: "Neural tensor execution threads optimal. Asynchronous state buffer reducing storage write cycles by 40%.",
     },
   ];
 

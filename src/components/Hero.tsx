@@ -158,7 +158,7 @@ export default function Hero({ onOpenTerminal }: HeroProps) {
               </div>
               <div className="flex items-center space-x-1.5 px-2.5 py-1 border border-tactical-border/60 bg-tactical-surface/50">
                 <Award className="w-3.5 h-3.5 text-tactical-green" />
-                <span className="text-tactical-ivory">Noob Hackfest Finalist</span>
+                <span className="text-tactical-ivory">KYC Datathon 2.0 MVP Finalist</span>
               </div>
               <div className="flex items-center space-x-1.5 px-2.5 py-1 border border-tactical-border/60 bg-tactical-surface/50">
                 <Cpu className="w-3.5 h-3.5 text-tactical-amber" />

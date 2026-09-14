@@ -32,28 +32,28 @@ export const projects: Project[] = [
     title: "EMO-REX: High-Concurrency Multimodal Emotion Tracker",
     category: "Computer Vision & Edge AI",
     status: "FIELD_TESTED",
-    tagline: "Low-latency edge facial expression detection with in-memory Redis state caching.",
-    summary: "High-concurrency facial expression analysis pipeline engineered for multi-subject tracking in variable illumination environments. Built during a strict 24-hour hackathon, mitigating database write bottlenecks by introducing an in-memory caching tier.",
-    keyMetric: "30 FPS / -40% Latency",
+    tagline: "Low-latency edge facial expression detection with real-time vector inference.",
+    summary: "High-concurrency facial expression analysis pipeline engineered for multi-subject tracking in variable illumination environments. Built during a strict datathon, mitigating storage write bottlenecks with an asynchronous in-memory state buffer.",
+    keyMetric: "30 FPS / Real-Time",
     keyMetricLabel: "Edge Inference Throughput & State-Lookup Optimization",
-    stack: ["Python", "OpenCV", "DeepFace", "Redis", "PostgreSQL", "Docker"],
+    stack: ["Python", "OpenCV", "DeepFace", "FastAPI", "SQLite", "Docker"],
     specs: [
       { label: "Target Frame Rate", value: "30.0 FPS stable" },
-      { label: "State Cache Layer", value: "Redis In-Memory Key-Value" },
-      { label: "Latency Cut", value: "40% reduction in DB read/write cycles" },
+      { label: "State Buffer Layer", value: "High-Speed In-Memory State Ring" },
+      { label: "Latency Cut", value: "40% reduction in storage read/write cycles" },
       { label: "Illumination Handling", value: "Adaptive CLAHE Histogram Normalization" },
-      { label: "Analytics Store", value: "PostgreSQL Relational Schema" }
+      { label: "Analytics Store", value: "Structured Relational Ledger" }
     ],
     architecture: {
       input: "RTSP / USB Live Video Feed",
       processing: "Haar + DeepFace Facial Vector Extraction",
-      hardwareOrStorage: "Redis In-Memory Cache (TTL: 1.5s)",
-      output: "PostgreSQL Long-term Affective Telemetry"
+      hardwareOrStorage: "In-Memory State Buffer (TTL: 1.5s)",
+      output: "Structured Long-term Affective Telemetry"
     },
     highlights: [
-      "Mitigated severe database bottlenecks under multi-face detection by decoupling raw frame metrics into a high-throughput Redis pipeline.",
+      "Mitigated database write bottlenecks under multi-face detection by decoupling raw frame metrics into an asynchronous buffer pipeline.",
       "Engineered adaptive contrast normalization allowing accurate emotion vector clustering across uneven ambient light.",
-      "Awarded Hackathon Finalist distinction at NOOB HACKFEST 2024 for full end-to-end MVP demonstration."
+      "Awarded MVP Finalist distinction at KYC DATATHON 2.0 for full end-to-end MVP demonstration."
     ],
     simulationType: "emotion"
   },
@@ -156,26 +156,26 @@ export const projects: Project[] = [
     title: "PiCam Micro-Gap Optical Profiler",
     category: "Computer Vision & Edge AI",
     status: "DEPLOYED",
-    tagline: "Automated sub-millimeter physical gap measurement with OpenCV perspective calibration.",
-    summary: "Industrial computer vision metrology rig replacing manual vernier caliper measurements with zero-contact edge boundary calculations. Uses sub-pixel contouring and calibrated homography to compute physical clearances in real time.",
-    keyMetric: "±0.04mm Tolerance",
-    keyMetricLabel: "Sub-Millimeter Edge Calibration & Zero-Contact Measurement",
-    stack: ["Raspberry Pi 4", "PiCamera v2", "Python", "OpenCV", "NumPy", "Linux"],
+    tagline: "Automated 0.1 mm physical gap measurement with OpenCV perspective calibration.",
+    summary: "Industrial computer vision metrology rig replacing manual vernier caliper measurements with zero-contact edge boundary calculations. Uses sub-pixel contouring and calibrated homography to compute physical clearances in real time with 0.1 mm precision.",
+    keyMetric: "0.1 mm Tolerance",
+    keyMetricLabel: "High-Precision Edge Calibration & Zero-Contact Measurement",
+    stack: ["Raspberry Pi", "PiCamera v2/v3", "Python", "OpenCV", "NumPy", "Linux"],
     specs: [
-      { label: "Measurement Resolution", value: "Sub-millimeter (±0.04mm calibrated)" },
+      { label: "Measurement Resolution", value: "0.1 mm calibrated tolerance" },
       { label: "Lens Correction", value: "Checkerboard Homography & Distortion Matrix" },
       { label: "Contour Algorithm", value: "Canny + Dual-Sobel Sub-Pixel Interpolation" },
       { label: "Inspection Speed", value: "18 samples / second continuous" },
-      { label: "Hardware Host", value: "Raspberry Pi 4B (Debian-based headless)" }
+      { label: "Hardware Host", value: "Raspberry Pi (Debian-based headless)" }
     ],
     architecture: {
-      input: "PiCamera 8MP Macro Telephoto Lens",
+      input: "PiCamera v2/v3 Macro Telephoto Lens",
       processing: "OpenCV Perspective Transform & Edge Contours",
       hardwareOrStorage: "On-device Euclidean Pixel-to-Metric Transform",
-      output: "Real-time Digital HUD Tolerance Readout"
+      output: "Real-time Digital HUD Tolerance Readout (0.1 mm)"
     },
     highlights: [
-      "Eliminated 100% of human error and manual caliper contact distortion in micro-clearance mechanical inspection.",
+      "Achieved verified 0.1 mm tolerance in micro-clearance mechanical inspection without physical caliper contact.",
       "Integrated dynamic checkerboard calibration targets for real-time field homography compensation.",
       "Direct digital readout with go/no-go industrial tolerance gating and CSV audit log generation."
     ],
@@ -192,22 +192,22 @@ export const projects: Project[] = [
     title: "Automated KYC Verification & Security Pipeline",
     category: "Systems & Cloud Infrastructure",
     status: "PRODUCTION_READY",
-    tagline: "Dual-tier database architecture decoupling rapid session ingest from encrypted master vaults.",
-    summary: "High-security Know Your Customer (KYC) onboarding backend architecture for identity document authentication. Employs a dual-database pattern using embedded SQLite for sub-millisecond local session caching and streaming verified credentials into an encrypted PostgreSQL vault.",
+    tagline: "High-security architecture decoupling rapid session ingest from encrypted storage vaults.",
+    summary: "High-security Know Your Customer (KYC) onboarding backend architecture for identity document authentication. Employs a secure database pattern using embedded SQLite with in-memory WAL mode for sub-millisecond local session caching and streaming verified credentials into an encrypted master store.",
     keyMetric: "<120ms Ingestion",
-    keyMetricLabel: "Zero-Timeout Session Drop-off with Dual-Tier Persistence",
-    stack: ["Python", "FastAPI", "SQLite", "PostgreSQL", "Cryptography", "Docker"],
+    keyMetricLabel: "Zero-Timeout Session Drop-off with High-Speed Persistence",
+    stack: ["Python", "FastAPI", "SQLite", "Cryptography", "Docker"],
     specs: [
-      { label: "Architectural Pattern", value: "Dual-tier Database Session Buffer" },
+      { label: "Architectural Pattern", value: "Secure Database Session Buffer" },
       { label: "Session Store", value: "Embedded SQLite in-memory / WAL mode" },
-      { label: "Encrypted Master Vault", value: "PostgreSQL with AES-256 encrypted fields" },
+      { label: "Encrypted Master Vault", value: "Encrypted SQLite / SQL Vault with AES-256" },
       { label: "Concurrency Model", value: "Async ASGI Event Loop via FastAPI" },
       { label: "Document Ingest", value: "Multi-part streaming upload with hash validation" }
     ],
     architecture: {
       input: "Encrypted Identity Document Upload",
       processing: "Async Hash Validation & Field Extraction",
-      hardwareOrStorage: "SQLite High-Speed Buffer -> Master PostgreSQL Vault",
+      hardwareOrStorage: "SQLite High-Speed Buffer -> Encrypted Vault",
       output: "Cryptographic Attestation Token & Status Webhook"
     },
     highlights: [

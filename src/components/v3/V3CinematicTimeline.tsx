@@ -14,10 +14,10 @@ export default function V3CinematicTimeline() {
     },
     {
       year: "2024",
-      title: "Noob Hackfest — MVP Finalist Award",
-      badge: "24-HOUR HACKATHON",
+      title: "KYC Datathon 2.0 — MVP Finalist Award",
+      badge: "DATATHON FINALIST",
       color: "border-tactical-green text-tactical-green",
-      desc: "Designed and demoed EMO-REX: high-concurrency facial emotion analysis with Redis in-memory lookup caching and PostgreSQL analytics.",
+      desc: "Designed and demoed high-concurrency verification and facial analysis with high-throughput in-memory state buffering.",
     },
     {
       year: "2024–PRESENT",

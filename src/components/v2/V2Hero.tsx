@@ -90,7 +90,7 @@ export default function V2Hero({ onOpenTerminal }: V2HeroProps) {
                 IEEE CONFERENCE AUTHOR
               </span>
               <span className="px-3 py-1 border border-tactical-border/80 bg-tactical-surface/60 text-tactical-green">
-                NOOB HACKFEST FINALIST
+                KYC DATATHON 2.0 FINALIST
               </span>
             </div>
 

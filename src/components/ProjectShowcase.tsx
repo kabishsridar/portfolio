@@ -372,7 +372,7 @@ function EmotionSimulator() {
           <div className="w-8 h-1 bg-tactical-green mx-auto rounded-full" />
           <div className="flex justify-between text-[8px] text-tactical-green">
             <span>CLAHE: ON</span>
-            <span className="text-tactical-amber">REDIS: HIT (1.2ms)</span>
+            <span className="text-tactical-amber">BUFFER: HIT (1.2ms)</span>
           </div>
         </div>
       </div>
@@ -633,7 +633,7 @@ function ProfilerSimulator() {
       <div className="relative aspect-video w-full border border-tactical-border bg-tactical-base p-4 flex flex-col justify-between overflow-hidden">
         <div className="flex justify-between text-[10px] text-tactical-muted">
           <span>OPTICAL RETICLE // 8MP TELEPHOTO</span>
-          <span className="text-tactical-green">CALIBRATION: ±0.04mm</span>
+          <span className="text-tactical-green">CALIBRATION: 0.1 mm</span>
         </div>
 
         <div className="relative w-full h-24 flex items-center justify-center">
@@ -699,7 +699,7 @@ function KycSimulator() {
 
           <div className="p-2 border border-tactical-border bg-tactical-surface flex items-center justify-between">
             <div>
-              <span className="text-tactical-ivory font-bold block">TIER 2: ENCRYPTED POSTGRESQL</span>
+              <span className="text-tactical-ivory font-bold block">TIER 2: ENCRYPTED MASTER VAULT</span>
               <span className="text-tactical-dim text-[9px]">ACID TRANSACTIONS &amp; AUDIT LOGS</span>
             </div>
             <span className="text-tactical-green font-bold">100% PERSISTENCE</span>

@@ -161,9 +161,9 @@ export default function Terminal({ isOpen, onClose }: TerminalProps) {
         responseNode = (
           <div className="space-y-1.5 text-xs text-tactical-ivory">
             <p className="text-tactical-amber font-bold">// TECHNICAL SKILL MATRIX:</p>
-            <p><span className="text-tactical-green">Vision:</span> PyTorch, TensorFlow, OpenCV, YOLOv8, DeepFace, CLAHE, Contouring</p>
-            <p><span className="text-tactical-green">Embedded:</span> C/C++, Python, Raspberry Pi 4, ESP32, Arduino, ABB AC500 PLC (ST), Modbus</p>
-            <p><span className="text-tactical-green">Systems:</span> Linux/Bash, Docker, Docker Compose, Redis, PostgreSQL, SQLite, FastAPI</p>
+            <p><span className="text-tactical-green">Vision:</span> PyTorch, OpenCV, YOLOv8, DeepFace, CLAHE, Contouring (0.1 mm Metrology)</p>
+            <p><span className="text-tactical-green">Embedded:</span> C/C++, Python, Raspberry Pi, PiCamera v2/v3, ESP32, ABB AC500 PLC (ST), Modbus</p>
+            <p><span className="text-tactical-green">Web & Systems:</span> HTML, CSS, JavaScript, Linux/Bash, Docker, SQLite, FastAPI</p>
           </div>
         );
         break;

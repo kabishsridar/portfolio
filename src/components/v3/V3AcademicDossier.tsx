@@ -141,7 +141,7 @@ export default function V3AcademicDossier() {
                 </p>
 
                 <p className="text-xs text-tactical-muted leading-relaxed">
-                  Architecting deployable neural networks and deterministic firmware logic for industrial and real-time computing applications. Researching low-latency state synchronization with Redis in-memory layers to eliminate database bottlenecks during multi-face edge tracking.
+                  Architecting deployable neural networks and deterministic firmware logic for industrial and real-time computing applications. Researching low-latency state synchronization with in-memory buffer layers to eliminate storage bottlenecks during multi-face edge tracking.
                 </p>
 
                 {/* Key Highlights Pill Grid */}
@@ -151,7 +151,7 @@ export default function V3AcademicDossier() {
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px]">
                     <div className="p-2 border border-tactical-border bg-transparent text-tactical-ivory">
-                      High-concurrency Redis state caching for real-time edge vision
+                      High-concurrency in-memory state buffering for real-time edge vision
                     </div>
                     <div className="p-2 border border-tactical-border bg-transparent text-tactical-ivory">
                       ABB AC500 PLC batching logic with IEC 61131-3 Structured Text
@@ -171,8 +171,8 @@ export default function V3AcademicDossier() {
                     <ol className="list-decimal list-inside space-y-1 text-tactical-muted text-[11px]">
                       <li><span className="text-tactical-ivory">Edge Hardware Sensor / Video Frame Capture (USB / RTSP)</span></li>
                       <li><span className="text-tactical-ivory">OpenCV & DeepFace / YOLOv8 Real-time Inference Engine</span></li>
-                      <li><span className="text-tactical-ivory">Redis In-Memory Key-Value Caching Layer (Sub-1.5ms Lookup)</span></li>
-                      <li><span className="text-tactical-ivory">Deterministic PLC Modbus TCP/IP Actuation & PostgreSQL Logging</span></li>
+                      <li><span className="text-tactical-ivory">In-Memory State Buffer Layer (Sub-1.5ms Lookup)</span></li>
+                      <li><span className="text-tactical-ivory">Deterministic PLC Modbus TCP/IP Actuation & Local Telemetry Logging</span></li>
                     </ol>
                   </div>
                 )}
@@ -356,19 +356,19 @@ export default function V3AcademicDossier() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-3 border border-tactical-border bg-transparent space-y-2">
                     <span className="text-blue-400 font-bold text-[10px] uppercase block">AI & COMPUTER VISION</span>
-                    <p className="text-[11px] text-tactical-ivory">PyTorch, OpenCV, DeepFace, YOLOv8, ONNX Runtime, NumPy, Real-time Sub-millimeter Metrology</p>
+                    <p className="text-[11px] text-tactical-ivory">PyTorch, OpenCV, DeepFace, YOLOv8, ONNX Runtime, NumPy, Real-time 0.1 mm Metrology</p>
                   </div>
                   <div className="p-3 border border-tactical-border bg-transparent space-y-2">
                     <span className="text-tactical-green font-bold text-[10px] uppercase block">EMBEDDED SILICON & INDUSTRIAL</span>
-                    <p className="text-[11px] text-tactical-ivory">ABB AC500 PLC, Structured Text (IEC 61131-3), ESP32 FreeRTOS, Raspberry Pi 4, Modbus TCP/IP, I2C/SPI</p>
+                    <p className="text-[11px] text-tactical-ivory">ABB AC500 PLC, Structured Text (IEC 61131-3), ESP32 FreeRTOS, Raspberry Pi, PiCamera v2/v3, Modbus TCP/IP, I2C/SPI</p>
                   </div>
                   <div className="p-3 border border-tactical-border bg-transparent space-y-2">
                     <span className="text-tactical-amber font-bold text-[10px] uppercase block">LANGUAGES & RUNTIMES</span>
-                    <p className="text-[11px] text-tactical-ivory">Python, C++17/20, C, TypeScript, SQL (PostgreSQL), Bash, Structured Text</p>
+                    <p className="text-[11px] text-tactical-ivory">Python, C++17/20, C, HTML, CSS, JavaScript, SQL, Bash, Structured Text</p>
                   </div>
                   <div className="p-3 border border-tactical-border bg-transparent space-y-2">
                     <span className="text-purple-400 font-bold text-[10px] uppercase block">INFRASTRUCTURE & PROTOCOLS</span>
-                    <p className="text-[11px] text-tactical-ivory">Docker Containers, Redis State Caching, Linux IPC, Next.js, Three.js, Git CI/CD</p>
+                    <p className="text-[11px] text-tactical-ivory">Docker Containers, FastAPI, Linux IPC, Next.js, Git CI/CD</p>
                   </div>
                 </div>
               </div>

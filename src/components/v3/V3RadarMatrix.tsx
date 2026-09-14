@@ -30,7 +30,7 @@ export default function V3RadarMatrix() {
         { name: "ABB AC500 PLC (Structured Text)", level: 90, detail: "10ms cyclic scan task" },
         { name: "Modbus TCP/IP Protocol Bus", level: 88, detail: "SCADA register streaming" },
         { name: "C / C++ Real-time Embedded", level: 92, detail: "Sub-millisecond interrupts" },
-        { name: "Raspberry Pi 4 & PiCamera", level: 95, detail: "Headless Linux edge rigs" },
+        { name: "Raspberry Pi & PiCamera v2/v3", level: 95, detail: "0.1 mm edge metrology" },
       ],
     },
     {
@@ -41,8 +41,8 @@ export default function V3RadarMatrix() {
       skills: [
         { name: "Linux Systems & Kernel Passthrough", level: 94, detail: "V4L2 hardware passthrough" },
         { name: "Docker Multi-stage Architecture", level: 90, detail: "100% environment parity" },
-        { name: "Redis In-Memory Caching", level: 88, detail: "40% latency reduction" },
-        { name: "FastAPI & PostgreSQL / SQLite", level: 92, detail: "Dual-tier secure database vault" },
+        { name: "In-Memory State Buffering", level: 88, detail: "High-throughput asynchronous ring" },
+        { name: "FastAPI & Embedded SQLite", level: 92, detail: "Secure lightweight database vault" },
       ],
     },
   ];

@@ -9,7 +9,7 @@ export default function V3EmotionSim() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeState, setActiveState] = useState<EmotionState>("focus");
   const [confidence, setConfidence] = useState(98.4);
-  const [redisLatency, setRedisLatency] = useState(1.18);
+  const [bufferLatency, setBufferLatency] = useState(1.18);
 
   const stateRef = useRef(activeState);
   useEffect(() => {
@@ -167,7 +167,7 @@ export default function V3EmotionSim() {
             EMO-REX // REAL-TIME INFERENCE PLAYGROUND
           </span>
         </div>
-        <span className="text-[10px] text-blue-400">REDIS STATE CACHE: {redisLatency} ms</span>
+        <span className="text-[10px] text-blue-400">STATE BUFFER: {bufferLatency} ms</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">

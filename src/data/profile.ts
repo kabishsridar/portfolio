@@ -139,7 +139,7 @@ export const profileData: ProfileData = {
         name: "Foundations of Machine Learning",
         category: "AI/ML",
         gradeOrStatus: "COMPLETED",
-        skills: ["Scikit-Learn", "SVM", "Gradient Boosting", "Evaluation Metrics"]
+        skills: ["Machine Learning", "SVM", "Gradient Boosting", "Evaluation Metrics"]
       },
       {
         code: "21CSC203J",
@@ -167,7 +167,7 @@ export const profileData: ProfileData = {
         name: "Database Management Systems & SQL",
         category: "Systems",
         gradeOrStatus: "COMPLETED",
-        skills: ["PostgreSQL", "B-Trees", "ACID Transactions", "Redis In-Memory Caching"]
+        skills: ["Relational Databases", "B-Trees", "ACID Transactions", "High-Speed In-Memory Buffers"]
       }
     ]
   },
@@ -181,11 +181,11 @@ export const profileData: ProfileData = {
   },
   achievements: [
     {
-      title: "24-Hour MVP Finalist — EMO-REX",
-      organization: "NOOB HACKFEST 2024",
+      title: "MVP Finalist — KYC Datathon 2.0",
+      organization: "KYC DATATHON 2.0",
       year: "2024",
-      description: "Designed, trained, and deployed a high-concurrency real-time facial expression analysis pipeline with Redis in-memory lookup caching and PostgreSQL analytics under strict 24-hour hackathon constraints.",
-      badge: "HACKATHON FINALIST",
+      description: "Designed, trained, and deployed a high-concurrency real-time verification and analysis pipeline with high-throughput state buffers under strict datathon constraints.",
+      badge: "MVP FINALIST",
       type: "competition"
     }
   ],
@@ -233,8 +233,8 @@ export const profileData: ProfileData = {
       { name: "C++ (17/20)", level: 90, tag: "Low Latency & High Concurrency" },
       { name: "C", level: 88, tag: "Firmware & Microcontrollers" },
       { name: "Structured Text (IEC 61131-3)", level: 85, tag: "Industrial PLC Automation" },
-      { name: "TypeScript / JavaScript", level: 82, tag: "Full-Stack & Three.js" },
-      { name: "SQL (PostgreSQL)", level: 80, tag: "Relational Storage & Indexing" },
+      { name: "HTML, CSS, JavaScript", level: 85, tag: "Web & Interactive UIs" },
+      { name: "SQL", level: 80, tag: "Relational Storage & Indexing" },
       { name: "Bash / Shell", level: 85, tag: "Linux Automation & Tooling" }
     ],
     aiml: [
@@ -248,17 +248,17 @@ export const profileData: ProfileData = {
     embedded: [
       { name: "ABB AC500 PLC", level: 88, tag: "Industrial Automation & Silos" },
       { name: "ESP32 (FreeRTOS)", level: 92, tag: "Dual-Core Real-time Scheduling" },
-      { name: "Raspberry Pi 4", level: 90, tag: "Headless Linux Edge Node" },
+      { name: "Raspberry Pi", level: 90, tag: "Headless Linux Edge Node" },
+      { name: "PiCamera v2/v3", level: 92, tag: "Optical Sensor Metrology" },
       { name: "Modbus TCP / RTU", level: 86, tag: "Industrial Fieldbus Protocol" },
       { name: "I2C, SPI, UART, PWM", level: 90, tag: "Hardware Bus Interfacing" },
       { name: "Digital Storage Oscilloscope", level: 88, tag: "Signal & Noise Metrology" }
     ],
     systems: [
       { name: "Docker Containerization", level: 86, tag: "Reproducible Model Sandboxing" },
-      { name: "Redis In-Memory Cache", level: 88, tag: "Low-Latency State Tier" },
+      { name: "FastAPI / SQLite", level: 88, tag: "Async APIs & High-Speed Buffer" },
       { name: "Linux Systems & Kernel", level: 88, tag: "IPC, Posix & Networking" },
-      { name: "Git / GitHub Actions", level: 90, tag: "CI/CD & Version Control" },
-      { name: "Next.js & Three.js", level: 85, tag: "3D Visual Web Portals" }
+      { name: "Git / GitHub Actions", level: 90, tag: "CI/CD & Version Control" }
     ]
   }
 };

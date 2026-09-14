@@ -21,10 +21,10 @@ export default function TechMatrix() {
       icon: Cpu,
       accent: "text-tactical-amber",
       skills: [
-        { name: "OpenCV", level: 95, note: "Sub-pixel contours, homography & optical metrology" },
+        { name: "OpenCV", level: 95, note: "0.1 mm optical metrology, contours & homography" },
         { name: "YOLOv8", level: 90, note: "Real-time edge inference & ONNX runtime" },
         { name: "PyTorch & DeepFace", level: 88, note: "Facial vector tracking & lightweight models" },
-        { name: "TensorFlow", level: 82, note: "CNN architectures & classification pipelines" },
+        { name: "HTML, CSS, JavaScript", level: 88, note: "Interactive web interfaces & telemetry portals" },
         { name: "Image Preprocessing", level: 92, note: "Adaptive CLAHE, dual-Sobel & perspective transforms" },
       ],
     },
@@ -38,7 +38,7 @@ export default function TechMatrix() {
         { name: "ABB AC500 PLC", level: 88, note: "IEC 61131-3 Structured Text & Automation Builder" },
         { name: "ESP32 & Arduino", level: 94, note: "Dual-core FreeRTOS task partition & sensor arrays" },
         { name: "Modbus TCP/IP", level: 85, note: "Industrial bus communication & SCADA telemetry" },
-        { name: "Raspberry Pi 4", level: 95, note: "Linux GPIO, PiCamera v2 & headless edge rigs" },
+        { name: "Raspberry Pi", level: 95, note: "Linux GPIO, PiCamera v2/v3 & headless edge rigs" },
       ],
     },
     {
@@ -49,8 +49,8 @@ export default function TechMatrix() {
       skills: [
         { name: "Linux & Bash", level: 94, note: "Kali, Debian, V4L2 device mounting & automation" },
         { name: "Docker & Compose", level: 90, note: "Multi-stage builds, device passthrough & zero drift" },
-        { name: "Redis Caching", level: 88, note: "In-memory key-value cache cutting DB latency 40%" },
-        { name: "PostgreSQL & SQLite", level: 92, note: "Dual-tier persistence pattern & ACID guarantees" },
+        { name: "In-Memory Buffering", level: 88, note: "Asynchronous memory ring cutting storage latency 40%" },
+        { name: "SQLite Vault", level: 92, note: "Lightweight secure persistence & ACID guarantees" },
         { name: "FastAPI & Python", level: 90, note: "Async ASGI event loops & microservices" },
       ],
     },

@@ -57,30 +57,30 @@ export default function Credentials() {
             </div>
           </div>
 
-          {/* Card 2: Noob Hackfest Finalist */}
+          {/* Card 2: KYC Datathon 2.0 MVP Finalist */}
           <div className="tactical-crosshair border border-tactical-green/50 bg-tactical-surface/90 p-6 sm:p-7 space-y-4 hover:border-tactical-green transition-colors">
             <div className="flex items-center justify-between border-b border-tactical-border pb-3">
               <span className="px-2.5 py-1 bg-tactical-green/20 border border-tactical-green text-tactical-green text-xs font-bold tracking-wider">
-                24-HOUR HACKATHON
+                DATATHON COMPETITION
               </span>
-              <span className="text-tactical-dim text-xs">NOOB HACKFEST // 2024</span>
+              <span className="text-tactical-dim text-xs">KYC DATATHON 2.0 // 2024</span>
             </div>
 
             <div className="space-y-2">
               <h3 className="text-xl sm:text-2xl font-bold text-tactical-ivory">
-                EMO-REX: Emotion Recognition Pipeline
+                EMO-REX: Real-time Multi-Modal Verification
               </h3>
               <p className="text-xs text-tactical-green font-semibold">
-                Hackathon Finalist Award
+                MVP Finalist Award
               </p>
             </div>
 
             <p className="text-xs sm:text-sm text-tactical-muted leading-relaxed">
-              Architected and demoed a high-concurrency real-time emotion tracker leveraging OpenCV, DeepFace, Redis in-memory lookup caching, and PostgreSQL analytics within a strict 24-hour hackathon timeframe.
+              Architected and demoed a high-concurrency real-time verification and emotion tracker leveraging OpenCV, DeepFace, and high-throughput in-memory state buffering within strict datathon constraints.
             </p>
 
             <div className="pt-2 flex items-center justify-between text-[11px] text-tactical-dim border-t border-tactical-border">
-              <span>OUTCOME: FINALIST</span>
+              <span>OUTCOME: MVP FINALIST</span>
               <span className="text-tactical-green">[DEMOED LIVE MVP]</span>
             </div>
           </div>

@@ -350,7 +350,7 @@ export default function V4Page() {
               </div>
               <h3 className="font-semibold text-white text-base">Computer Vision &amp; Metrology</h3>
               <p className="text-neutral-400 text-xs leading-normal">
-                Sub-millimeter edge contours, homography transforms, and YOLOv8 segmentation on low-power compute like Raspberry Pi 4 and edge accelerators.
+                0.1 mm edge contour calibration, homography transforms, and YOLOv8 segmentation on low-power compute like Raspberry Pi with PiCamera v2/v3.
               </p>
             </div>
 
@@ -370,7 +370,7 @@ export default function V4Page() {
               </div>
               <h3 className="font-semibold text-white text-base">Deep Learning &amp; Backends</h3>
               <p className="text-neutral-400 text-xs leading-normal">
-                High-concurrency microservices, in-memory caching tiers with Redis, CRNN cursive OCR architectures, and encrypted document validation vaults.
+                High-concurrency microservices, in-memory state buffers, CRNN cursive OCR architectures, and encrypted document validation vaults.
               </p>
             </div>
           </div>
@@ -662,7 +662,7 @@ export default function V4Page() {
             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
               <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">AI &amp; Computer Vision</span>
               <div className="flex flex-wrap gap-2">
-                {["OpenCV", "PyTorch", "YOLOv8", "DeepFace", "CRNN", "NumPy", "TensorFlow", "Scikit-Learn"].map((s) => (
+                {["OpenCV", "PyTorch", "YOLOv8", "DeepFace", "CRNN", "NumPy", "FastAPI"].map((s) => (
                   <span key={s} className="px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08] text-neutral-300 font-medium">
                     {s}
                   </span>
@@ -673,7 +673,7 @@ export default function V4Page() {
             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
               <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">Embedded &amp; Hardware</span>
               <div className="flex flex-wrap gap-2">
-                {["Raspberry Pi 4", "ABB AC500 PLC", "Structured Text (ST)", "ESP32", "Arduino", "PiCamera v2", "I2C / SPI", "RS-485 / Modbus"].map((s) => (
+                {["Raspberry Pi", "ABB AC500 PLC", "Structured Text (ST)", "ESP32", "Arduino", "PiCamera v2/v3", "I2C / SPI", "RS-485 / Modbus"].map((s) => (
                   <span key={s} className="px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08] text-neutral-300 font-medium">
                     {s}
                   </span>
@@ -684,7 +684,7 @@ export default function V4Page() {
             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
               <span className="text-xs font-bold text-teal-300 uppercase tracking-wider">Systems &amp; Database</span>
               <div className="flex flex-wrap gap-2">
-                {["Redis", "PostgreSQL", "SQLite", "Docker", "FastAPI", "Linux / POSIX", "Git / GitHub Actions"].map((s) => (
+                {["SQLite", "Docker", "FastAPI", "Linux / POSIX", "Git / GitHub Actions"].map((s) => (
                   <span key={s} className="px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08] text-neutral-300 font-medium">
                     {s}
                   </span>
@@ -695,7 +695,7 @@ export default function V4Page() {
             <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-4">
               <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">Languages</span>
               <div className="flex flex-wrap gap-2">
-                {["Python 3", "C++", "C", "IEC 61131-3 ST", "TypeScript", "SQL", "Bash"].map((s) => (
+                {["Python 3", "C++", "C", "IEC 61131-3 ST", "HTML", "CSS", "JavaScript", "SQL", "Bash"].map((s) => (
                   <span key={s} className="px-2.5 py-1 rounded-lg bg-white/[0.05] border border-white/[0.08] text-neutral-300 font-medium">
                     {s}
                   </span>
