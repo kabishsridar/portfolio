@@ -18,6 +18,11 @@ export interface Project {
   };
   highlights: string[];
   simulationType: "emotion" | "rasi" | "thali" | "ocr" | "profiler" | "kyc";
+  externalWebsite?: {
+    label: string;
+    url: string;
+    description: string;
+  };
 }
 
 export const projects: Project[] = [
@@ -174,7 +179,12 @@ export const projects: Project[] = [
       "Integrated dynamic checkerboard calibration targets for real-time field homography compensation.",
       "Direct digital readout with go/no-go industrial tolerance gating and CSV audit log generation."
     ],
-    simulationType: "profiler"
+    simulationType: "profiler",
+    externalWebsite: {
+      label: "OM90 Elongation Detector",
+      url: "https://om90.in/devices/elongation-detector",
+      description: "Official device portal & live deployment specifications created especially for this project."
+    }
   },
   {
     id: "kyc-platform",

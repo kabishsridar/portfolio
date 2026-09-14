@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { X, CheckCircle2, GitBranch, Cpu, Activity, ShieldCheck, Zap } from "lucide-react";
+import { X, CheckCircle2, GitBranch, Cpu, Activity, ShieldCheck, Zap, ExternalLink, ArrowUpRight } from "lucide-react";
 import { Project } from "@/data/projects";
 
 interface V2ProjectModalProps {
@@ -83,6 +83,41 @@ export default function V2ProjectModal({ project, onClose }: V2ProjectModalProps
               {project.keyMetricLabel}
             </span>
           </div>
+
+          {/* Dedicated External Device Website (For Elongation Detector / Gap Measurement) */}
+          {project.externalWebsite && (
+            <div className="p-4 border border-blue-500/50 bg-blue-500/10 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-blue-400 font-bold uppercase text-[10px] flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5" /> OFFICIAL DEDICATED DEVICE WEBSITE
+                </span>
+                <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[9px] font-bold">
+                  PRODUCTION PORTAL
+                </span>
+              </div>
+              <p className="text-tactical-ivory text-xs">
+                {project.externalWebsite.description}
+              </p>
+              <div className="pt-1 flex flex-wrap gap-2">
+                <a
+                  href={project.externalWebsite.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-blue-500 text-black font-bold text-xs uppercase hover:bg-tactical-ivory transition-colors"
+                >
+                  <span>VISIT OM90 DEVICE PORTAL</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href={`/portfolio/projects/${project.id}`}
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 border border-tactical-border bg-tactical-base text-tactical-ivory text-xs uppercase hover:border-tactical-green hover:text-tactical-green transition-colors"
+                >
+                  <span>FULL PAGE EXPLANATION</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          )}
 
           {/* Architecture Pipeline Breakdown */}
           <div className="space-y-2 border border-tactical-border bg-tactical-base p-4">

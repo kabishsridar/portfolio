@@ -45,7 +45,7 @@ export default function V3Navbar({ onToggleTerminal, terminalOpen }: V3NavbarPro
             </span>
           </a>
           <span className="hidden sm:inline text-blue-400 font-semibold text-[10px] px-2 py-0.5 border border-blue-500/30 bg-blue-500/10">
-            V3 // HYPER-SCROLL
+            EDITION 01 // 3D CYBERNETICS
           </span>
         </div>
 

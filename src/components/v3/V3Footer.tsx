@@ -15,7 +15,7 @@ export default function V3Footer({ onOpenTerminal }: { onOpenTerminal: () => voi
           <div className="flex items-center space-x-3">
             <span className="w-2.5 h-2.5 bg-blue-500 inline-block" />
             <span className="font-black text-tactical-ivory uppercase tracking-wider text-sm">
-              KABISH SRIDAR // V3 HYPER-SCROLL
+              KABISH SRIDAR // EDITION 01
             </span>
             <span className="text-tactical-dim hidden md:inline">
               SRMIST B.TECH (AI & ML)

@@ -25,6 +25,7 @@ import {
   Layers3
 } from "lucide-react";
 import VersionSwitcher from "@/components/VersionSwitcher";
+import ResumeModal from "@/components/ResumeModal";
 import { profileData } from "@/data/profile";
 import { projects } from "@/data/projects";
 
@@ -34,6 +35,7 @@ export default function V4Page() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<string>("all");
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[0]>(projects[0]);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   // Setup Smooth Lenis + GSAP ScrollTrigger
   useEffect(() => {
@@ -195,14 +197,13 @@ export default function V4Page() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <a
-              href={`${basePath}/Kabish_Sridar_Resume.pdf`}
-              download="Kabish_Sridar_Resume.pdf"
+            <button
+              onClick={() => setIsResumeOpen(true)}
               className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-neutral-200 hover:bg-emerald-500 hover:text-black hover:border-emerald-400 transition-all duration-200 shadow-sm"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Resume</span>
-            </a>
+            </button>
           </div>
         </div>
       </nav>
@@ -428,9 +429,8 @@ export default function V4Page() {
             {filteredProjects.map((p) => (
               <div
                 key={p.id}
-                onClick={() => setSelectedProject(p)}
-                className={`v4-project-card group cursor-pointer p-6 rounded-2xl bg-white/[0.02] border transition-all duration-300 flex flex-col justify-between hover:bg-white/[0.04] hover:-translate-y-1 ${
-                  selectedProject.id === p.id ? "border-emerald-400/50 shadow-[0_0_25px_rgba(52,211,153,0.15)]" : "border-white/[0.08] hover:border-white/[0.18]"
+                className={`v4-project-card group p-6 rounded-2xl bg-white/[0.02] border transition-all duration-300 flex flex-col justify-between hover:bg-white/[0.04] hover:-translate-y-1.5 ${
+                  selectedProject.id === p.id ? "border-emerald-400/50 shadow-[0_0_25px_rgba(52,211,153,0.15)]" : "border-white/[0.08] hover:border-white/[0.2]"
                 }`}
               >
                 <div className="space-y-3">
@@ -441,9 +441,12 @@ export default function V4Page() {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug">
+                  <Link
+                    href={`/projects/${p.id}`}
+                    className="block text-lg font-bold text-white group-hover:text-emerald-300 transition-colors leading-snug"
+                  >
                     {p.title}
-                  </h3>
+                  </Link>
 
                   <p className="text-xs text-neutral-400 leading-relaxed line-clamp-3">
                     {p.summary}
@@ -473,6 +476,25 @@ export default function V4Page() {
                       </span>
                     )}
                   </div>
+
+                  {/* Navigation Buttons */}
+                  <div className="flex items-center space-x-2 pt-1 border-t border-white/[0.06]">
+                    <Link
+                      href={`/projects/${p.id}`}
+                      className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-400 text-neutral-950 hover:bg-emerald-300 transition-all flex items-center justify-center space-x-1 shadow-sm"
+                    >
+                      <span>Full Explanation</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </Link>
+
+                    <button
+                      onClick={() => setSelectedProject(p)}
+                      className="py-2 px-3 rounded-lg text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] text-neutral-300 hover:text-white transition-all border border-white/[0.08]"
+                      title="Quick Preview Architecture"
+                    >
+                      <span>Preview</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -491,6 +513,41 @@ export default function V4Page() {
                   <span>Architecture Specification</span>
                 </div>
               </div>
+
+              {/* Dedicated External Device Website Link (For Elongation Detector / Gap Measurement) */}
+              {selectedProject.externalWebsite && (
+                <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/15 via-emerald-500/15 to-transparent border border-blue-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <span className="text-[10px] text-blue-400 font-mono font-bold uppercase tracking-wider block">
+                      OFFICIAL DEDICATED DEVICE WEBSITE
+                    </span>
+                    <h4 className="text-sm font-bold text-white">
+                      {selectedProject.externalWebsite.label}
+                    </h4>
+                    <p className="text-xs text-neutral-300">
+                      {selectedProject.externalWebsite.description}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2 shrink-0">
+                    <a
+                      href={selectedProject.externalWebsite.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-400 text-black font-bold text-xs transition-all flex items-center space-x-1.5 shadow-sm"
+                    >
+                      <span>Visit OM90 Site</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                    <Link
+                      href={`/projects/${selectedProject.id}`}
+                      className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-all flex items-center space-x-1.5"
+                    >
+                      <span>Full Page</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
                 <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/[0.06]">
@@ -696,6 +753,13 @@ export default function V4Page() {
           </div>
         </div>
       </footer>
+
+      {/* Official Resume PDF Popup Modal */}
+      <ResumeModal
+        isOpen={isResumeOpen}
+        onClose={() => setIsResumeOpen(false)}
+        resumeUrl={`${basePath}/Kabish_Sridar_Resume.pdf`}
+      />
     </div>
   );
 }

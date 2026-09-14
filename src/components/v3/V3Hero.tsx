@@ -9,11 +9,12 @@ import { profileData } from "@/data/profile";
 
 interface V3HeroProps {
   onOpenTerminal: () => void;
+  onOpenResume?: () => void;
 }
 
 const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
 
-export default function V3Hero({ onOpenTerminal }: V3HeroProps) {
+export default function V3Hero({ onOpenTerminal, onOpenResume }: V3HeroProps) {
   const lettersRef = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
@@ -132,14 +133,14 @@ export default function V3Hero({ onOpenTerminal }: V3HeroProps) {
                 <span>TERMINAL [^~]</span>
               </button>
 
-              <a
-                href={`${basePath}/Kabish_Sridar_Resume.pdf`}
-                download="Kabish_Sridar_Resume.pdf"
+              <button
+                onClick={onOpenResume}
                 className="flex items-center space-x-2 px-4 py-3.5 border border-tactical-border/70 text-tactical-muted hover:text-tactical-ivory transition-colors tracking-wider uppercase"
+                title="View verified resume PDF"
               >
                 <Download className="w-4 h-4" />
                 <span>DOSSIER</span>
-              </a>
+              </button>
             </div>
 
           </div>

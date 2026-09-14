@@ -1,25 +1,21 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Layers, Sparkles, Zap } from "lucide-react";
+import { Zap, Sparkles } from "lucide-react";
 
 export default function VersionSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const isV1 = pathname.startsWith("/v1");
-  const isV2 = pathname.startsWith("/v2");
-  const isV4 = pathname.startsWith("/v4");
-  const isV3 = !isV1 && !isV2 && !isV4;
+  // Version 1 is Cinematic Cybernetics (Root /)
+  // Version 2 is Minimal Professional (Path /v4)
+  const isV2 = pathname.startsWith("/v4");
+  const isV1 = !isV2;
 
-  const switchVersion = (target: "v1" | "v2" | "v3" | "v4") => {
-    if (target === "v1" && !isV1) {
-      router.push("/v1");
-    } else if (target === "v2" && !isV2) {
-      router.push("/v2");
-    } else if (target === "v3" && !isV3) {
+  const switchVersion = (target: "1" | "2") => {
+    if (target === "1" && !isV1) {
       router.push("/");
-    } else if (target === "v4" && !isV4) {
+    } else if (target === "2" && !isV2) {
       router.push("/v4");
     }
   };
@@ -27,59 +23,33 @@ export default function VersionSwitcher() {
   return (
     <aside
       aria-label="Portfolio Version Switcher"
-      className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center bg-tactical-surface/90 border border-tactical-border/90 backdrop-blur-md p-1 font-mono-tech text-xs shadow-[0_0_25px_rgba(0,0,0,0.7)]"
+      className="fixed top-3 left-1/2 -translate-x-1/2 z-50 flex items-center bg-[#0a0c10]/90 border border-white/10 backdrop-blur-md p-1 font-mono-tech text-xs shadow-[0_0_25px_rgba(0,0,0,0.8)] rounded-full"
     >
       <div className="flex items-center space-x-1">
         <button
-          onClick={() => switchVersion("v1")}
-          className={`flex items-center space-x-1 px-2.5 sm:px-3 py-1 transition-all uppercase tracking-wider font-semibold text-[10px] sm:text-[11px] ${
+          onClick={() => switchVersion("1")}
+          className={`flex items-center space-x-1.5 px-3 py-1 rounded-full transition-all uppercase tracking-wider text-[10px] sm:text-[11px] ${
             isV1
-              ? "bg-tactical-amber text-tactical-base shadow-[0_0_12px_rgba(255,85,0,0.5)] font-bold"
-              : "text-tactical-muted hover:text-tactical-ivory hover:bg-tactical-base/60"
+              ? "bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.6)] font-extrabold"
+              : "text-neutral-400 hover:text-white hover:bg-white/5 font-medium"
           }`}
-          title="Version 1: Tactical Laboratory"
-        >
-          <Layers className="w-3 h-3" />
-          <span>V1: LAB</span>
-        </button>
-
-        <button
-          onClick={() => switchVersion("v2")}
-          className={`flex items-center space-x-1 px-2.5 sm:px-3 py-1 transition-all uppercase tracking-wider font-semibold text-[10px] sm:text-[11px] ${
-            isV2
-              ? "bg-tactical-green text-tactical-base shadow-[0_0_12px_rgba(0,255,102,0.5)] font-bold"
-              : "text-tactical-muted hover:text-tactical-ivory hover:bg-tactical-base/60"
-          }`}
-          title="Version 2: Kinetic Cybernetics"
-        >
-          <Sparkles className="w-3 h-3" />
-          <span>V2: KINETIC</span>
-        </button>
-
-        <button
-          onClick={() => switchVersion("v3")}
-          className={`flex items-center space-x-1 px-2.5 sm:px-3 py-1 transition-all uppercase tracking-wider font-semibold text-[10px] sm:text-[11px] ${
-            isV3
-              ? "bg-blue-500 text-tactical-base shadow-[0_0_15px_rgba(59,130,246,0.6)] font-extrabold"
-              : "text-tactical-muted hover:text-tactical-ivory hover:bg-tactical-base/60"
-          }`}
-          title="Version 3: Hyper-Scroll Cinematic Cybernetics"
+          title="Version 1: 3D Cinematic Cybernetics"
         >
           <Zap className="w-3 h-3" />
-          <span>V3: HYPER</span>
+          <span>VERSION 1</span>
         </button>
 
         <button
-          onClick={() => switchVersion("v4")}
-          className={`flex items-center space-x-1 px-2.5 sm:px-3 py-1 transition-all uppercase tracking-wider font-semibold text-[10px] sm:text-[11px] ${
-            isV4
+          onClick={() => switchVersion("2")}
+          className={`flex items-center space-x-1.5 px-3 py-1 rounded-full transition-all uppercase tracking-wider text-[10px] sm:text-[11px] ${
+            isV2
               ? "bg-emerald-400 text-neutral-950 shadow-[0_0_15px_rgba(52,211,153,0.7)] font-black"
-              : "text-tactical-muted hover:text-tactical-ivory hover:bg-tactical-base/60"
+              : "text-neutral-400 hover:text-white hover:bg-white/5 font-medium"
           }`}
-          title="Version 4: Minimal Professional Smooth-Scroll"
+          title="Version 2: Minimal Smooth-Scroll Professional"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400" />
-          <span>V4: PRO</span>
+          <span>VERSION 2</span>
         </button>
       </div>
     </aside>

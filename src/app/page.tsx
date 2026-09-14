@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import VersionSwitcher from "@/components/VersionSwitcher";
+import ResumeModal from "@/components/ResumeModal";
 import V3FullPageCanvas from "@/components/v3/V3FullPageCanvas";
 import V3LaserCircuit from "@/components/v3/V3LaserCircuit";
 import V3ScrollProgressHUD from "@/components/v3/V3ScrollProgressHUD";
@@ -18,6 +19,8 @@ import { Terminal as TerminalIcon } from "lucide-react";
 
 export default function Home() {
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -52,7 +55,17 @@ export default function Home() {
       />
 
       {/* V3 Hero Section - No background, transparent */}
-      <V3Hero onOpenTerminal={() => setTerminalOpen(true)} />
+      <V3Hero
+        onOpenTerminal={() => setTerminalOpen(true)}
+        onOpenResume={() => setResumeOpen(true)}
+      />
+
+      {/* Resume PDF Popup Viewer Modal */}
+      <ResumeModal
+        isOpen={resumeOpen}
+        onClose={() => setResumeOpen(false)}
+        resumeUrl={`${basePath}/Kabish_Sridar_Resume.pdf`}
+      />
 
       {/* V3 Horizontal Project Showcase - Sleek sliding */}
       <V3HorizontalShowcase />
