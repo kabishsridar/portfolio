@@ -10,8 +10,10 @@ export default function VersionSwitcher() {
 
   // Version 1 is Cinematic Cybernetics (Root /)
   // Version 2 is Minimal Professional (Path /v4)
+  // Version 3 is Kinetic Synapse (Path /v3)
+  const isV3 = pathname.includes("/v3");
   const isV2 = pathname.includes("/v4");
-  const isV1 = !isV2 && !pathname.includes("/projects");
+  const isV1 = !isV2 && !isV3 && !pathname.includes("/projects");
 
   return (
     <div
@@ -43,6 +45,19 @@ export default function VersionSwitcher() {
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400" />
           <span>VERSION 2</span>
+        </Link>
+
+        <Link
+          href="/v3"
+          className={`flex items-center space-x-1.5 px-3 py-1 rounded-full transition-all uppercase tracking-wider text-[10px] sm:text-[11px] select-none ${
+            isV3
+              ? "bg-purple-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.8)] font-black"
+              : "text-neutral-400 hover:text-white hover:bg-white/10 font-medium"
+          }`}
+          title="Version 3: Kinetic Synapse Linear-Grade"
+        >
+          <span className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+          <span>VERSION 3</span>
         </Link>
       </div>
     </div>
