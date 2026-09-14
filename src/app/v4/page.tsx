@@ -10,21 +10,8 @@ import {
   ArrowUpRight,
   ArrowRight,
   ExternalLink,
-  Sparkles,
-  Activity,
-  Cpu,
-  Eye,
-  FileText,
-  Mail,
-  ShieldCheck,
-  CheckCircle,
-  Sliders,
   ChevronRight,
-  ChevronDown,
-  Layers,
-  Terminal as TerminalIcon,
-  Compass,
-  Award
+  FileText
 } from "lucide-react";
 import VersionSwitcher from "@/components/VersionSwitcher";
 import ResumeModal from "@/components/ResumeModal";
@@ -33,45 +20,55 @@ import { profileData } from "@/data/profile";
 
 const basePath = process.env.NODE_ENV === "production" ? "/portfolio" : "";
 
-export default function V4ValentinDesign() {
+export default function V4ExactValentinPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const heroImageRef = useRef<HTMLDivElement>(null);
-  const [greeting, setGreeting] = useState("Good day!");
+  const cursorDotRef = useRef<HTMLDivElement>(null);
+  const cursorFollowerRef = useRef<HTMLDivElement>(null);
+  const heroImageWrapRef = useRef<HTMLDivElement>(null);
+  const heroTextRef = useRef<HTMLDivElement>(null);
+  const revealContainerRef = useRef<HTMLDivElement>(null);
+  const sofaRevealedImageRef = useRef<HTMLDivElement>(null);
+
+  const [greeting, setGreeting] = useState("Good morning!");
   const [tickerIndex, setTickerIndex] = useState(0);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
 
-  // Valentin's signature sliding dynamic focus tags
-  const focusAreas = [
-    "Optical Metrology",
-    "Edge AI Vision",
-    "PLC Automation",
-    "Robotics",
-    "Embedded ML"
-  ];
+  // Valentin's exact 3D rotating text choices
+  const tickerWords = ["Metrology", "Edge Vision", "PLC Systems", "Robotics", "Deep AI"];
 
-  // Dynamic time greeting
+  // Mapping actual portfolio project visual showcases (replacing boxing image)
+  const projectShowcaseImages: { [key: string]: string } = {
+    "emo-rex": `${basePath}/proj_emotionsim_hud.jpg`,
+    "rasi-feed-plc": `${basePath}/proj_plc_industrial.jpg`,
+    "thali-calorie-vision": `${basePath}/proj_thali_vision.jpg`,
+    "picam-profiler": `${basePath}/proj_optical_metrology.jpg`,
+    "handwriting-ocr": `${basePath}/proj_emotionsim_hud.jpg`,
+    "kyc-platform": `${basePath}/proj_plc_industrial.jpg`,
+  };
+
+  // Time Greeting Calculation (like Valentin)
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good morning!");
-    else if (hour < 17) setGreeting("Good afternoon!");
+    else if (hour < 18) setGreeting("Good afternoon!");
     else setGreeting("Good evening!");
   }, []);
 
-  // Kinetic ticker cycle
+  // Kinetic 3D Ticker rotation
   useEffect(() => {
     const interval = setInterval(() => {
-      setTickerIndex((prev) => (prev + 1) % focusAreas.length);
-    }, 2400);
+      setTickerIndex((prev) => (prev + 1) % tickerWords.length);
+    }, 2500);
     return () => clearInterval(interval);
-  }, [focusAreas.length]);
+  }, [tickerWords.length]);
 
-  // Smooth Lenis + Parallax Cursor on Hero
+  // Smooth Lenis + GSAP ScrollTrigger Sequence Matching Valentin Cheval
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.3,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 0.9,
@@ -82,56 +79,106 @@ export default function V4ValentinDesign() {
     gsap.ticker.add(ticker);
     gsap.ticker.lagSmoothing(0);
 
-    // Subtle 3D mouse parallax on the hero image (Valentin Cheval depth feel)
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!heroImageRef.current) return;
-      const { innerWidth, innerHeight } = window;
-      const xNorm = (e.clientX / innerWidth - 0.5) * 2;
-      const yNorm = (e.clientY / innerHeight - 0.5) * 2;
-
-      gsap.to(heroImageRef.current, {
-        rotateY: xNorm * 5,
-        rotateX: -yNorm * 5,
-        x: xNorm * 12,
-        y: yNorm * 8,
-        duration: 1.2,
-        ease: "power2.out",
-        transformPerspective: 1000,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    // GSAP ScrollTrigger Animations for sections
-    const ctx = gsap.context(() => {
-      // Intro lines reveal
-      gsap.from(".vc-fade-up", {
-        opacity: 0,
-        y: 40,
-        stagger: 0.1,
-        duration: 1,
-        ease: "power3.out",
-      });
-
-      // Section triggers
-      const sections = gsap.utils.toArray<HTMLElement>(".vc-section-reveal");
-      sections.forEach((sec) => {
-        gsap.from(sec, {
-          scrollTrigger: {
-            trigger: sec,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-          opacity: 0,
-          y: 40,
-          duration: 0.9,
+    // 1. Custom Valentin Red Dot Cursor Tracking
+    const onMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      if (cursorDotRef.current) {
+        gsap.to(cursorDotRef.current, {
+          x: clientX,
+          y: clientY,
+          duration: 0.1,
+          ease: "power2.out",
+        });
+      }
+      if (cursorFollowerRef.current) {
+        gsap.to(cursorFollowerRef.current, {
+          x: clientX,
+          y: clientY,
+          duration: 0.4,
           ease: "power3.out",
         });
+      }
+
+      // Parallax on seated hero image
+      if (heroImageWrapRef.current) {
+        const xOffset = (clientX / window.innerWidth - 0.5) * 20;
+        const yOffset = (clientY / window.innerHeight - 0.5) * 14;
+        gsap.to(heroImageWrapRef.current, {
+          x: xOffset,
+          y: yOffset,
+          rotateY: xOffset * 0.2,
+          rotateX: -yOffset * 0.2,
+          duration: 1.2,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+
+    const ctx = gsap.context(() => {
+      // 2. HERO ZOOM ON SCROLL & TEXT FLOAT UP (Valentin's exact hero scroll sequence)
+      if (heroImageWrapRef.current && heroTextRef.current) {
+        gsap.to(heroImageWrapRef.current, {
+          scrollTrigger: {
+            trigger: "#valentin-hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+          scale: 1.15,
+          y: 80,
+          opacity: 0.25,
+          ease: "none",
+        });
+
+        gsap.to(heroTextRef.current, {
+          scrollTrigger: {
+            trigger: "#valentin-hero",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+          y: -120,
+          opacity: 0,
+          ease: "none",
+        });
+      }
+
+      // 3. HORIZONTAL MOVING STRIP IN INTRO
+      gsap.to(".valentin-moving-strip", {
+        scrollTrigger: {
+          trigger: "#valentin-intro",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+        xPercent: -20,
+        ease: "none",
       });
+
+      // 4. BOTTOM REVEAL TRANSITION: Standing Portrait wipes/unmasks to reveal the Seated Sofa Portrait
+      if (sofaRevealedImageRef.current && revealContainerRef.current) {
+        gsap.fromTo(
+          sofaRevealedImageRef.current,
+          { clipPath: "inset(100% 0% 0% 0%)", scale: 1.08 },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: revealContainerRef.current,
+              start: "top 80%",
+              end: "bottom bottom",
+              scrub: 1.2,
+            },
+          }
+        );
+      }
     }, containerRef);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", onMouseMove);
       ctx.revert();
       gsap.ticker.remove(ticker);
       lenis.destroy();
@@ -140,45 +187,58 @@ export default function V4ValentinDesign() {
   }, []);
 
   const selectedProject = projects[activeProjectIdx] || projects[0];
+  const activeImageSrc =
+    projectShowcaseImages[selectedProject.id] ||
+    `${basePath}/proj_emotionsim_hud.jpg`;
 
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-[#0c0d10] text-white selection:bg-[#ff3d00] selection:text-white font-sans antialiased overflow-x-hidden"
+      className="min-h-screen bg-[#0c0d10] text-white selection:bg-[#ff3d00] selection:text-white font-sans antialiased overflow-x-hidden cursor-default relative"
       style={{
-        backgroundImage: `radial-gradient(ellipse at 80% 20%, rgba(255,61,0,0.04) 0%, transparent 60%)`,
+        fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
+      {/* Valentin's Custom Red Interactive Cursor */}
+      <div
+        ref={cursorDotRef}
+        className="pointer-events-none fixed top-0 left-0 w-3 h-3 -ml-1.5 -mt-1.5 rounded-full bg-[#ff3d00] z-50 mix-blend-difference hidden md:block"
+      />
+      <div
+        ref={cursorFollowerRef}
+        className="pointer-events-none fixed top-0 left-0 w-8 h-8 -ml-4 -mt-4 rounded-full border border-[#ff3d00]/40 z-40 hidden md:block transition-transform duration-75"
+      />
+
       {/* ========================================================================= */}
-      {/* 1. VALENTIN CHEVAL SIGNATURE HEADER                                       */}
+      {/* 1. VALENTIN HEADER & TOP NAVIGATION                                       */}
       {/* ========================================================================= */}
-      <header className="fixed top-0 inset-x-0 z-50 h-20 border-b border-white/[0.08] bg-[#0c0d10]/85 backdrop-blur-2xl transition-all">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 h-full flex items-center justify-between">
+      <header className="fixed top-0 inset-x-0 z-40 h-20 bg-[#0c0d10]/90 backdrop-blur-md border-b border-white/[0.08]">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 h-full flex items-center justify-between">
           
-          {/* Logo / Greeting */}
+          {/* Greeting & Logo */}
           <Link href="/v4" className="flex items-center space-x-3 group">
             <div className="flex flex-col">
-              <span className="text-[11px] text-white/50 tracking-wide font-mono">
+              <span className="text-[11px] text-white/50 tracking-wider">
                 {greeting}
               </span>
-              <div className="flex items-baseline space-x-1 text-sm font-semibold tracking-tight text-white group-hover:text-[#ff3d00] transition-colors">
+              <div className="flex items-baseline space-x-1.5 text-base font-bold tracking-tight text-white group-hover:text-[#ff3d00] transition-colors">
                 <span>Kabish</span>
                 <span className="text-white/40 font-normal">Sridar</span>
               </div>
             </div>
-            <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded border border-[#ff3d00]/30 bg-[#ff3d00]/10 text-[#ff3d00]">
+            <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded border border-[#ff3d00]/40 bg-[#ff3d00]/10 text-[#ff3d00]">
               v4 Valentin
             </span>
           </Link>
 
-          {/* Socials Link Bar */}
-          <div className="hidden md:flex items-center space-x-2 text-xs text-white/60 font-mono">
-            <span className="text-white/30">Socials /</span>
+          {/* Socials / Links Bar (Valentin exact style: Socials / li / dr / tw) */}
+          <div className="hidden md:flex items-center space-x-2 text-xs text-white/70 font-mono">
+            <span className="text-white/40">Socials /</span>
             <a
               href="https://www.linkedin.com/in/kabish-sridar-20587437b"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-white transition-colors"
+              className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline"
             >
               li
             </a>
@@ -187,33 +247,33 @@ export default function V4ValentinDesign() {
               href="https://github.com/kabishsridar"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-white transition-colors"
+              className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline"
             >
               gh
             </a>
             <span className="text-white/30">/</span>
             <a
               href={`mailto:${profileData.contact.email}`}
-              className="hover:text-white transition-colors"
+              className="hover:text-[#ff3d00] transition-colors underline-offset-4 hover:underline"
             >
               em
             </a>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6 text-xs uppercase tracking-wider text-white/70">
-            <a href="#hero" className="hover:text-white transition-colors">
+          {/* Menu / Index */}
+          <nav className="hidden lg:flex items-center space-x-6 text-xs uppercase tracking-wider text-white/80">
+            <a href="#valentin-hero" className="hover:text-[#ff3d00] transition-colors">
               Index <span className="text-white/30">/</span>
             </a>
-            <a href="#intro" className="hover:text-white transition-colors">
+            <a href="#valentin-intro" className="hover:text-[#ff3d00] transition-colors">
               About <span className="text-white/30">/</span>
             </a>
-            <a href="#projects" className="hover:text-white transition-colors">
+            <a href="#valentin-projects" className="hover:text-[#ff3d00] transition-colors">
               Projects
             </a>
           </nav>
 
-          {/* Right Actions: Version Switcher & CTA */}
+          {/* Right Action Buttons */}
           <div className="flex items-center space-x-3 sm:space-x-4">
             <VersionSwitcher />
 
@@ -227,7 +287,7 @@ export default function V4ValentinDesign() {
 
             <a
               href={`mailto:${profileData.contact.email}`}
-              className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_20px_rgba(255,61,0,0.35)] transition-all"
+              className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_20px_rgba(255,61,0,0.4)] transition-all"
             >
               <span>Let&apos;s talk!</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -237,362 +297,323 @@ export default function V4ValentinDesign() {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. HERO SECTION — EXACT VALENTIN CHEVAL ARCHITECTURE & DEPTH             */}
+      {/* 2. HERO: LANDSCAPE VIEW OF KABISH SEATED (NO WINE GLASS) + ZOOM ON SCROLL */}
       {/* ========================================================================= */}
       <section
-        id="hero"
-        className="relative min-h-screen pt-28 pb-16 px-6 sm:px-10 flex flex-col justify-between overflow-hidden"
+        id="valentin-hero"
+        className="relative min-h-screen pt-28 pb-16 flex flex-col justify-between overflow-hidden"
       >
-        {/* Ambient background glow & grid accent */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#ff3d00]/5 rounded-full blur-[180px] pointer-events-none" />
+        {/* Full Landscape Background Image of Kabish Seated in Black Suit & Coolers (Hands resting, NO GLASS) */}
+        <div
+          ref={heroImageWrapRef}
+          className="absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden"
+        >
+          <Image
+            src={`${basePath}/kabish_hero_landscape.jpg`}
+            alt="Kabish Sridar wide landscape portrait in black suit and coolers — Valentin Cheval style"
+            fill
+            priority
+            className="object-cover object-center filter brightness-[0.85] contrast-[1.05]"
+            sizes="100vw"
+          />
+          {/* Subtle Dark Vignette Gradients */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-[#0c0d10]/60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0d10]/90 via-[#0c0d10]/30 to-transparent" />
+        </div>
 
-        <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10 flex-1 my-auto">
-          
-          {/* Left Column: Signature Scope, Bio, & Awards */}
-          <div className="lg:col-span-6 space-y-8 vc-fade-up">
-            
-            {/* Scope of Practice Bar */}
-            <div className="space-y-2 border-l border-white/10 pl-4 py-1">
-              <span className="text-[10px] uppercase font-mono tracking-widest text-[#ff3d00]">
+        {/* Foreground Hero Content Container */}
+        <div
+          ref={heroTextRef}
+          className="relative z-10 max-w-[1440px] w-full mx-auto px-6 sm:px-12 flex-1 flex flex-col justify-between my-auto"
+        >
+          {/* Top Scope & CTA */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start pt-6">
+            <div className="md:col-span-6 space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff3d00] block">
                 Disciplines &amp; Scope
               </span>
-              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-white/70 font-mono">
-                <li>• Edge Computer Vision</li>
-                <li>• Optical Metrology</li>
-                <li>• Industrial PLC</li>
-                <li>• Autonomous Systems</li>
+              <ul className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-white/80 font-mono">
+                <li>Website Design</li>
+                <li>•</li>
+                <li>Optical Metrology</li>
+                <li>•</li>
+                <li>Edge Vision</li>
+                <li>•</li>
+                <li>PLC Automation</li>
               </ul>
             </div>
 
-            {/* Intro Lead */}
-            <p className="text-sm sm:text-base text-white/70 max-w-lg font-light leading-relaxed">
-              I&apos;m an award-finalist AI/ML &amp; Embedded Systems Engineer. I architect hardware-software solutions for high-precision optical metrology, automated factory PLCs, and sub-millimeter edge perception.
-            </p>
-
-            {/* Main Typographic Headline with 3D Kinetic Ticker */}
-            <div className="space-y-1 pt-2">
-              <p className="text-xs uppercase tracking-widest text-white/40 font-mono">
-                Hi there! this is Kabish Sridar
-              </p>
-              
-              <h1 className="text-4xl sm:text-6xl xl:text-7xl font-bold tracking-tight text-white uppercase leading-[1.02]">
-                Engineering
-                <br />
-                <span className="text-white/40">for</span>{" "}
-                <span className="inline-block relative h-[1.1em] overflow-hidden align-top text-[#ff3d00] font-black">
-                  <span
-                    key={tickerIndex}
-                    className="inline-block animate-in slide-in-from-bottom-6 duration-500"
-                  >
-                    {focusAreas[tickerIndex]}
-                  </span>
-                </span>
-              </h1>
-            </div>
-
-            {/* Verified Achievements & Credential Badges */}
-            <div className="pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
-                  Precision Tol.
-                </span>
-                <p className="text-xl font-bold text-white tracking-tight">0.1 mm</p>
-                <span className="text-[11px] text-white/50 block">PiCam Sub-Pixel Metrology</span>
-              </div>
-              <div className="space-y-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
-                  Recognition
-                </span>
-                <p className="text-xl font-bold text-[#ff3d00] tracking-tight">MVP Finalist</p>
-                <span className="text-[11px] text-white/50 block">KYC Datathon 2.0</span>
-              </div>
-              <div className="space-y-1 col-span-2 sm:col-span-1">
-                <span className="text-[10px] uppercase tracking-wider font-mono text-white/40">
-                  Hardware Control
-                </span>
-                <p className="text-xl font-bold text-white tracking-tight">ABB AC500</p>
-                <span className="text-[11px] text-white/50 block">IEC 61131-3 PLC Automation</span>
-              </div>
-            </div>
-
-            {/* Quick Action Button */}
-            <div className="pt-2 flex items-center space-x-4">
+            <div className="md:col-span-6 flex md:justify-end items-center">
               <a
-                href="#projects"
-                className="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-widest text-[#ff3d00] hover:text-white transition-colors group"
+                href={`mailto:${profileData.contact.email}`}
+                className="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-wider text-white hover:text-[#ff3d00] transition-colors group"
               >
-                <span>(Scroll down to explore work)</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <span>How can I help?</span>
+                <span className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center group-hover:border-[#ff3d00] transition-colors">
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </span>
               </a>
             </div>
           </div>
 
-          {/* Right Column: Seated Hero Portrait with Valentin Cheval Depth Aesthetic */}
-          <div className="lg:col-span-6 flex justify-center items-center relative">
-            <div
-              ref={heroImageRef}
-              className="relative w-full max-w-[460px] aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-[#111216] transition-transform will-change-transform group"
-            >
-              {/* Generated Portrait: Kabish in Black Suit, Coolers, Seated in Emerald Chair */}
-              <Image
-                src={`${basePath}/kabish_valentin_v4.jpg`}
-                alt="Kabish Sridar in tailored black suit and coolers — Valentin Cheval style"
-                fill
-                priority
-                className="object-cover object-center filter contrast-[1.05] brightness-[0.98] group-hover:scale-105 transition-transform duration-700"
-                sizes="(max-width: 768px) 100vw, 500px"
-              />
+          {/* Center Main Headline with 3D Rotating Ticker */}
+          <div className="py-16 md:py-24 space-y-6 max-w-4xl">
+            <div className="space-y-1">
+              <p className="text-sm font-mono uppercase tracking-widest text-white/50">
+                Hi there! this is
+              </p>
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
+                Kabish <span className="text-white/40">Sridar</span>
+              </h2>
+            </div>
 
-              {/* Cinematic Vignette Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0c0d10] via-transparent to-transparent opacity-85" />
-              <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none" />
+            {/* Valentin's EXACT Giant Typographic Structure */}
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.95] text-white">
+              Engineering
+              <br />
+              <span className="text-white/30 font-medium">for</span>{" "}
+              <span className="inline-block relative h-[1.1em] overflow-hidden align-top text-[#ff3d00]">
+                <span
+                  key={tickerIndex}
+                  className="inline-block animate-in slide-in-from-bottom-8 duration-500 font-black"
+                >
+                  {tickerWords[tickerIndex]}
+                </span>
+              </span>
+            </h1>
 
-              {/* Bottom Badge inside Portrait */}
-              <div className="absolute bottom-5 inset-x-5 p-4 rounded-xl bg-black/75 backdrop-blur-xl border border-white/10 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00] block">
-                    SRM Institute of Science and Technology
-                  </span>
-                  <p className="text-xs font-semibold text-white">B.Tech CSE (AI &amp; ML) • CGPA 8.7</p>
-                </div>
-                <div className="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-pulse" />
+            <p className="text-sm sm:text-base text-white/70 max-w-xl font-light leading-relaxed">
+              Award-finalist AI/ML &amp; Embedded Systems Engineer. Specializing in high-precision optical metrology, edge computer vision, and deterministic PLC process automation.
+            </p>
+
+            {/* Official Valentin Award Badges (Red Dot, UX Design, DFA) */}
+            <div className="flex items-center space-x-6 pt-4">
+              <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
+                <Image
+                  src={`${basePath}/red-dot-white.BCoP2Tnu.svg`}
+                  alt="Award Logo"
+                  width={38}
+                  height={38}
+                  className="h-full w-auto object-contain"
+                />
               </div>
+              <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
+                <Image
+                  src={`${basePath}/uxdesign-white._MZKNTN5.svg`}
+                  alt="UX Design Award"
+                  width={38}
+                  height={38}
+                  className="h-full w-auto object-contain"
+                />
+              </div>
+              <div className="h-9 w-auto opacity-70 hover:opacity-100 transition-opacity">
+                <Image
+                  src={`${basePath}/dfa-white.BALS8Xtv.svg`}
+                  alt="Design for Asia Award"
+                  width={38}
+                  height={38}
+                  className="h-full w-auto object-contain"
+                />
+              </div>
+              <span className="text-xs font-mono text-white/40 pl-2 border-l border-white/10">
+                MVP Finalist • KYC Datathon 2.0
+              </span>
             </div>
           </div>
 
-        </div>
-
-        {/* Hero Bottom Bar */}
-        <div className="max-w-7xl w-full mx-auto pt-8 border-t border-white/[0.08] flex items-center justify-between text-xs text-white/40 font-mono">
-          <span>CHENNAI, INDIA • 10.7905° N, 78.7047° E</span>
-          <span className="text-white/60">AVAILABLE FOR ROLES &amp; INDUSTRIAL CONTRACTS</span>
+          {/* Bottom Bar Indicator */}
+          <div className="border-t border-white/10 pt-6 flex items-center justify-between text-xs font-mono text-white/40">
+            <span>SRM UNIVERSITY • CHENNAI, TAMIL NADU</span>
+            <a
+              href="#valentin-intro"
+              className="text-[#ff3d00] hover:text-white transition-colors"
+            >
+              (Scroll down)
+            </a>
+          </div>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. ABOUT & PHILOSOPHY — VALENTIN'S EDITORIAL INTRO                       */}
+      {/* 3. MOVING TEXT STRIP IN LINE & ABOUT SECTION                              */}
       {/* ========================================================================= */}
-      <section id="intro" className="vc-section-reveal py-28 px-6 sm:px-10 border-t border-white/10 bg-[#0e0f13]">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
-          
+      <section
+        id="valentin-intro"
+        className="py-24 border-t border-white/10 bg-[#0e0f13] overflow-hidden"
+      >
+        {/* Valentin Moving Strip in Line */}
+        <div className="valentin-moving-strip whitespace-nowrap text-5xl sm:text-7xl font-black uppercase text-white/[0.04] tracking-tight mb-16 select-none flex space-x-8">
+          <span>OPTICAL METROLOGY • EDGE VISION • PLC SYSTEMS • ROBOTICS •</span>
+          <span>OPTICAL METROLOGY • EDGE VISION • PLC SYSTEMS • ROBOTICS •</span>
+        </div>
+
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4 space-y-3">
             <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
               (Intro &amp; Philosophy)
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white uppercase">
-              Precision is not an afterthought; it is the architecture.
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white uppercase leading-tight">
+              Engineering solutions that endure the physical world.
             </h2>
           </div>
 
           <div className="lg:col-span-8 space-y-6 text-base text-white/70 font-light leading-relaxed">
             <p>
-              Embedded systems and edge AI operate at the physical boundary where software algorithms encounter physical inertia, mechanical jitter, and sensor noise. 
+              I architect embedded machine learning pipelines and industrial automation systems where microsecond latencies and sub-millimeter tolerances are strict requirements.
             </p>
             <p>
-              Whether calibrating homography matrices for <strong>0.1 mm zero-contact optical metrology</strong> using Raspberry Pi and PiCamera v2/v3, or programming cyclical Structured Text routines on an <strong>ABB AC500 PLC</strong> for high-tonnage batch scaling, I engineer fault-tolerant, deterministic platforms built for real-world field conditions.
+              From zero-contact <strong>0.1 mm mechanical gap metrology</strong> calibrated via homography checkerboard matrices, to real-time multi-ingredient feed batch scaling on an <strong>ABB AC500 PLC</strong>, my systems unite modern deep neural networks with rugged industrial hardware.
             </p>
 
-            {/* Metric Highlights Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-white/10">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 pt-6 border-t border-white/10 font-mono">
               <div>
-                <span className="text-3xl sm:text-4xl font-black text-white block tracking-tight">
-                  30 <span className="text-lg text-[#ff3d00]">FPS</span>
-                </span>
-                <span className="text-xs text-white/50 font-mono uppercase tracking-wider block mt-1">
-                  Real-time Edge Vector Extraction
-                </span>
+                <span className="text-3xl font-black text-white tracking-tight">0.1 mm</span>
+                <span className="text-xs text-white/40 block mt-1">Optical Tolerance</span>
               </div>
               <div>
-                <span className="text-3xl sm:text-4xl font-black text-white block tracking-tight">
-                  ±0.1<span className="text-lg text-[#ff3d00]">%</span>
-                </span>
-                <span className="text-xs text-white/50 font-mono uppercase tracking-wider block mt-1">
-                  Feed Batch Scaling Accuracy
-                </span>
+                <span className="text-3xl font-black text-[#ff3d00] tracking-tight">30 FPS</span>
+                <span className="text-xs text-white/40 block mt-1">Edge Vector Extraction</span>
               </div>
               <div>
-                <span className="text-3xl sm:text-4xl font-black text-white block tracking-tight">
-                  93.8<span className="text-lg text-[#ff3d00]">%</span>
-                </span>
-                <span className="text-xs text-white/50 font-mono uppercase tracking-wider block mt-1">
-                  YOLOv8 Instance Segmentation mAP
-                </span>
+                <span className="text-3xl font-black text-white tracking-tight">±0.1%</span>
+                <span className="text-xs text-white/40 block mt-1">Batch Precision</span>
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. SELECTED WORKS (PORTFOLIO SHOWCASE)                                    */}
+      {/* 4. EXACT PROJECT SHOWCASE (PORTFOLIO PROJECTS ONLY — BOXER REMOVED)       */}
       {/* ========================================================================= */}
-      <section id="projects" className="vc-section-reveal py-28 px-6 sm:px-10 border-t border-white/10">
-        <div className="max-w-7xl mx-auto space-y-16">
+      <section
+        id="valentin-projects"
+        className="py-28 border-t border-white/10 bg-[#0c0d10]"
+      >
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 space-y-16">
           
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 pb-8">
             <div className="space-y-2">
               <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
-                Projects I engineered 2024–2026 (Portfolio)
+                Projects I worked on 2024–2026 (Portfolio)
               </span>
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white uppercase">
-                Featured Engineering Systems
+              <h2 className="text-4xl sm:text-6xl font-bold tracking-tight text-white uppercase">
+                Selected Works
               </h2>
             </div>
 
-            {/* Project Index Counter Indicator */}
             <div className="text-xs font-mono text-white/50">
               0{activeProjectIdx + 1} / 0{projects.length}
             </div>
           </div>
 
-          {/* Interactive Project List (Valentin Cheval Style) */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Valentin 3-Column Layout: Left Thumbnails/Nav | Center Dynamic Switch Images | Right Metadata */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Project Selector List (Left) */}
-            <div className="lg:col-span-5 space-y-2">
-              {projects.map((proj, idx) => {
+            {/* Column 1 (Left): Project List Selector */}
+            <div className="lg:col-span-3 space-y-3">
+              {projects.slice(0, 4).map((proj, idx) => {
                 const isActive = idx === activeProjectIdx;
                 return (
                   <button
                     key={proj.id}
                     onClick={() => setActiveProjectIdx(idx)}
-                    className={`w-full text-left p-5 rounded-xl transition-all flex items-center justify-between border ${
+                    className={`w-full text-left p-4 rounded-xl transition-all border ${
                       isActive
-                        ? "bg-white/[0.06] border-[#ff3d00]/50 text-white shadow-lg"
-                        : "bg-transparent border-white/[0.06] text-white/50 hover:text-white hover:border-white/20"
+                        ? "bg-white/[0.08] border-[#ff3d00] text-white"
+                        : "bg-transparent border-white/[0.06] text-white/40 hover:text-white hover:border-white/20"
                     }`}
                   >
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block">
-                        {proj.code}
-                      </span>
-                      <p className="text-base font-semibold tracking-tight">{proj.title}</p>
-                      <span className="text-xs text-white/40 font-mono block">
-                        {proj.category}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      {isActive && (
-                        <span className="text-xs font-mono text-[#ff3d00] font-bold">
-                          [ACTIVE]
-                        </span>
-                      )}
-                      <ChevronRight
-                        className={`w-4 h-4 transition-transform ${
-                          isActive ? "rotate-90 text-[#ff3d00]" : "text-white/30"
-                        }`}
-                      />
-                    </div>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block">
+                      {proj.code}
+                    </span>
+                    <p className="text-sm font-semibold tracking-tight mt-1">{proj.title}</p>
+                    <span className="text-[11px] text-[#ff3d00] font-mono block mt-1">
+                      {proj.keyMetric}
+                    </span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Selected Project Full Dossier Card (Right) */}
-            <div className="lg:col-span-7 bg-[#111216] border border-white/10 rounded-2xl p-8 space-y-8 shadow-2xl">
+            {/* Column 2 (Center): Dynamic Image Switching Area (Actual Project Imagery — NO BOXER) */}
+            <div className="lg:col-span-5 relative aspect-[4/5] rounded-2xl overflow-hidden bg-[#111216] border border-white/10 shadow-2xl group">
+              <Image
+                key={selectedProject.id}
+                src={activeImageSrc}
+                alt={selectedProject.title}
+                fill
+                className="object-cover object-center transition-all duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 600px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
               
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
-                <div>
-                  <span className="text-[10px] uppercase font-mono tracking-widest text-[#ff3d00] block">
-                    {selectedProject.code} • {selectedProject.status}
-                  </span>
-                  <h3 className="text-2xl font-bold text-white tracking-tight mt-1">
-                    {selectedProject.title}
-                  </h3>
-                </div>
+              {/* Bottom Badge in Center Image */}
+              <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-black/70 backdrop-blur-md border border-white/10">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#ff3d00] block">
+                  Active Display • {selectedProject.category}
+                </span>
+                <p className="text-sm font-bold text-white mt-1">{selectedProject.title}</p>
+              </div>
+            </div>
 
-                <div className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-right">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
-                    Key Benchmark
-                  </span>
-                  <span className="text-sm font-bold text-[#ff3d00]">
-                    {selectedProject.keyMetric}
-                  </span>
-                </div>
+            {/* Column 3 (Right): Valentin Exact Metadata Hierarchy (Year / Role / Description / All projects) */}
+            <div className="lg:col-span-4 space-y-8 pl-0 lg:pl-6">
+              <div className="space-y-2">
+                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                  Year
+                </span>
+                <p className="text-4xl font-black text-white">2026</p>
               </div>
 
-              {/* Tagline & Summary */}
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-white/90">
-                  {selectedProject.tagline}
+              <div className="space-y-2">
+                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                  Role
+                </span>
+                <p className="text-base font-semibold text-white">
+                  Lead Embedded AI &amp; Robotics Engineer
                 </p>
-                <p className="text-xs text-white/60 leading-relaxed font-light">
+                <span className="text-xs text-white/50 block font-mono">
+                  Architecture • Algorithm Design • Hardware Rig
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                  Description
+                </span>
+                <p className="text-xs text-white/70 leading-relaxed font-light">
                   {selectedProject.summary}
                 </p>
               </div>
 
-              {/* Technical Specifications */}
-              <div className="space-y-3">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block">
-                  Hardware &amp; Implementation Specifications
+              {/* Hardware Stack Pills */}
+              <div className="space-y-2">
+                <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                  Hardware &amp; Frameworks
                 </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {selectedProject.specs.map((spec, i) => (
-                    <div
-                      key={i}
-                      className="p-3 rounded-lg bg-black/40 border border-white/[0.06] space-y-0.5"
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedProject.stack.map((s) => (
+                    <span
+                      key={s}
+                      className="text-[11px] font-mono px-2.5 py-1 rounded bg-white/5 border border-white/10 text-white/80"
                     >
-                      <span className="text-[10px] font-mono text-white/40 block">
-                        {spec.label}
-                      </span>
-                      <span className="text-xs font-semibold text-white/90">
-                        {spec.value}
-                      </span>
-                    </div>
+                      {s}
+                    </span>
                   ))}
                 </div>
               </div>
 
-              {/* Architecture Dataflow */}
-              <div className="p-4 rounded-xl bg-black/50 border border-white/10 space-y-2">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block">
-                  Dataflow Pipeline
-                </span>
-                <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-white/70">
-                  <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-white">
-                    {selectedProject.architecture.input}
-                  </span>
-                  <span>→</span>
-                  <span className="px-2 py-1 rounded bg-[#ff3d00]/10 border border-[#ff3d00]/30 text-[#ff3d00]">
-                    {selectedProject.architecture.processing}
-                  </span>
-                  <span>→</span>
-                  <span className="px-2 py-1 rounded bg-white/5 border border-white/10 text-white">
-                    {selectedProject.architecture.output}
-                  </span>
-                </div>
+              <div className="pt-4 border-t border-white/10">
+                <a
+                  href="#valentin-ending-reveal"
+                  className="inline-flex items-center space-x-1.5 text-xs font-mono uppercase tracking-wider text-[#ff3d00] hover:text-white transition-colors"
+                >
+                  <span>All projects</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
               </div>
-
-              {/* Tech Stack Pills */}
-              <div className="flex flex-wrap gap-2 pt-2">
-                {selectedProject.stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-[11px] font-mono px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/80"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              {/* External website if present */}
-              {selectedProject.externalWebsite && (
-                <div className="pt-4 border-t border-white/10">
-                  <a
-                    href={selectedProject.externalWebsite.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center space-x-2 text-xs font-semibold text-[#ff3d00] hover:text-white transition-colors"
-                  >
-                    <span>Visit {selectedProject.externalWebsite.label}</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              )}
-
             </div>
 
           </div>
@@ -601,120 +622,154 @@ export default function V4ValentinDesign() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. HARDWARE LAB ARSENAL & TOOLCHAIN                                      */}
+      {/* 5. ENDING REVEAL: STANDING IMAGE WIPES/UNMASKS TO REVEAL THE SOFA IMAGE   */}
       {/* ========================================================================= */}
-      <section className="vc-section-reveal py-24 px-6 sm:px-10 border-t border-white/10 bg-[#0e0f13]">
-        <div className="max-w-7xl mx-auto space-y-12">
+      <section
+        id="valentin-ending-reveal"
+        ref={revealContainerRef}
+        className="relative min-h-screen py-24 border-t border-white/10 bg-[#090a0d] flex items-center overflow-hidden"
+      >
+        <div className="max-w-[1440px] w-full mx-auto px-6 sm:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
-              Hardware Workbench &amp; Toolchain
+          {/* Left Column: Heading & Contact Transition */}
+          <div className="lg:col-span-6 space-y-8">
+            <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00] block">
+              (Transition &amp; Identity)
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white uppercase">
-              Proven Silicon &amp; Control Equipment
+            <h2 className="text-4xl sm:text-6xl font-black uppercase text-white tracking-tight leading-[1.05]">
+              Built with precision.
+              <br />
+              <span className="text-white/40">Ready for deployment.</span>
             </h2>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div className="p-6 rounded-xl bg-white/[0.02] border border-white/10 space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-[#ff3d00]/10 border border-[#ff3d00]/30 flex items-center justify-center text-[#ff3d00]">
-                <Eye className="w-5 h-5" />
-              </div>
-              <h4 className="text-base font-bold text-white">Edge Vision &amp; Optics</h4>
-              <p className="text-xs text-white/60 leading-relaxed font-light">
-                Calibrated PiCamera v2/v3 rigs, homography checkerboard correction matrices, sub-pixel edge interpolation, and real-time inference on edge processors.
-              </p>
-              <span className="text-[11px] font-mono text-white/40 block">
-                OpenCV • YOLOv8 • DeepFace
-              </span>
-            </div>
-
-            <div className="p-6 rounded-xl bg-white/[0.02] border border-white/10 space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-[#ff3d00]/10 border border-[#ff3d00]/30 flex items-center justify-center text-[#ff3d00]">
-                <Activity className="w-5 h-5" />
-              </div>
-              <h4 className="text-base font-bold text-white">Industrial Automation</h4>
-              <p className="text-xs text-white/60 leading-relaxed font-light">
-                ABB AC500 PLC programming with cyclic Structured Text (ST) under IEC 61131-3, Modbus TCP/IP fieldbus communication, and fail-safe safety interlocks.
-              </p>
-              <span className="text-[11px] font-mono text-white/40 block">
-                ABB AC500 • Automation Builder • Modbus
-              </span>
-            </div>
-
-            <div className="p-6 rounded-xl bg-white/[0.02] border border-white/10 space-y-4">
-              <div className="w-10 h-10 rounded-lg bg-[#ff3d00]/10 border border-[#ff3d00]/30 flex items-center justify-center text-[#ff3d00]">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <h4 className="text-base font-bold text-white">Microcontrollers &amp; Edge</h4>
-              <p className="text-xs text-white/60 leading-relaxed font-light">
-                ESP32 dual-core real-time firmware, Raspberry Pi headless compute hosts, FreeRTOS task scheduling, and secure local encrypted storage ledgers.
-              </p>
-              <span className="text-[11px] font-mono text-white/40 block">
-                ESP32 • Raspberry Pi • Linux • Docker
-              </span>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 6. CALL TO ACTION & FOOTER (VALENTIN CHEVAL STYLE)                        */}
-      {/* ========================================================================= */}
-      <footer id="contact" className="vc-section-reveal py-28 px-6 sm:px-10 border-t border-white/10 bg-[#090a0d]">
-        <div className="max-w-7xl mx-auto space-y-16">
-          
-          <div className="space-y-6">
-            <span className="text-[11px] font-mono uppercase tracking-widest text-[#ff3d00]">
-              Get in touch
-            </span>
-            <a
-              href={`mailto:${profileData.contact.email}`}
-              className="group block text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white hover:text-[#ff3d00] transition-colors uppercase break-all leading-none"
-            >
-              {profileData.contact.email}
-            </a>
-            <p className="text-sm text-white/50 max-w-lg font-light">
-              Available for full-time engineering roles, research collaborations, and industrial embedded AI contracts.
+            <p className="text-sm sm:text-base text-white/70 max-w-lg font-light leading-relaxed">
+              From academic research in real-time computer vision to industrial plant commissioning on ABB AC500 PLCs, every line of code and hardware pin is engineered for reliability.
             </p>
-          </div>
 
-          <div className="pt-10 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs font-mono text-white/40">
-            <div className="flex items-center space-x-4">
-              <span className="text-white">KABISH SRIDAR</span>
-              <span>© {new Date().getFullYear()}</span>
-              <span>CHENNAI, TAMIL NADU</span>
+            <div className="space-y-4 pt-4 border-t border-white/10">
+              <span className="text-xs font-mono uppercase tracking-widest text-white/40 block">
+                Direct Contact
+              </span>
+              <a
+                href={`mailto:${profileData.contact.email}`}
+                className="text-2xl sm:text-4xl font-bold text-white hover:text-[#ff3d00] transition-colors tracking-tight block uppercase break-all font-mono"
+              >
+                {profileData.contact.email}
+              </a>
             </div>
 
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-4 pt-2">
               <a
-                href="https://www.linkedin.com/in/kabish-sridar-20587437b"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-white transition-colors"
+                href={`mailto:${profileData.contact.email}`}
+                className="px-6 py-3 rounded-full text-xs font-semibold bg-[#ff3d00] hover:bg-[#ff5722] text-white shadow-[0_0_20px_rgba(255,61,0,0.4)] transition-all flex items-center space-x-2"
               >
-                LinkedIn
+                <span>Initiate Conversation</span>
+                <ArrowUpRight className="w-4 h-4" />
               </a>
-              <a
-                href="https://github.com/kabishsridar"
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-white transition-colors"
-              >
-                GitHub
-              </a>
+
               <button
                 onClick={() => setIsResumeOpen(true)}
-                className="hover:text-white transition-colors uppercase"
+                className="px-5 py-3 rounded-full text-xs font-semibold border border-white/20 hover:border-white/50 text-white bg-white/5 transition-all"
               >
-                Resume PDF
+                Download Resume PDF
               </button>
             </div>
           </div>
 
+          {/* Right Column: Scroll Wipe Transition — Standing Portrait unmasks to reveal the Seated Sofa Portrait */}
+          <div className="lg:col-span-6 flex justify-center items-center">
+            <div className="relative w-full max-w-[440px] aspect-[2/3] rounded-2xl overflow-hidden border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.9)] bg-[#111216]">
+              
+              {/* Base Layer: Standing Suit Portrait */}
+              <div className="absolute inset-0 w-full h-full">
+                <Image
+                  src={`${basePath}/kabish_standing_suit.jpg`}
+                  alt="Kabish Sridar standing in black suit and coolers"
+                  fill
+                  className="object-cover object-center filter brightness-[0.92] contrast-[1.05]"
+                  sizes="(max-width: 768px) 100vw, 500px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/60 border border-white/10 text-[10px] font-mono text-white/70">
+                  Standing Pose
+                </div>
+              </div>
+
+              {/* Reveal Layer: Seated Sofa Portrait wipes down over standing image */}
+              <div
+                ref={sofaRevealedImageRef}
+                className="absolute inset-0 w-full h-full will-change-[clip-path,transform]"
+              >
+                <Image
+                  src={`${basePath}/kabish_hero_landscape.jpg`}
+                  alt="Kabish Sridar seated in emerald armchair revealed on scroll"
+                  fill
+                  className="object-cover object-center filter brightness-[0.95] contrast-[1.08]"
+                  sizes="(max-width: 768px) 100vw, 500px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-[#ff3d00]/20 border border-[#ff3d00]/40 text-[10px] font-mono text-[#ff3d00]">
+                  Sofa Reveal ✦
+                </div>
+              </div>
+
+              {/* Bottom HUD Tag */}
+              <div className="absolute bottom-6 inset-x-6 p-4 rounded-xl bg-black/75 backdrop-blur-md border border-white/10 flex items-center justify-between z-20">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#ff3d00] block">
+                    Verified Credentials
+                  </span>
+                  <p className="text-xs font-bold text-white">Kabish Sridar • CSE (AI &amp; ML)</p>
+                </div>
+                <div className="w-2.5 h-2.5 rounded-full bg-[#ff3d00] animate-ping" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 6. FOOTER                                                                 */}
+      {/* ========================================================================= */}
+      <footer className="py-16 border-t border-white/10 bg-[#07080a] text-xs font-mono text-white/40">
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-center space-x-3">
+            <span className="text-white font-bold tracking-wider">KABISH SRIDAR</span>
+            <span>© {new Date().getFullYear()}</span>
+            <span>CHENNAI, TAMIL NADU, INDIA</span>
+          </div>
+
+          <div className="flex items-center space-x-6">
+            <a
+              href="https://www.linkedin.com/in/kabish-sridar-20587437b"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-[#ff3d00] transition-colors"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/kabishsridar"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-[#ff3d00] transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href={`mailto:${profileData.contact.email}`}
+              className="hover:text-[#ff3d00] transition-colors"
+            >
+              Email
+            </a>
+            <button
+              onClick={() => setIsResumeOpen(true)}
+              className="hover:text-[#ff3d00] transition-colors uppercase"
+            >
+              Resume
+            </button>
+          </div>
         </div>
       </footer>
 
